@@ -7,6 +7,7 @@ import lombok.Value;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -17,14 +18,14 @@ public class LambdaMatchersTest {
     @Test
     public void simpleTestMethodReference() {
         Person p = new Person("Alice", 21);
-        assertThat(p, mappedItem(Person::getName, startsWith("A")));
+        assertThat(p, map(Person::getName, startsWith("A")));
     }
 
     @Test
     public void simpleTestLambda() {
         Person p = new Person("Alice Bob", 21);
         Function<Person, String> mapper = a -> a.getName().split(" ")[1];
-        assertThat(p, mappedItem(mapper, equalTo("Bob")));
+        assertThat(p, map(mapper, equalTo("Bob")));
     }
 
     @Test
@@ -36,13 +37,13 @@ public class LambdaMatchersTest {
     @Test
     public void simpleNotMatcherTestLambda() {
         Person p = new Person("Alice", 21);
-        assertThat(p, not(mappedItem(Person::getName, startsWith("B"))));
+        assertThat(p, not(map(Person::getName, startsWith("B"))));
     }
 
     @Test
     public void simpleBetterNotMatcherTestLambda() {
         Person p = new Person("Alice", 21);
-        assertThat(p, mappedItem(Person::getName, not(startsWith("B"))));
+        assertThat(p, map(Person::getName, not(startsWith("B"))));
     }
 
     @Test
@@ -58,7 +59,7 @@ public class LambdaMatchersTest {
         Person p2 = new Person("Ariana", 21);
         List<Person> list = Arrays.asList(p0, p1, p2);
 
-        assertThat(list, everyItem(mappedItem(Person::getAge, equalTo(21))));
+        assertThat(list, everyItem(map(Person::getAge, equalTo(21))));
     }
 
     @Test
@@ -69,7 +70,7 @@ public class LambdaMatchersTest {
         List<Person> list = Arrays.asList(p0, p1, p2);
 
         Function<Person, String> mapper = a -> a.getName().split(" ")[1];
-        assertThat(list, everyItem(mappedItem(mapper, equalTo("Bob"))));
+        assertThat(list, everyItem(map(mapper, equalTo("Bob"))));
     }
 
     @Test
@@ -89,7 +90,7 @@ public class LambdaMatchersTest {
         Person p2 = new Person("Ariana G", 21);
         List<Person> list = Arrays.asList(p0, p1, p2);
 
-        assertThat(list, not(everyItem(mappedItem(Person::getName, startsWith("Alice")))));
+        assertThat(list, not(everyItem(map(Person::getName, startsWith("Alice")))));
     }
 
     @Test
@@ -99,7 +100,7 @@ public class LambdaMatchersTest {
         Person p2 = new Person("Ariana G", 21);
         List<Person> list = Arrays.asList(p0, p1, p2);
 
-        assertThat(list, everyItem(mappedItem(Person::getName, not(startsWith("Alice")))));
+        assertThat(list, everyItem(map(Person::getName, not(startsWith("Alice")))));
     }
 
     @Test
@@ -119,7 +120,7 @@ public class LambdaMatchersTest {
         Person p2 = new Person("Ariana G", 21);
         List<Person> list = Arrays.asList(p0, p1, p2);
 
-        assertThat(list, hasItem(mappedItem(Person::getName, startsWith("Alice"))));
+        assertThat(list, hasItem(map(Person::getName, startsWith("Alice"))));
     }
 
     @Test
@@ -130,7 +131,7 @@ public class LambdaMatchersTest {
         List<Person> list = Arrays.asList(p0, p1, p2);
 
         Function<Person, Integer> mapper = (person) -> person.getAge() + 1; //in case of inlining this, an explicit cast is needed
-        assertThat(list, hasItem(mappedItem(mapper, equalTo(22))));
+        assertThat(list, hasItem(map(mapper, equalTo(22))));
     }
 
     @Test
@@ -150,7 +151,7 @@ public class LambdaMatchersTest {
         Person p2 = new Person("Ariana G", 21);
         Person[] array = {p0, p1, p2};
 
-        assertThat(array, hasItemInArray(mappedItem(Person::getName, startsWith("Alice"))));
+        assertThat(array, hasItemInArray(map(Person::getName, startsWith("Alice"))));
     }
 
     @Test
@@ -161,7 +162,7 @@ public class LambdaMatchersTest {
         Person[] array = {p0, p1, p2};
 
         Function<Person, Integer> mapper = (person) -> person.getAge() + 1;
-        assertThat(array, hasItemInArray(mappedItem(mapper, equalTo(22))));
+        assertThat(array, hasItemInArray(map(mapper, equalTo(22))));
     }
 
     @Test
@@ -175,13 +176,23 @@ public class LambdaMatchersTest {
     }
 
     @Test
+    public void streamHasItemMatcherTestMappedWith() {
+        Person p0 = new Person("Alice Bob", 21);
+        Person p1 = new Person("Ana Pop", 21);
+        Person p2 = new Person("Ariana G", 21);
+        Stream<Person> stream = Stream.of(p0, p1, p2);
+
+        assertThat(stream, mapStream(Person::getName, hasItem("Ana Pop")));
+    }
+
+    @Test
     public void listHasItemMatcherTestMappedWith() {
         Person p0 = new Person("Alice Bob", 21);
         Person p1 = new Person("Ana Pop", 21);
         Person p2 = new Person("Ariana G", 21);
         List<Person> list = Arrays.asList(p0, p1, p2);
 
-        assertThat(list, mappedIterable(Person::getName, hasItem("Ana Pop")));
+        assertThat(list, mapIterable(Person::getName, hasItem("Ana Pop")));
     }
 
     @Test
@@ -191,7 +202,7 @@ public class LambdaMatchersTest {
         Person p2 = new Person("Ariana G", 21);
         Person[] array = {p0, p1, p2};
 
-        assertThat(array, mappedArray(Person::getName, hasItem(startsWith("Ana"))));
+        assertThat(array, mapArray(Person::getName, hasItem(startsWith("Ana"))));
     }
 
     @Value
