@@ -130,7 +130,8 @@ public class LambdaMatchersTest {
         Person p2 = new Person("Ariana G", 21);
         List<Person> list = Arrays.asList(p0, p1, p2);
 
-        Function<Person, Integer> mapper = (person) -> person.getAge() + 1; //in case of inlining this, an explicit cast is needed
+        //in case of inlining the following line, an explicit cast is needed
+        Function<Person, Integer> mapper = (person) -> person.getAge() + 1;
         assertThat(list, hasItem(map(mapper, equalTo(22))));
     }
 
@@ -162,7 +163,7 @@ public class LambdaMatchersTest {
         Person[] array = {p0, p1, p2};
 
         Function<Person, Integer> mapper = (person) -> person.getAge() + 1;
-        assertThat(array, hasItemInArray(map(mapper, equalTo(22))));
+        assertThat(array, hasItemInArray(map(mapper, equalTo(23))));
     }
 
     @Test
@@ -176,12 +177,17 @@ public class LambdaMatchersTest {
     }
 
     @Test
+    public void streamIsEmpty() {
+        assertThat(Stream.empty(), emptyStream());
+    }
+
+    @Test
     public void streamHasItemMatcherTestMappedWith() {
         Person p0 = new Person("Alice Bob", 21);
         Person p1 = new Person("Ana Pop", 21);
         Person p2 = new Person("Ariana G", 21);
         Stream<Person> stream = Stream.of(p0, p1, p2);
-
+        
         assertThat(stream, mapStream(Person::getName, hasItem("Ana Pop")));
     }
 
