@@ -43,6 +43,10 @@ public class LambdaMatchers {
         return map(stream -> stream.map(mapper).collect(Collectors.toList()), matcher);
     }
 
+    public static <T> Matcher<Stream<? extends T>> toIterable(Matcher<Iterable<? super T>> matcher) {
+        return map(stream -> stream.collect(Collectors.toList()), matcher);
+    }
+
     public static <T, S extends BaseStream<T, S>> Matcher<BaseStream<T, S>> emptyStream() {
         return map(streamToIterable(), emptyIterable());
     }

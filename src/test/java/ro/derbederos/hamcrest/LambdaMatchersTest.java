@@ -1,8 +1,8 @@
 package ro.derbederos.hamcrest;
 
+import org.junit.Rule;
 import org.junit.Test;
-
-import lombok.Value;
+import org.junit.rules.ExpectedException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +14,9 @@ import static org.hamcrest.Matchers.*;
 import static ro.derbederos.hamcrest.LambdaMatchers.*;
 
 public class LambdaMatchersTest {
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void simpleTestMethodReference() {
@@ -163,7 +166,7 @@ public class LambdaMatchersTest {
         Person[] array = {p0, p1, p2};
 
         Function<Person, Integer> mapper = (person) -> person.getAge() + 1;
-        assertThat(array, hasItemInArray(map(mapper, equalTo(23))));
+        assertThat(array, hasItemInArray(map(mapper, equalTo(22))));
     }
 
     @Test
@@ -182,17 +185,40 @@ public class LambdaMatchersTest {
     }
 
     @Test
-    public void streamHasItemMatcherTestMappedWith() {
+    public void streamIsEmptyAssertionError() {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("an empty iterable");
+        expectedException.expectMessage("[\"alabala\",\"trilulilu\"]");
+
+        assertThat(Stream.of("alabala", "trilulilu"), emptyStream());
+    }
+
+    @Test
+    public void streamHasItemMatcherTestMapStream() {
         Person p0 = new Person("Alice Bob", 21);
         Person p1 = new Person("Ana Pop", 21);
         Person p2 = new Person("Ariana G", 21);
         Stream<Person> stream = Stream.of(p0, p1, p2);
-        
+
         assertThat(stream, mapStream(Person::getName, hasItem("Ana Pop")));
     }
 
     @Test
-    public void listHasItemMatcherTestMappedWith() {
+    public void streamHasItemMatcherTestMapStreamAssertionError() {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("a collection containing \"Ana Pop1\"");
+        expectedException.expectMessage("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"");
+
+        Person p0 = new Person("Alice Bob", 21);
+        Person p1 = new Person("Ana Pop", 21);
+        Person p2 = new Person("Ariana G", 21);
+        Stream<Person> stream = Stream.of(p0, p1, p2);
+
+        assertThat(stream, mapStream(Person::getName, hasItem("Ana Pop1")));
+    }
+
+    @Test
+    public void listHasItemMatcherTestMapIterable() {
         Person p0 = new Person("Alice Bob", 21);
         Person p1 = new Person("Ana Pop", 21);
         Person p2 = new Person("Ariana G", 21);
@@ -202,7 +228,21 @@ public class LambdaMatchersTest {
     }
 
     @Test
-    public void arrayHasItemMatcherTestMappedWith() {
+    public void listHasItemMatcherTestMapIterableAssertionError() {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("a collection containing \"Ana Pop1\"");
+        expectedException.expectMessage("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"");
+
+        Person p0 = new Person("Alice Bob", 21);
+        Person p1 = new Person("Ana Pop", 21);
+        Person p2 = new Person("Ariana G", 21);
+        List<Person> list = Arrays.asList(p0, p1, p2);
+
+        assertThat(list, mapIterable(Person::getName, hasItem("Ana Pop1")));
+    }
+
+    @Test
+    public void arrayHasItemMatcherTestMapArray() {
         Person p0 = new Person("Alice Bob", 21);
         Person p1 = new Person("Ana Pop", 21);
         Person p2 = new Person("Ariana G", 21);
@@ -211,9 +251,36 @@ public class LambdaMatchersTest {
         assertThat(array, mapArray(Person::getName, hasItem(startsWith("Ana"))));
     }
 
-    @Value
+    @Test
+    public void arrayHasItemMatcherTestMapArrayAssertionError() {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("a collection containing a string starting with \"Ana1\"");
+        expectedException.expectMessage("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"");
+
+        Person p0 = new Person("Alice Bob", 21);
+        Person p1 = new Person("Ana Pop", 21);
+        Person p2 = new Person("Ariana G", 21);
+        Person[] array = {p0, p1, p2};
+
+        assertThat(array, mapArray(Person::getName, hasItem(startsWith("Ana1"))));
+
+    }
+
     public static class Person {
-        String name;
-        int age;
+        private final String name;
+        private final int age;
+
+        Person(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getAge() {
+            return age;
+        }
     }
 }
