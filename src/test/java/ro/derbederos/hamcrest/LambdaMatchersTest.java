@@ -25,6 +25,15 @@ public class LambdaMatchersTest {
     }
 
     @Test
+    public void simpleTestMethodReferenceAssertionError() {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: a person with string property a string starting with \"B\"");
+        expectedException.expectMessage("     but: string was \"Alice\"");
+        Person p = new Person("Alice", 21);
+        assertThat(p, map(Person::getName, startsWith("B")));
+    }
+
+    @Test
     public void simpleTestLambda() {
         Person p = new Person("Alice Bob", 21);
         Function<Person, String> mapper = a -> a.getName().split(" ")[1];

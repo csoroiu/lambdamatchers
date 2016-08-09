@@ -24,21 +24,20 @@ public final class LambdaMatchers {
 
     public static <T, U> Matcher<Iterable<? extends T>> mapIterable(Function<T, U> mapper,
             Matcher<Iterable<? super U>> matcher) {
-        return map(iter -> StreamSupport.stream(iter.spliterator(), false).map(mapper).collect(Collectors.toList()),
-                matcher);
+        return map(iter -> (Iterable<? super U>) StreamSupport.stream(iter.spliterator(), false).map(mapper).collect(Collectors.toList()), matcher);
     }
 
     public static <T, U> Matcher<T[]> mapArray(Function<T, U> mapper, Matcher<Iterable<? super U>> matcher) {
-        return map(array -> Stream.of(array).map(mapper).collect(Collectors.toList()), matcher);
+        return map(array -> (Iterable<? super U>) Stream.of(array).map(mapper).collect(Collectors.toList()), matcher);
     }
 
     public static <T, U> Matcher<Stream<? extends T>> mapStream(Function<T, U> mapper,
             Matcher<Iterable<? super U>> matcher) {
-        return map(stream -> stream.map(mapper).collect(Collectors.toList()), matcher);
+        return map(stream -> (Iterable<? super U>) stream.map(mapper).collect(Collectors.toList()), matcher);
     }
 
     public static <T> Matcher<Stream<? extends T>> toIterable(Matcher<Iterable<? super T>> matcher) {
-        return map(stream -> stream.collect(Collectors.toList()), matcher);
+        return map(stream -> (Iterable<? super T>) stream.collect(Collectors.toList()), matcher);
     }
 
     public static <T, S extends BaseStream<T, S>> Matcher<BaseStream<T, S>> emptyStream() {
