@@ -218,6 +218,25 @@ public class LambdaMatchersTest {
     }
 
     @Test
+    public void streamHasItemMatcherTestToIterable() {
+        Stream<String> stream = Stream.of("Alice Bob", "Ana Pop", "Ariana G");
+
+        assertThat(stream, toIterable(hasItem("Ana Pop")));
+    }
+
+    @Test
+    public void streamHasItemMatcherTestToIterableAssertionError() {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("a collection containing \"Ana Pop1\"");
+        expectedException.expectMessage("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"");
+
+        Stream<String> stream = Stream.of("Alice Bob", "Ana Pop", "Ariana G");
+
+        assertThat(stream, toIterable(hasItem("Ana Pop1")));
+    }
+
+
+    @Test
     public void listHasItemMatcherTestMapIterable() {
         Person p0 = new Person("Alice Bob", 21);
         Person p1 = new Person("Ana Pop", 21);

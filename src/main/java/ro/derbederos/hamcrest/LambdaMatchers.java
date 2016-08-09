@@ -1,5 +1,7 @@
 package ro.derbederos.hamcrest;
 
+import org.hamcrest.Matcher;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -8,20 +10,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.hamcrest.Matcher;
+import static org.hamcrest.Matchers.emptyIterable;
 
-import lombok.experimental.UtilityClass;
-import static org.hamcrest.Matchers.*;
+public final class LambdaMatchers {
 
-@UtilityClass
-public class LambdaMatchers {
-
-    private static <S extends BaseStream<T, S>, T> Function<BaseStream<T, S>, Iterable<T>> streamToIterable() {
-        return stream -> {
-            List<T> target = new ArrayList<>();
-            stream.iterator().forEachRemaining(target::add);
-            return target;
-        };
+    private LambdaMatchers() {
+        throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     public static <T, U> Matcher<T> map(Function<T, U> mapper, Matcher<? super U> matcher) {
@@ -48,6 +42,14 @@ public class LambdaMatchers {
     }
 
     public static <T, S extends BaseStream<T, S>> Matcher<BaseStream<T, S>> emptyStream() {
-        return map(streamToIterable(), emptyIterable());
+        return map(baseStreamToIterable(), emptyIterable());
+    }
+
+    private static <S extends BaseStream<T, S>, T> Function<BaseStream<T, S>, Iterable<T>> baseStreamToIterable() {
+        return stream -> {
+            List<T> target = new ArrayList<>();
+            stream.iterator().forEachRemaining(target::add);
+            return target;
+        };
     }
 }

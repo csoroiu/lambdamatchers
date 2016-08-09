@@ -7,10 +7,11 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class RegexMatcher extends SubstringMatcher {
+
     private Pattern pattern;
 
-    private RegexMatcher(String pattern) {
-        this(Pattern.compile(pattern));
+    private RegexMatcher(String regex) {
+        this(Pattern.compile(regex));
     }
 
     private RegexMatcher(Pattern pattern) {
@@ -33,8 +34,12 @@ public class RegexMatcher extends SubstringMatcher {
         return "matching pattern";
     }
 
-    public static Matcher<String> matchesPattern(String pattern) {
-        return new RegexMatcher(pattern);
+    public static Matcher<String> matchesPattern(String regex) {
+        return new RegexMatcher(regex);
+    }
+
+    public static Matcher<String> matchesPattern(String regex, int patternFlags) {
+        return new RegexMatcher(Pattern.compile(regex, patternFlags));
     }
 
     public static Matcher<String> matchesPattern(Pattern pattern) {
