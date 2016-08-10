@@ -14,8 +14,8 @@ class FunctionMatcher<T, U> extends FeatureMatcher<T, U> {
     private T lastChecked;
     private U lastResult;
 
-    private FunctionMatcher(Function<T, U> mapper, String object, String feature, Matcher<? super U> subMatcher) {
-        super(subMatcher, "a " + object + " with " + feature + " property", feature);
+    private FunctionMatcher(Function<T, U> mapper, String typeName, String feature, Matcher<? super U> subMatcher) {
+        super(subMatcher, "a " + typeName + " with " + feature + " property", feature);
         Objects.requireNonNull(mapper);
         Objects.requireNonNull(subMatcher);
         this.mapper = mapper;
@@ -44,8 +44,8 @@ class FunctionMatcher<T, U> extends FeatureMatcher<T, U> {
 
     public static <T, U> Matcher<T> map(Function<T, U> mapper, Matcher<? super U> matcher) {
         Class<?>[] arguments = TypeResolver.resolveRawArguments(Function.class, mapper.getClass());
-        String objectName = arguments[0].getSimpleName().toLowerCase();
-        String featureName = arguments[1].getSimpleName().toLowerCase();
-        return new FunctionMatcher<>(mapper, objectName, featureName, matcher);
+        String objectTypeName = arguments[0].getSimpleName().toLowerCase();
+        String featureTypeName = arguments[1].getSimpleName().toLowerCase();
+        return new FunctionMatcher<>(mapper, objectTypeName, featureTypeName, matcher);
     }
 }

@@ -21,8 +21,7 @@ public class RegexMatcher extends SubstringMatcher {
 
     @Override
     protected boolean evalSubstringOf(String actual) {
-        return Objects.equals(substring, actual) ||
-                matches(actual);
+        return Objects.equals(substring, actual) || matches(actual);
     }
 
     private boolean matches(String actual) {

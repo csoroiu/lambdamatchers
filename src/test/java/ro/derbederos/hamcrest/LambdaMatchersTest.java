@@ -142,7 +142,7 @@ public class LambdaMatchersTest {
         Person p2 = new Person("Ariana G", 21);
         List<Person> list = Arrays.asList(p0, p1, p2);
 
-        //in case of inlining the following line, an explicit cast is needed
+        // in case of inlining the following line, an explicit cast is needed
         Function<Person, Integer> mapper = (person) -> person.getAge() + 1;
         assertThat(list, hasItem(map(mapper, equalTo(22))));
     }
@@ -243,7 +243,6 @@ public class LambdaMatchersTest {
 
         assertThat(stream, toIterable(hasItem("Ana Pop1")));
     }
-
 
     @Test
     public void listHasItemMatcherTestMapIterable() {
