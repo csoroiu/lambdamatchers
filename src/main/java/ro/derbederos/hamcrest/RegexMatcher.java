@@ -15,7 +15,7 @@ public class RegexMatcher extends SubstringMatcher {
     }
 
     private RegexMatcher(Pattern pattern) {
-        super(pattern.pattern());
+        super("matching pattern", false, pattern.pattern());
         this.pattern = pattern;
     }
 
@@ -26,11 +26,6 @@ public class RegexMatcher extends SubstringMatcher {
 
     private boolean matches(String actual) {
         return pattern.matcher(actual).find();
-    }
-
-    @Override
-    protected String relationship() {
-        return "matching pattern";
     }
 
     public static Matcher<String> matchesPattern(String regex) {
