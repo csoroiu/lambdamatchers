@@ -7,6 +7,7 @@ import org.junit.rules.ExpectedException;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertThat;
+import static ro.derbederos.hamcrest.RegexMatcher.containsPattern;
 import static ro.derbederos.hamcrest.RegexMatcher.matchesPattern;
 
 public class RegexMatcherTest {
@@ -16,17 +17,32 @@ public class RegexMatcherTest {
 
     @Test
     public void testMatchesPatternSubstring() throws Exception {
-        assertThat("alabala", matchesPattern("aba"));
+        assertThat("alabala", matchesPattern("alabala"));
+    }
+
+    @Test
+    public void testContainsPatternSubstring() throws Exception {
+        assertThat("alabala", containsPattern("aba"));
     }
 
     @Test
     public void testMatchesPatternEnding() throws Exception {
-        assertThat("alabala", matchesPattern("bala$"));
+        assertThat("alabala", matchesPattern("\\w*bala$"));
+    }
+
+    @Test
+    public void testContainsPatternEnding() throws Exception {
+        assertThat("alabala", containsPattern("bala$"));
     }
 
     @Test
     public void testMatchesPatternStarting() throws Exception {
-        assertThat("alabala", matchesPattern("^.la"));
+        assertThat("alabala", matchesPattern("^.labala"));
+    }
+
+    @Test
+    public void testContainsPatternStarting() throws Exception {
+        assertThat("alabala", containsPattern("^.la"));
     }
 
     @Test
