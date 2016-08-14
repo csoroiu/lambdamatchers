@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
 
 class TypeResolverFeatureMatcherFactory {
 
-    private TypeResolverFeatureMatcherFactory() {
+    protected TypeResolverFeatureMatcherFactory() {
         throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
