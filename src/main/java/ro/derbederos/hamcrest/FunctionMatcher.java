@@ -8,21 +8,21 @@ import org.hamcrest.Matcher;
 import java.util.Objects;
 import java.util.function.Function;
 
-class FunctionMatcher<T, U> extends FeatureMatcher<T, U> {
+final class FunctionMatcher<T, U> extends FeatureMatcher<T, U> {
 
     private final Function<T, U> mapper;
     private T lastChecked;
     private U lastResult;
 
-    private FunctionMatcher(Function<T, U> mapper, String typeName, String feature, Matcher<? super U> subMatcher) {
-        super(subMatcher, "a " + typeName + " with " + feature + " property", feature);
+    FunctionMatcher(Function<T, U> mapper, String typeName, String feature, Matcher<? super U> subMatcher) {
+        super(subMatcher, "a " + typeName + " with feature of type " + feature, feature);
         Objects.requireNonNull(mapper);
         Objects.requireNonNull(subMatcher);
         this.mapper = mapper;
     }
 
     @Override
-    protected U featureValueOf(T actual) {
+    protected final U featureValueOf(T actual) {
         if (lastChecked == null || lastChecked != actual) {
             lastResult = mapper.apply(actual);
             lastChecked = actual;
@@ -31,7 +31,7 @@ class FunctionMatcher<T, U> extends FeatureMatcher<T, U> {
     }
 
     @Override
-    protected boolean matchesSafely(T actual, Description mismatch) {
+    protected final boolean matchesSafely(T actual, Description mismatch) {
         boolean result = super.matchesSafely(actual, mismatch);
         // clear the state
         // first call on matchesSafely is done with a Description.NullDescription

@@ -27,8 +27,9 @@ public class LambdaMatchersTest {
     @Test
     public void simpleTestMethodReferenceAssertionError() {
         expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a person with string property a string starting with \"B\"");
+        expectedException.expectMessage("Expected: a person with feature of type string a string starting with \"B\"");
         expectedException.expectMessage("     but: string was \"Alice\"");
+
         Person p = new Person("Alice", 21);
         assertThat(p, map(Person::getName, startsWith("B")));
     }
@@ -290,7 +291,6 @@ public class LambdaMatchersTest {
         Person[] array = {p0, p1, p2};
 
         assertThat(array, mapArray(Person::getName, hasItem(startsWith("Ana1"))));
-
     }
 
     public static class Person {
