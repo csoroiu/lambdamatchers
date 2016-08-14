@@ -34,7 +34,7 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
     private T lastInput = null;
     private U lastValue = null;
 
-    private MappedValueMatcher(Function<? super T, ? extends U> mapper, Class<?> inputType,
+    MappedValueMatcher(Function<? super T, ? extends U> mapper, Class<?> inputType,
                                String featureDescription, String featureName, Matcher<? super U> subMatcher) {
         super(requireNonNull(inputType));
         this.mapper = requireNonNull(mapper);
@@ -81,7 +81,7 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
         return featureTypeName;
     }
 
-    private static String getArticle(String objectTypeName) {
+    static String getArticle(String objectTypeName) {
         boolean startsWithVowel = "AaEeIiOoUu".indexOf(objectTypeName.charAt(0)) >= 0;
         return startsWithVowel ? "an" : "a";
     }
