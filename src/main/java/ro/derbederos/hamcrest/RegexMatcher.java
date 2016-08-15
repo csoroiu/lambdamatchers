@@ -3,7 +3,11 @@ package ro.derbederos.hamcrest;
 import org.hamcrest.Matcher;
 import org.hamcrest.core.SubstringMatcher;
 
+import java.util.ArrayList;
 import java.util.regex.Pattern;
+
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anyOf;
 
 public class RegexMatcher extends SubstringMatcher {
 
@@ -52,6 +56,28 @@ public class RegexMatcher extends SubstringMatcher {
     public static Matcher<String> containsPattern(Pattern pattern) {
         return new RegexMatcher(pattern, false);
     }
-//    assertThat("Hello, world!", containsPattern("[wW]orld"));
-//    assertThat("Hello, world!", matchesPattern("Hello, .+!"));
+
+    public static Matcher<? super String> matchesAnyPattern(String... patterns) {
+        ArrayList<Matcher<? super String>> matchers = new ArrayList<>(patterns.length);
+        for (String pattern : patterns) {
+            matchers.add(matchesPattern(pattern));
+        }
+        return anyOf(matchers);
+    }
+
+    public static Matcher<? super String> containsAnyPattern(String... patterns) {
+        ArrayList<Matcher<? super String>> matchers = new ArrayList<>(patterns.length);
+        for (String pattern : patterns) {
+            matchers.add(containsPattern(pattern));
+        }
+        return anyOf(matchers);
+    }
+
+    public static Matcher<? super String> containsAllPatterns(String... patterns) {
+        ArrayList<Matcher<? super String>> matchers = new ArrayList<>(patterns.length);
+        for (String pattern : patterns) {
+            matchers.add(containsPattern(pattern));
+        }
+        return allOf(matchers);
+    }
 }
