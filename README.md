@@ -6,7 +6,7 @@ This library implements some hamcrest matchers usable with Java 8 and a set of u
 
 The matchers implemented are:
 * **[FunctionMatcher](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/FunctionMatcher.java)** - a mapping matcher, accessible via various **[LambdaMatchers](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/LambdaMatchers.java)** methods
-* **[RegexMatcher](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/RegexMatcher.java)** - a regex pattern matcher, accessible via overloaded **[RegexMatcher.matchesPattern](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/RegexMatcher.java#L36)** and **[RegexMatcher.containsPattern](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/RegexMatcher.java#L56)**methods
+* **[RegexMatcher](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/RegexMatcher.java)** - a regex pattern matcher, accessible via overloaded **[RegexMatcher.matchesPattern](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/RegexMatcher.java#L36)** and **[RegexMatcher.containsPattern](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/RegexMatcher.java#L56)** methods
 
 The usages van be seen in:
 * **[LambdaMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/LambdaMatchersTest.java)**. Some examples are:
