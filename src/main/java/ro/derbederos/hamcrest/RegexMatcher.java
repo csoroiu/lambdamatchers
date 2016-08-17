@@ -45,6 +45,14 @@ public class RegexMatcher extends SubstringMatcher {
         return new RegexMatcher(pattern, true);
     }
 
+    public static Matcher<? super String> matchesAnyPattern(String... patterns) {
+        ArrayList<Matcher<? super String>> matchers = new ArrayList<>(patterns.length);
+        for (String pattern : patterns) {
+            matchers.add(matchesPattern(pattern));
+        }
+        return anyOf(matchers);
+    }
+
     public static Matcher<String> containsPattern(String regex) {
         return new RegexMatcher(regex, false);
     }
@@ -55,14 +63,6 @@ public class RegexMatcher extends SubstringMatcher {
 
     public static Matcher<String> containsPattern(Pattern pattern) {
         return new RegexMatcher(pattern, false);
-    }
-
-    public static Matcher<? super String> matchesAnyPattern(String... patterns) {
-        ArrayList<Matcher<? super String>> matchers = new ArrayList<>(patterns.length);
-        for (String pattern : patterns) {
-            matchers.add(matchesPattern(pattern));
-        }
-        return anyOf(matchers);
     }
 
     public static Matcher<? super String> containsAnyPattern(String... patterns) {
