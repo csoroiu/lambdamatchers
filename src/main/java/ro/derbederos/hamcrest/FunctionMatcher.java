@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2016 Claudiu Soroiu
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package ro.derbederos.hamcrest;
 
 import net.jodah.typetools.TypeResolver;
@@ -14,8 +30,8 @@ final class FunctionMatcher<T, U> extends FeatureMatcher<T, U> {
     private T lastChecked;
     private U lastResult;
 
-    FunctionMatcher(Function<T, U> mapper, String typeName, String feature, Matcher<? super U> subMatcher) {
-        super(subMatcher, "a " + typeName + " with feature of type " + feature, feature);
+    private FunctionMatcher(Function<T, U> mapper, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
+        super(subMatcher, featureDescription, featureName);
         Objects.requireNonNull(mapper);
         Objects.requireNonNull(subMatcher);
         this.mapper = mapper;
@@ -42,10 +58,19 @@ final class FunctionMatcher<T, U> extends FeatureMatcher<T, U> {
         return result;
     }
 
-    public static <T, U> Matcher<T> map(Function<T, U> mapper, Matcher<? super U> matcher) {
+    static <T, U> Matcher<T> map(Function<T, U> mapper, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
+        return new FunctionMatcher<>(mapper, featureDescription, featureName, subMatcher);
+    }
+
+    static <T, U> Matcher<T> map(Function<T, U> mapper, Matcher<? super U> matcher) {
         Class<?>[] arguments = TypeResolver.resolveRawArguments(Function.class, mapper.getClass());
         String objectTypeName = arguments[0].getSimpleName().toLowerCase();
         String featureTypeName = arguments[1].getSimpleName().toLowerCase();
-        return new FunctionMatcher<>(mapper, objectTypeName, featureTypeName, matcher);
+        boolean startsWithVowel = "aeiou".indexOf(Character.toLowerCase(objectTypeName.charAt(0))) >= 0;
+        String article = startsWithVowel ? "an" : "a";
+        return new FunctionMatcher<>(mapper,
+                article + " " + objectTypeName + " with feature of type " + featureTypeName,
+                featureTypeName,
+                matcher);
     }
 }
