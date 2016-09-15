@@ -34,15 +34,15 @@ public class OptionalMatchers {
     }
 
     public static Matcher<Optional<?>> optionalIsPresent() {
-        return map(Optional::isPresent, "Optional.isPresent", "isPresent", equalTo(true));
+        return map(Optional::isPresent, "Optional.isPresent", "", equalTo(true));
     }
 
     public static Matcher<Optional<?>> optionalIsEmpty() {
-        return map(Optional::isPresent, "Optional.isPresent", "isPresent", equalTo(false));
+        return map(Optional::isPresent, "Optional.isPresent", "", equalTo(false));
     }
 
     public static <T> Matcher<Optional<T>> optionalHasValue(Matcher<? super T> matcher) {
-        return allOf(optionalIsPresent(), map(Optional::get, "Optional.value is", "value", matcher));
+        return allOf(optionalIsPresent(), map(Optional::get, "Optional item:", "", matcher));
     }
 
     public static <T> Matcher<Optional<T>> optionalHasValue(T value) {
@@ -50,15 +50,15 @@ public class OptionalMatchers {
     }
 
     public static Matcher<OptionalInt> optionalIntIsPresent() {
-        return map(OptionalInt::isPresent, "OptionalInt.isPresent", "isPresent", equalTo(true));
+        return map(OptionalInt::isPresent, "OptionalInt.isPresent", "", equalTo(true));
     }
 
     public static Matcher<OptionalInt> optionalIntIsEmpty() {
-        return map(OptionalInt::isPresent, "OptionalInt.isPresent", "isPresent", equalTo(false));
+        return map(OptionalInt::isPresent, "OptionalInt.isPresent", "", equalTo(false));
     }
 
     public static <T> Matcher<OptionalInt> optionalIntHasValue(Matcher<Integer> matcher) {
-        return allOf(optionalIntIsPresent(), map(OptionalInt::getAsInt, "OptionalInt.value is", "value", matcher));
+        return allOf(optionalIntIsPresent(), map(OptionalInt::getAsInt, "OptionalInt item:", "", matcher));
     }
 
     public static <T> Matcher<OptionalInt> optionalIntHasValue(int value) {
@@ -66,15 +66,15 @@ public class OptionalMatchers {
     }
 
     public static Matcher<OptionalLong> optionalLongIsPresent() {
-        return map(OptionalLong::isPresent, "OptionalLong.isPresent", "isPresent", equalTo(true));
+        return map(OptionalLong::isPresent, "OptionalLong.isPresent", "", equalTo(true));
     }
 
     public static Matcher<OptionalLong> optionalLongIsEmpty() {
-        return map(OptionalLong::isPresent, "OptionalLong.isPresent", "isPresent", equalTo(false));
+        return map(OptionalLong::isPresent, "OptionalLong.isPresent", "", equalTo(false));
     }
 
     public static <T> Matcher<OptionalLong> optionalLongHasValue(Matcher<Long> matcher) {
-        return allOf(optionalLongIsPresent(), map(OptionalLong::getAsLong, "OptionalLong.value is", "value", matcher));
+        return allOf(optionalLongIsPresent(), map(OptionalLong::getAsLong, "OptionalLong item:", "", matcher));
     }
 
     public static <T> Matcher<OptionalLong> optionalLongHasValue(long value) {
@@ -82,15 +82,15 @@ public class OptionalMatchers {
     }
 
     public static Matcher<OptionalDouble> optionalDoubleIsPresent() {
-        return map(OptionalDouble::isPresent, "OptionalDouble.isPresent", "isPresent", equalTo(true));
+        return map(OptionalDouble::isPresent, "OptionalDouble.isPresent", "", equalTo(true));
     }
 
     public static Matcher<OptionalDouble> optionalDoubleIsEmpty() {
-        return map(OptionalDouble::isPresent, "OptionalDouble.isPresent", "isPresent", equalTo(false));
+        return map(OptionalDouble::isPresent, "OptionalDouble.isPresent", "", equalTo(false));
     }
 
     public static <T> Matcher<OptionalDouble> optionalDoubleHasValue(Matcher<Double> matcher) {
-        return allOf(optionalDoubleIsPresent(), map(OptionalDouble::getAsDouble, "OptionalDouble.value is", "value", matcher));
+        return allOf(optionalDoubleIsPresent(), map(OptionalDouble::getAsDouble, "OptionalDouble item: ", "", matcher));
     }
 
     public static <T> Matcher<OptionalDouble> optionalDoubleHasValue(double value) {

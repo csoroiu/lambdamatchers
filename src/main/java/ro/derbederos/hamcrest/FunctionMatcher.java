@@ -64,12 +64,12 @@ final class FunctionMatcher<T, U> extends FeatureMatcher<T, U> {
 
     static <T, U> Matcher<T> map(Function<T, U> mapper, Matcher<? super U> matcher) {
         Class<?>[] arguments = TypeResolver.resolveRawArguments(Function.class, mapper.getClass());
-        String objectTypeName = arguments[0].getSimpleName().toLowerCase();
-        String featureTypeName = arguments[1].getSimpleName().toLowerCase();
-        boolean startsWithVowel = "aeiou".indexOf(Character.toLowerCase(objectTypeName.charAt(0))) >= 0;
+        String objectTypeName = arguments[0].getSimpleName();
+        String featureTypeName = arguments[1].getSimpleName();
+        boolean startsWithVowel = "AaEeIiOoUu".indexOf(objectTypeName.charAt(0)) >= 0;
         String article = startsWithVowel ? "an" : "a";
         return new FunctionMatcher<>(mapper,
-                article + " " + objectTypeName + " with feature of type " + featureTypeName,
+                article + " " + objectTypeName + "::" + featureTypeName,
                 featureTypeName,
                 matcher);
     }

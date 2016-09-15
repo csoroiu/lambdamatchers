@@ -43,8 +43,8 @@ public class LambdaMatchersTest {
     @Test
     public void simpleTestMethodReferenceAssertionError() {
         expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a person with feature of type string a string starting with \"B\"");
-        expectedException.expectMessage("     but: string was \"Alice\"");
+        expectedException.expectMessage("Expected: a Person::String a string starting with \"B\"");
+        expectedException.expectMessage("     but: String was \"Alice\"");
 
         Person p = new Person("Alice", 21);
         assertThat(p, map(Person::getName, startsWith("B")));
