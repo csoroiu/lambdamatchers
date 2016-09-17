@@ -68,7 +68,7 @@ final class FunctionMatcher<T, U> extends FeatureMatcher<T, U> {
         String featureTypeName = arguments[1].getSimpleName();
         boolean startsWithVowel = "AaEeIiOoUu".indexOf(objectTypeName.charAt(0)) >= 0;
         String article = startsWithVowel ? "an" : "a";
-        return new FunctionMatcher<>(mapper,
+        return map(mapper,
                 article + " " + objectTypeName + "::" + featureTypeName,
                 featureTypeName,
                 matcher);

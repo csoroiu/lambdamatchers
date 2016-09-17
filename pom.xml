@@ -48,6 +48,14 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+    <developers>
+        <developer>
+            <name>Claudiu Soroiu</name>
+            <url>https://github.com/csoroiu/</url>
+            <organization>Derbederos</organization>
+        </developer>
+    </developers>
+
     <build>
         <plugins>
             <plugin>
@@ -59,6 +67,19 @@
                         <id>attach-sources</id>
                         <goals>
                             <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+                        <goals>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
