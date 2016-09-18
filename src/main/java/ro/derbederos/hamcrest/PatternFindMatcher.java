@@ -16,31 +16,37 @@
 
 package ro.derbederos.hamcrest;
 
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.core.SubstringMatcher;
+import org.hamcrest.TypeSafeMatcher;
 
 import java.util.regex.Pattern;
 
-final class PatternFindMatcher extends SubstringMatcher {
+final class PatternFindMatcher<T extends CharSequence> extends TypeSafeMatcher<T> {
 
     private final Pattern pattern;
 
     private PatternFindMatcher(Pattern pattern) {
-        super(pattern.pattern());
+        super(CharSequence.class);
         this.pattern = pattern;
     }
 
     @Override
-    protected boolean evalSubstringOf(String actual) {
+    public boolean matchesSafely(T actual) {
         return pattern.matcher(actual).find();
     }
 
     @Override
-    protected String relationship() {
-        return "containing pattern";
+    public void describeMismatchSafely(T actual, Description mismatchDescription) {
+        mismatchDescription.appendText("was \"").appendText(String.valueOf(actual)).appendText("\"");
     }
 
-    static Matcher<String> containsPattern(Pattern pattern) {
-        return new PatternFindMatcher(pattern);
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("a string containing pattern ").appendValue(pattern.pattern());
+    }
+
+    static <T extends CharSequence> Matcher<T> containsPattern(Pattern pattern) {
+        return new PatternFindMatcher<>(pattern);
     }
 }

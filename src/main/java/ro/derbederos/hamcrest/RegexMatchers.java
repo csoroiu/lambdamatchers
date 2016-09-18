@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 
 /**
- * This class provides a set of regular expressions matchers for strings.
+ * Set regular expression matchers for strings.
  *
  * @since 0.1
  */
@@ -36,48 +36,51 @@ public final class RegexMatchers {
     }
 
     /**
-     * Checks if the input string <b>matches</b> the given regular expression <code>pattern</code>.
+     * Checks if the input char sequence matches the given regular expression <code>pattern</code>.
      *
-     * @param pattern The {@link Pattern} object to check against.
+     * @param pattern The {@link Pattern} object to match against.
+     * @param <T>     The type of the char sequence implementing {@link CharSequence}.
      * @since 0.1
      */
-    public static Matcher<String> matchesPattern(Pattern pattern) {
+    public static <T extends CharSequence> Matcher<T> matchesPattern(Pattern pattern) {
         return PatternMatchesMatcher.matchesPattern(pattern);
     }
 
     /**
-     * Checks if the input string <b>matches</b> the given <code>regex</code> pattern.
+     * Checks if the input char sequence matches the given <code>regex</code> pattern.
      *
-     * @param regex The regular expression to check against.
+     * @param regex The regular expression to match against.
+     * @param <T>   The type of the char sequence implementing {@link CharSequence}.
      * @since 0.1
      */
-    public static Matcher<String> matchesPattern(String regex) {
+    public static <T extends CharSequence> Matcher<T> matchesPattern(String regex) {
         return matchesPattern(Pattern.compile(regex));
     }
 
     /**
-     * Checks if the input string <b>matches</b> the given <code>regex</code> pattern.
+     * Checks if the input char sequence matches the given <code>regex</code> pattern.
      *
-     * @param regex        The regular expression to check against.
+     * @param regex        The regular expression to match against.
      * @param patternFlags Match flags, a bit mask that may include
      *                     {@link Pattern#CASE_INSENSITIVE}, {@link Pattern#MULTILINE}, {@link Pattern#DOTALL},
      *                     {@link Pattern#UNICODE_CASE}, {@link Pattern#CANON_EQ}, {@link Pattern#UNIX_LINES},
      *                     {@link Pattern#LITERAL}, {@link Pattern#UNICODE_CHARACTER_CLASS}
      *                     and {@link Pattern#COMMENTS}
+     * @param <T>          The type of the char sequence implementing {@link CharSequence}.
      * @since 0.1
      */
-    public static Matcher<String> matchesPattern(String regex, int patternFlags) {
+    public static <T extends CharSequence> Matcher<T> matchesPattern(String regex, int patternFlags) {
         return matchesPattern(Pattern.compile(regex, patternFlags));
     }
 
     /**
-     * Checks if the input string <b>matches any</b> of the given patterns.
+     * Checks if the input char sequence matches any of the given patterns.
      *
-     * @param patterns The regular expressions to check against.
+     * @param patterns The regular expressions to match against.
      * @since 0.1
      */
-    public static Matcher<? super String> matchesAnyPattern(String... patterns) {
-        ArrayList<Matcher<? super String>> matchers = new ArrayList<>(patterns.length);
+    public static Matcher<CharSequence> matchesAnyPattern(String... patterns) {
+        ArrayList<Matcher<? super CharSequence>> matchers = new ArrayList<>(patterns.length);
         for (String pattern : patterns) {
             matchers.add(matchesPattern(pattern));
         }
@@ -85,48 +88,51 @@ public final class RegexMatchers {
     }
 
     /**
-     * Checks if the input string <b>contains</b> the given regular expression <code>pattern</code>.
+     * Checks if the input char sequence contains the given regular expression <code>pattern</code>.
      *
-     * @param pattern The {@link Pattern} object to check against.
+     * @param pattern The {@link Pattern} object to match against.
+     * @param <T>     The type of the char sequence implementing {@link CharSequence}.
      * @since 0.1
      */
-    public static Matcher<String> containsPattern(Pattern pattern) {
+    public static <T extends CharSequence> Matcher<T> containsPattern(Pattern pattern) {
         return PatternFindMatcher.containsPattern(pattern);
     }
 
     /**
-     * Checks if the input string <b>contains</b> the given <code>regex</code> pattern.
+     * Checks if the input char sequence <b>contains</b> the given <code>regex</code> pattern.
      *
-     * @param regex The regular expression to check against.
+     * @param regex The regular expression to match against.
+     * @param <T>   The type of the char sequence implementing {@link CharSequence}.
      * @since 0.1
      */
-    public static Matcher<String> containsPattern(String regex) {
+    public static <T extends CharSequence> Matcher<T> containsPattern(String regex) {
         return containsPattern(Pattern.compile(regex));
     }
 
     /**
-     * Checks if the input string <b>contains</b> the given <code>regex</code> pattern.
+     * Checks if the input char sequence <b>contains</b> the given <code>regex</code> pattern.
      *
-     * @param regex        The regular expression to check against.
+     * @param regex        The regular expression to match against.
      * @param patternFlags Match flags, a bit mask that may include
      *                     {@link Pattern#CASE_INSENSITIVE}, {@link Pattern#MULTILINE}, {@link Pattern#DOTALL},
      *                     {@link Pattern#UNICODE_CASE}, {@link Pattern#CANON_EQ}, {@link Pattern#UNIX_LINES},
      *                     {@link Pattern#LITERAL}, {@link Pattern#UNICODE_CHARACTER_CLASS}
      *                     and {@link Pattern#COMMENTS}
+     * @param <T>          The type of the char sequence implementing {@link CharSequence}.
      * @since 0.1
      */
-    public static Matcher<String> containsPattern(String regex, int patternFlags) {
+    public static <T extends CharSequence> Matcher<T> containsPattern(String regex, int patternFlags) {
         return containsPattern(Pattern.compile(regex, patternFlags));
     }
 
     /**
-     * Checks if the input string <b>contains any</b> of the given patterns.
+     * Checks if the input char sequence <b>contains</b> any of the given patterns.
      *
-     * @param patterns The regular expressions to check against.
+     * @param patterns The regular expressions to match against.
      * @since 0.1
      */
-    public static Matcher<? super String> containsAnyPattern(String... patterns) {
-        ArrayList<Matcher<? super String>> matchers = new ArrayList<>(patterns.length);
+    public static Matcher<CharSequence> containsAnyPattern(String... patterns) {
+        ArrayList<Matcher<? super CharSequence>> matchers = new ArrayList<>(patterns.length);
         for (String pattern : patterns) {
             matchers.add(containsPattern(pattern));
         }
@@ -134,13 +140,13 @@ public final class RegexMatchers {
     }
 
     /**
-     * Checks if the input string <b>contains all</b> of the given patterns.
+     * Checks if the input char sequence <b>contains</b> all of the given patterns.
      *
-     * @param patterns The regular expressions to check against.
+     * @param patterns The regular expressions to match against.
      * @since 0.1
      */
-    public static Matcher<? super String> containsAllPatterns(String... patterns) {
-        ArrayList<Matcher<? super String>> matchers = new ArrayList<>(patterns.length);
+    public static Matcher<CharSequence> containsAllPatterns(String... patterns) {
+        ArrayList<Matcher<? super CharSequence>> matchers = new ArrayList<>(patterns.length);
         for (String pattern : patterns) {
             matchers.add(containsPattern(pattern));
         }

@@ -184,8 +184,8 @@ public final class LambdaMatchers {
     /**
      * Returns a {@link Matcher} that checks if the given {@link BaseStream} is empty.
      *
-     * @param <T> The type of the stream elements
-     * @param <S> The type of of the stream implementing {@code BaseStream}
+     * @param <T> The type of the stream elements.
+     * @param <S> The type of the stream implementing {@code BaseStream}.
      * @since 0.1
      */
     public static <T, S extends BaseStream<T, S>> Matcher<BaseStream<T, S>> emptyStream() {
