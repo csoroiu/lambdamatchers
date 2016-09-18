@@ -23,7 +23,7 @@ assertThat(stream, mapStream(Person::getName, hasItem(startsWith("Ana"))));
 
 [build-status-svg]: https://travis-ci.org/csoroiu/lambdamatchers.svg?branch=master
 [build-status-link]: https://travis-ci.org/csoroiu/lambdamatchers
-[license-svg]: https://img.shields.io/badge/license-APACHE2-blue.svg
+[license-svg]: https://img.shields.io/badge/license-Apache2-blue.svg
 [license-link]: https://raw.githubusercontent.com/csoroiu/lambdamatchers/master/LICENSE
 [maven-tasks-svg]: https://img.shields.io/maven-central/v/ro.derbederos.hamcrest/lambdamatchers.svg
 [maven-tasks-link]: https://maven-badges.herokuapp.com/maven-central/ro.derbederos.hamcrest/lambdamatchers
