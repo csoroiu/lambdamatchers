@@ -1,4 +1,7 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/ro.derbederos.hamcrest/lambdamatchers/badge.svg)](https://maven-badges.herokuapp.com/maven-central/ro.derbederos.hamcrest/lambdamatchers)
+
 [![Apache2 licensed](https://img.shields.io/badge/license-APACHE2-blue.svg)](https://raw.githubusercontent.com/csoroiu/lambdamatchers/master/LICENSE)
+
 [![Build Status](https://travis-ci.org/csoroiu/lambdamatchers.svg?branch=master)](https://travis-ci.org/csoroiu/lambdamatchers)
 
 # lambdamatchers
