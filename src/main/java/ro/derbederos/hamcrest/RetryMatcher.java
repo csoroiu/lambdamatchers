@@ -25,6 +25,7 @@ import java.util.concurrent.locks.LockSupport;
 
 final class RetryMatcher<T> extends BaseMatcher<T> {
 
+    private static final int DEFAULT_INTERVAL_MILLIS = 50;
     private final long durationNanos;
     private final long intervalNanos;
     private final Matcher<? super T> subMatcher;
@@ -38,12 +39,14 @@ final class RetryMatcher<T> extends BaseMatcher<T> {
     @Override
     public boolean matches(Object item) {
         final long start = System.nanoTime();
+        final long parkTime = Math.min(this.intervalNanos, durationNanos);
+
         while (!subMatcher.matches(item)) {
             final long elapsed = System.nanoTime() - start;
             if (elapsed >= durationNanos) {
                 return false;
             }
-            LockSupport.parkNanos(intervalNanos);
+            LockSupport.parkNanos(parkTime);
         }
         return true;
     }
@@ -64,14 +67,6 @@ final class RetryMatcher<T> extends BaseMatcher<T> {
     }
 
     static <T> Matcher<T> retry(long duration, TimeUnit timeUnit, Matcher<? super T> subMatcher) {
-        return new RetryMatcher<T>(timeUnit.toNanos(duration), TimeUnit.MILLISECONDS.toNanos(50), subMatcher);
-    }
-
-    static <T> Matcher<T> retry(long durationMillis, long intervalMillis, Matcher<? super T> subMatcher) {
-        return retry(durationMillis, intervalMillis, TimeUnit.MILLISECONDS, subMatcher);
-    }
-
-    static <T> Matcher<T> retry(long durationMillis, Matcher<? super T> subMatcher) {
-        return retry(durationMillis, 50, subMatcher);
+        return new RetryMatcher<T>(timeUnit.toNanos(duration), TimeUnit.MILLISECONDS.toNanos(DEFAULT_INTERVAL_MILLIS), subMatcher);
     }
 }

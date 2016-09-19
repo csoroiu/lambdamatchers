@@ -20,6 +20,7 @@ assertThat(stream, mapStream(Person::getName, hasItem(startsWith("Ana"))));
 ```
 * **[OptionalMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/OptionalMatchersTest.java)**
 * **[RegexMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/RegexMatchersTest.java)**
+* **[RetryMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/RetryMatchersTest.java)**
 
 [build-status-svg]: https://travis-ci.org/csoroiu/lambdamatchers.svg?branch=master
 [build-status-link]: https://travis-ci.org/csoroiu/lambdamatchers

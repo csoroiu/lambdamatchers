@@ -64,7 +64,7 @@ public class OptionalMatchers {
      * <code>matcher</code> argument.
      *
      * @param matcher the {@link Matcher} to apply to {@link Optional}'s content.
-     * @param <T>     the type of the {@link Optional}'s content.
+     * @param <T>     The type of the {@link Optional}'s content.
      * @since 0.1
      */
     public static <T> Matcher<Optional<T>> optionalHasValue(Matcher<? super T> matcher) {
@@ -76,7 +76,7 @@ public class OptionalMatchers {
      * <code>value</code> argument.
      *
      * @param value The expected content of the {@link Optional}.
-     * @param <T>   the type of the {@link Optional}'s content.
+     * @param <T>   The type of the {@link Optional}'s content.
      * @since 0.1
      */
     public static <T> Matcher<Optional<T>> optionalHasValue(T value) {

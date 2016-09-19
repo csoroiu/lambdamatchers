@@ -21,39 +21,44 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.Timeout;
 
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.LockSupport;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.junit.Assert.assertThat;
 import static ro.derbederos.hamcrest.LambdaMatchers.map;
-import static ro.derbederos.hamcrest.RetryMatcher.retry;
+import static ro.derbederos.hamcrest.RetryMatchers.*;
 
 
-public class RetryMatcherTest {
+public class RetryMatchersTest {
     @Rule
-    public Timeout TIMEOUT = Timeout.millis(1000);
+    public Timeout TIMEOUT = Timeout.millis(700);
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void testRetryHasProperty() throws Exception {
-        DelayedValueBean bean = new DelayedValueBean(500, 2, 7);
-        assertThat(bean, retry(750, hasProperty("value", equalTo(7))));
+        DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
+        assertThat(bean, retry(500, 25, hasProperty("value", equalTo(7))));
     }
 
     @Test
     public void testRetryTimeUnitHasProperty() throws Exception {
-        DelayedValueBean bean = new DelayedValueBean(500, 2, 7);
-        assertThat(bean, retry(750, TimeUnit.MILLISECONDS, hasProperty("value", equalTo(7))));
+        DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
+        assertThat(bean, retry(500, TimeUnit.MILLISECONDS, hasProperty("value", equalTo(7))));
     }
-
 
     @Test
     public void testRetryLambda() throws Exception {
-        DelayedValueBean bean = new DelayedValueBean(500, 2, 7);
-        assertThat(bean, retry(750, map(DelayedValueBean::getValue, equalTo(7))));
+        DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
+        assertThat(bean, retry(500, map(DelayedValueBean::getValue, equalTo(7))));
     }
 
     @Test
@@ -64,7 +69,6 @@ public class RetryMatcherTest {
 
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         assertThat(bean, retry(300, hasProperty("value", equalTo(9))));
-
     }
 
     @Test
@@ -75,9 +79,53 @@ public class RetryMatcherTest {
 
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         assertThat(bean, retry(300, map(DelayedValueBean::getValue, equalTo(9))));
-
     }
 
+    @Test
+    public void testRetryAtomicInteger() throws Exception {
+        AtomicInteger atomicInteger = new AtomicInteger(2);
+        executeDelayed(100, () -> atomicInteger.set(7));
+        assertThat(atomicInteger, retryAtomicInteger(500, 7));
+    }
+
+    @Test
+    public void testRetryAtomicIntegerFails() throws Exception {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an AtomicInteger::Integer <9>");
+        expectedException.expectMessage("     but: timed out after 300000000 Integer was <7>");
+
+        AtomicInteger atomicInteger = new AtomicInteger(2);
+        executeDelayed(100, () -> atomicInteger.set(7));
+        assertThat(atomicInteger, retryAtomicInteger(300, 9));
+    }
+
+    @Test
+    public void testRetryAtomicLong() throws Exception {
+        AtomicLong atomicLong = new AtomicLong(2);
+        executeDelayed(100, () -> atomicLong.set(7));
+        assertThat(atomicLong, retryAtomicLong(500, 7L));
+    }
+
+    @Test
+    public void testRetryAtomicDouble() throws Exception {
+        AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+        executeDelayed(100, () -> atomicBoolean.set(true));
+        assertThat(atomicBoolean, retryAtomicBoolean(500, true));
+    }
+
+    @Test
+    public void testRetryAtomicReference() throws Exception {
+        AtomicReference<String> atomicString = new AtomicReference<>("Expelliarmus");
+        executeDelayed(100, () -> atomicString.set("Expecto Patronum"));
+        assertThat(atomicString, retryAtomicReference(500, "Expecto Patronum"));
+    }
+
+    private void executeDelayed(long delayMillis, Runnable runnable) {
+        ForkJoinPool.commonPool().submit(() -> {
+            LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(delayMillis));
+            runnable.run();
+        });
+    }
 
     public static class DelayedValueBean {
         private final long start = System.nanoTime();
@@ -86,11 +134,7 @@ public class RetryMatcherTest {
         private final int goodValue;
 
         DelayedValueBean(long delayMillis, int badValue, int goodValue) {
-            this(delayMillis, TimeUnit.MILLISECONDS, badValue, goodValue);
-        }
-
-        DelayedValueBean(long delay, TimeUnit timeUnit, int badValue, int goodValue) {
-            this.delayNanos = timeUnit.toNanos(delay);
+            this.delayNanos = TimeUnit.MILLISECONDS.toNanos(delayMillis);
             this.badValue = badValue;
             this.goodValue = goodValue;
         }
