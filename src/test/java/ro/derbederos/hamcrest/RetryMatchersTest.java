@@ -32,7 +32,6 @@ import java.util.concurrent.locks.LockSupport;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.junit.Assert.assertThat;
-import static ro.derbederos.hamcrest.LambdaMatchers.map;
 import static ro.derbederos.hamcrest.RetryMatchers.*;
 
 
@@ -58,7 +57,7 @@ public class RetryMatchersTest {
     @Test
     public void testRetryLambda() throws Exception {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
-        assertThat(bean, retry(500, map(DelayedValueBean::getValue, equalTo(7))));
+        assertThat(bean, retry(500, DelayedValueBean::getValue, equalTo(7)));
     }
 
     @Test
@@ -78,7 +77,7 @@ public class RetryMatchersTest {
         expectedException.expectMessage("     but: timed out after 300000000 Integer was <7>");
 
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
-        assertThat(bean, retry(300, map(DelayedValueBean::getValue, equalTo(9))));
+        assertThat(bean, retry(300, DelayedValueBean::getValue, equalTo(9)));
     }
 
     @Test

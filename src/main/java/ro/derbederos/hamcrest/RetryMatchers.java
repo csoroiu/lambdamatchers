@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.hamcrest.Matchers.equalTo;
@@ -99,6 +100,25 @@ public class RetryMatchers {
     }
 
     /**
+     * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
+     * <code>50 ms</code>, until <code>durationMillis</code> is reached. This method receives a {@link Function} as
+     * input and builds a mapping matcher out of the <code>mapper</code> and the received <code>matcher</code>.
+     * It is a shortcut for:
+     * <pre>
+     * retry(durationMillis, map(mapper, matcher));
+     * </pre>
+     *
+     * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
+     * @param mapper         The function that transforms the input.
+     * @param matcher        The {@link Matcher} to be applied on the result of the <code>mapper</code> function.
+     * @param <T>            The type of the input.
+     * @since 0.3
+     */
+    public static <T, U> Matcher<T> retry(long durationMillis, Function<T, U> mapper, Matcher<? super U> matcher) {
+        return retry(durationMillis, map(mapper, matcher));
+    }
+
+    /**
      * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicInteger}
      * received as input. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
      *
@@ -107,7 +127,7 @@ public class RetryMatchers {
      * @since 0.2
      */
     public static Matcher<AtomicInteger> retryAtomicInteger(long durationMillis, Matcher<Integer> matcher) {
-        return retry(durationMillis, MILLISECONDS, map(AtomicInteger::get, matcher));
+        return retry(durationMillis, AtomicInteger::get, matcher);
     }
 
     /**
@@ -130,7 +150,7 @@ public class RetryMatchers {
      * @since 0.2
      */
     public static Matcher<AtomicLong> retryAtomicLong(long durationMillis, Matcher<Long> matcher) {
-        return retry(durationMillis, MILLISECONDS, map(AtomicLong::get, matcher));
+        return retry(durationMillis, AtomicLong::get, matcher);
     }
 
     /**
@@ -153,7 +173,7 @@ public class RetryMatchers {
      * @since 0.2
      */
     public static Matcher<AtomicBoolean> retryAtomicBoolean(long durationMillis, Matcher<Boolean> matcher) {
-        return retry(durationMillis, MILLISECONDS, map(AtomicBoolean::get, matcher));
+        return retry(durationMillis, AtomicBoolean::get, matcher);
     }
 
     /**
@@ -177,7 +197,7 @@ public class RetryMatchers {
      * @since 0.2
      */
     public static <V> Matcher<AtomicReference<V>> retryAtomicReference(long durationMillis, Matcher<? super V> matcher) {
-        return retry(durationMillis, MILLISECONDS, map(AtomicReference::get, matcher));
+        return retry(durationMillis, AtomicReference::get, matcher);
     }
 
     /**
