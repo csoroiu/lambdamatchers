@@ -67,7 +67,11 @@ final class RetryMatcher<T> extends BaseMatcher<T> {
         return new RetryMatcher<T>(timeUnit.toNanos(duration), TimeUnit.MILLISECONDS.toNanos(50), subMatcher);
     }
 
+    static <T> Matcher<T> retry(long durationMillis, long intervalMillis, Matcher<? super T> subMatcher) {
+        return retry(durationMillis, intervalMillis, TimeUnit.MILLISECONDS, subMatcher);
+    }
+
     static <T> Matcher<T> retry(long durationMillis, Matcher<? super T> subMatcher) {
-        return new RetryMatcher<T>(TimeUnit.MILLISECONDS.toNanos(durationMillis), TimeUnit.MILLISECONDS.toNanos(50), subMatcher);
+        return retry(durationMillis, 50, subMatcher);
     }
 }

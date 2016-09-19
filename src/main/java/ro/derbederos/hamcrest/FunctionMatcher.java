@@ -20,6 +20,7 @@ import net.jodah.typetools.TypeResolver;
 import org.hamcrest.Description;
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
+import org.hamcrest.StringDescription;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -27,8 +28,8 @@ import java.util.function.Function;
 final class FunctionMatcher<T, U> extends FeatureMatcher<T, U> {
 
     private final Function<T, U> mapper;
-    private T lastChecked;
-    private U lastResult;
+    private Description lastDescription;
+    private boolean lastResult = true;
 
     private FunctionMatcher(Function<T, U> mapper, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
         super(subMatcher, featureDescription, featureName);
@@ -39,23 +40,22 @@ final class FunctionMatcher<T, U> extends FeatureMatcher<T, U> {
 
     @Override
     protected final U featureValueOf(T actual) {
-        if (lastChecked == null || lastChecked != actual) {
-            lastResult = mapper.apply(actual);
-            lastChecked = actual;
-        }
-        return lastResult;
+        return mapper.apply(actual);
     }
 
     @Override
     protected final boolean matchesSafely(T actual, Description mismatch) {
-        boolean result = super.matchesSafely(actual, mismatch);
-        // clear the state
-        // first call on matchesSafely is done with a Description.NullDescription
-        if (result || !(mismatch instanceof Description.NullDescription)) {
-            lastChecked = null;
-            lastResult = null;
+        if (!lastResult && lastDescription != null && !(mismatch instanceof Description.NullDescription)) {
+            mismatch.appendText(String.valueOf(lastDescription));
+            lastDescription = null;
+            lastResult = true;
+            return false;
         }
-        return result;
+
+        lastDescription = new StringDescription();
+        lastResult = super.matchesSafely(actual, lastDescription);
+        mismatch.appendText(String.valueOf(lastDescription));
+        return lastResult;
     }
 
     static <T, U> Matcher<T> map(Function<T, U> mapper, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
