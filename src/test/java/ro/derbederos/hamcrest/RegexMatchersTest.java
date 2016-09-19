@@ -92,6 +92,15 @@ public class RegexMatchersTest {
     }
 
     @Test
+    public void testContainsPatternAssertionError() throws Exception {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: a string containing pattern \"ata\"");
+        expectedException.expectMessage("     but: was \"alabala\"");
+
+        assertThat("alabala", containsPattern("ata"));
+    }
+
+    @Test
     public void matchesStringToPatterns() {
         assertThat("zxc456", matchesAnyPattern("[zxc]+\\d{3}", "[abc]+"));
     }

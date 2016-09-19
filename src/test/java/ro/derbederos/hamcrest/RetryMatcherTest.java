@@ -43,6 +43,12 @@ public class RetryMatcherTest {
         assertThat(bean, retry(750, hasProperty("value", equalTo(7))));
     }
 
+    @Test
+    public void testRetryTimeUnitHasProperty() throws Exception {
+        DelayedValueBean bean = new DelayedValueBean(500, 2, 7);
+        assertThat(bean, retry(750, TimeUnit.MILLISECONDS, hasProperty("value", equalTo(7))));
+    }
+
 
     @Test
     public void testRetryLambda() throws Exception {
