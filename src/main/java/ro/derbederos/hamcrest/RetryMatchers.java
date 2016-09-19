@@ -35,7 +35,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.map;
  * <p>
  * Examples:
  * <pre>
- * assertThat(mutableObject, retry(500, a -> a.getValue(), equalTo(7)));
+ * assertThat(mutableObject, retry(500, a -&gt; a.getValue(), equalTo(7)));
  *
  * assertThat(bean, retry(300, hasProperty("value", equalTo(9))));
  *
@@ -135,7 +135,7 @@ public final class RetryMatchers {
      * <p>
      * Example:
      * <pre>
-     * assertThat(bean, retry(500, b -> b.getValue(), equalTo(7)));
+     * assertThat(bean, retry(500, b -&gt; b.getValue(), equalTo(7)));
      * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
