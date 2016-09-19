@@ -30,17 +30,17 @@ import static org.hamcrest.Matchers.emptyIterable;
 
 /**
  * This class provides a set of mapping matchers based on java 8 functional interfaces (lambdas).
- * <p>
+ * <p/>
  * They are useful in plenty of places where you are required to make assertions on different properties of objects.
- * <p>
+ * <p/>
  * It can replace {@link org.hamcrest.Matchers#hasProperty(String, Matcher)} in many places.
- * <p>
+ * <p/>
  * Also it can be used in places where the property to be read is not a JavaBean compliant property like AtomicXXX.get()
  * methods, non public getters or methods having different names (these are places where the aforementioned matcher
  * cannot be used.
- * <p>
+ * <p/>
  * The benefit of using the mapping matchers can be seen when dealing with collections of objects.
- * <p>
+ * <p/>
  * Examples:
  * <pre>
  * assertThat(iterableOfAtomicInteger, everyItem(map(AtomicInteger::get, greaterThanOrEqualTo(21))));
@@ -87,10 +87,10 @@ public final class LambdaMatchers {
      * Utility method to return a functional mapper matcher. It receives as input a <code>mapper</code> and
      * a <code>matcher</code> that will be applied on the result of the <code>mapper</code> function.
      * It tries to auto-magically determine the type of the input object and of the <code>mapper</code> function result.
-     * <p>
+     * <p/>
      * This method is useful ca used to extract properties of objects, or call other functions.
      * It can be used to replace {@link org.hamcrest.Matchers#hasProperty(String, Matcher)}.
-     * <p>
+     * <p/>
      * Examples:
      * <pre>
      * assertThat(iterableOfAtomicInteger, everyItem(map(AtomicInteger::get, greaterThanOrEqualTo(21))));
@@ -113,7 +113,7 @@ public final class LambdaMatchers {
     /**
      * Utility method that returns a matcher that converts an iterable of <code>&lt;T&gt;</code> to an iterable of
      * <code>&lt;U&gt;</code> allowing us to use an iterable matcher on the result of the mapping function.
-     * <p>
+     * <p/>
      * Example:
      * <pre>
      * assertThat(list, mapIterable(Person::getName, hasItem("Ana")));
@@ -134,7 +134,7 @@ public final class LambdaMatchers {
     /**
      * Utility method that returns a matcher that converts an array of <code>&lt;T&gt;</code> to an iterable of
      * <code>&lt;U&gt;</code> allowing us to use an iterable matcher on the result of the mapping function.
-     * <p>
+     * <p/>
      * Example:
      * <pre>
      * assertThat(array, mapArray(Person::getName, hasItem(startsWith("Ana"))));
@@ -153,7 +153,7 @@ public final class LambdaMatchers {
     /**
      * Utility method that returns a matcher that converts a stream of <code>&lt;T&gt;</code> to an iterable of
      * <code>&lt;U&gt;</code> allowing us to use an iterable matcher on the result of the mapping function.
-     * <p>
+     * <p/>
      * Example:
      * <pre>
      * assertThat(stream, mapStream(Person::getName, hasItem(startsWith("Ana"))));

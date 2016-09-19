@@ -21,6 +21,17 @@ assertThat(stream, mapStream(Person::getName, hasItem(startsWith("Ana"))));
 * **[OptionalMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/OptionalMatchersTest.java)**
 * **[RegexMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/RegexMatchersTest.java)**
 * **[RetryMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/RetryMatchersTest.java)**
+```java
+assertThat(mutableObject, retry(500, a -> a.getValue(), equalTo(7)));
+
+assertThat(bean, retry(300, hasProperty("value", equalTo(9))));
+
+assertThat(atomicReferenceSpell, retryAtomicReference(500, powerfulThan("Expecto Patronum")));
+
+assertThat(atomicInteger, retryAtomicInteger(300, 9));
+
+assertThat(atomicLong, retryAtomicLong(300, greatherThan(10)));
+```
 
 [build-status-svg]: https://travis-ci.org/csoroiu/lambdamatchers.svg?branch=master
 [build-status-link]: https://travis-ci.org/csoroiu/lambdamatchers

@@ -32,12 +32,26 @@ import static ro.derbederos.hamcrest.LambdaMatchers.map;
 /**
  * This class provides a set of matchers that retry a certain {@link Matcher} until a duration is reached.
  * Useful for some concurrent tests, where we expect a certain value to be reached in a reasonable amount of time.
- * <p>
- * <i>These matchers are not compatible with streams, if received as an input.</i>
+ * <p/>
+ * Examples:
+ * <pre>
+ * assertThat(mutableObject, retry(500, a -> a.getValue(), equalTo(7)));
+ *
+ * assertThat(bean, retry(300, hasProperty("value", equalTo(9))));
+ *
+ * assertThat(atomicReferenceSpell, retryAtomicReference(500, powerfulThan("Expecto Patronum")));
+ *
+ * assertThat(atomicInteger, retryAtomicInteger(300, 9));
+ *
+ * assertThat(atomicLong, retryAtomicLong(300, greatherThan(10)));
+ * </pre>
+ * <p/>
+ * <i>These matchers are not compatible with streams, if received directly as an input.
+ * When dealing with streams one should work with some sort of stream provider in order to use the retry matchers.</i>
  *
  * @since 0.2
  */
-public class RetryMatchers {
+public final class RetryMatchers {
 
     private RetryMatchers() {
         throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
@@ -75,6 +89,11 @@ public class RetryMatchers {
     /**
      * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
      * <code>intervalMillis</code>, until <code>durationMillis</code> is reached.
+     * <p/>
+     * Example:
+     * <pre>
+     * assertThat(bean, retry(500, 25, hasProperty("value", equalTo(7))));
+     * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
      * @param intervalMillis The interval between two consecutive checks.
@@ -89,6 +108,11 @@ public class RetryMatchers {
     /**
      * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
      * <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * <p/>
+     * Example:
+     * <pre>
+     * assertThat(bean, retry(300, hasProperty("value", equalTo(9))));
+     * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
      * @param matcher        The {@link Matcher} to be applied on the input.
@@ -103,9 +127,15 @@ public class RetryMatchers {
      * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
      * <code>50 ms</code>, until <code>durationMillis</code> is reached. This method receives a {@link Function} as
      * input and builds a mapping matcher out of the <code>mapper</code> and the received <code>matcher</code>.
+     * <p/>
      * It is a shortcut for:
      * <pre>
      * retry(durationMillis, map(mapper, matcher));
+     * </pre>
+     * <p/>
+     * Example:
+     * <pre>
+     * assertThat(bean, retry(500, b -> b.getValue(), equalTo(7)));
      * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
@@ -121,6 +151,11 @@ public class RetryMatchers {
     /**
      * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicInteger}
      * received as input. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * <p/>
+     * Example:
+     * <pre>
+     * assertThat(atomicInteger, retryAtomicInteger(300, greatherThan(10)));
+     * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
      * @param matcher        The {@link Matcher} to be applied on the value of the {@link AtomicInteger}.
@@ -133,6 +168,11 @@ public class RetryMatchers {
     /**
      * Returns a {@link Matcher} that checks if the value of the {@link AtomicInteger} is equal to the received
      * <code>value</code>. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * <p/>
+     * Example:
+     * <pre>
+     * assertThat(atomicInteger, retryAtomicInteger(300, 9));
+     * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if value does not match.
      * @since 0.2
@@ -144,6 +184,11 @@ public class RetryMatchers {
     /**
      * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicLong}
      * received as input. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * <p/>
+     * Example:
+     * <pre>
+     * assertThat(atomicLong, retryAtomicLong(300, greatherThan(10)));
+     * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
      * @param matcher        The {@link Matcher} to be applied on the value of the {@link AtomicLong}.
@@ -156,6 +201,11 @@ public class RetryMatchers {
     /**
      * Returns a {@link Matcher} that checks if the value of the {@link AtomicLong} is equal to the received
      * <code>value</code>. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * <p/>
+     * Example:
+     * <pre>
+     * assertThat(atomicLong, retryAtomicLong(300, 9));
+     * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if value does not match.
      * @since 0.2
@@ -167,6 +217,11 @@ public class RetryMatchers {
     /**
      * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicBoolean}
      * received as input. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * <p/>
+     * Example:
+     * <pre>
+     * assertThat(atomicBoolean, retryAtomicBoolean(300, equalTo(false)));
+     * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
      * @param matcher        The {@link Matcher} to be applied on the value of the {@link AtomicBoolean}.
@@ -179,6 +234,11 @@ public class RetryMatchers {
     /**
      * Returns a {@link Matcher} that checks if the value of the {@link AtomicBoolean} is equal to the received
      * <code>value</code>. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * <p/>
+     * Example:
+     * <pre>
+     * assertThat(atomicBoolean, retryAtomicBoolean(300, true));
+     * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if value does not match.
      * @since 0.2
@@ -190,6 +250,11 @@ public class RetryMatchers {
     /**
      * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicReference}
      * received as input. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * <p/>
+     * Example:
+     * <pre>
+     * assertThat(atomicReferenceSpell, retryAtomicReference(500, powerfulThan("Expecto Patronum")));
+     * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
      * @param matcher        The {@link Matcher} to be applied on the value of the {@link AtomicReference}.
@@ -203,6 +268,11 @@ public class RetryMatchers {
     /**
      * Returns a {@link Matcher} that checks if the value of the {@link AtomicReference} is equal to the received
      * <code>value</code>. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * <p/>
+     * Example:
+     * <pre>
+     * assertThat(atomicReferenceSpell, retryAtomicReference(500, "Expecto Patronum"));
+     * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if value does not match.
      * @param <V>            The type of the {@link AtomicReference} value.

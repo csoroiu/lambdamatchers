@@ -35,7 +35,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.map;
  *
  * @since 0.1
  */
-public class OptionalMatchers {
+public final class OptionalMatchers {
 
     private OptionalMatchers() {
         throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");

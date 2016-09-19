@@ -45,6 +45,7 @@ final class FunctionMatcher<T, U> extends FeatureMatcher<T, U> {
 
     @Override
     protected final boolean matchesSafely(T actual, Description mismatch) {
+        //hack - cache the description, or else it won't work with streams correctly.
         if (!lastResult && lastDescription != null && !(mismatch instanceof Description.NullDescription)) {
             mismatch.appendText(String.valueOf(lastDescription));
             lastDescription = null;
