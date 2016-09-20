@@ -22,9 +22,9 @@ import org.junit.rules.ExpectedException;
 
 import java.util.regex.Pattern;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
 import static ro.derbederos.hamcrest.RegexMatchers.*;
 
 public class RegexMatchersTest {

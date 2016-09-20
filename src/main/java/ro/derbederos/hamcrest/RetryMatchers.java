@@ -175,6 +175,7 @@ public final class RetryMatchers {
      * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if value does not match.
+     * @param value          The value to match against.
      * @since 0.2
      */
     public static Matcher<AtomicInteger> retryAtomicInteger(long durationMillis, int value) {
@@ -208,6 +209,7 @@ public final class RetryMatchers {
      * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if value does not match.
+     * @param value          The value to match against.
      * @since 0.2
      */
     public static Matcher<AtomicLong> retryAtomicLong(long durationMillis, long value) {
@@ -241,6 +243,7 @@ public final class RetryMatchers {
      * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if value does not match.
+     * @param value          The value to match against.
      * @since 0.2
      */
     public static Matcher<AtomicBoolean> retryAtomicBoolean(long durationMillis, boolean value) {
@@ -275,6 +278,7 @@ public final class RetryMatchers {
      * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if value does not match.
+     * @param value          The value to match against.
      * @param <V>            The type of the {@link AtomicReference} value.
      * @since 0.2
      */
