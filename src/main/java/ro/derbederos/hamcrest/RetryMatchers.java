@@ -142,6 +142,7 @@ public final class RetryMatchers {
      * @param mapper         The function that transforms the input.
      * @param matcher        The {@link Matcher} to be applied on the result of the <code>mapper</code> function.
      * @param <T>            The type of the input.
+     * @param <U>            The type of the result of the <code>mapper</code> function.
      * @since 0.3
      */
     public static <T, U> Matcher<T> retry(long durationMillis, Function<T, U> mapper, Matcher<? super U> matcher) {
