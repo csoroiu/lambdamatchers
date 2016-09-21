@@ -37,11 +37,6 @@ final class PatternMatchesMatcher<T extends CharSequence> extends TypeSafeMatche
     }
 
     @Override
-    public void describeMismatchSafely(T actual, Description mismatchDescription) {
-        mismatchDescription.appendText("was \"").appendText(String.valueOf(actual)).appendText("\"");
-    }
-
-    @Override
     public void describeTo(Description description) {
         description.appendText("a string matching pattern ").appendValue(pattern.pattern());
     }
