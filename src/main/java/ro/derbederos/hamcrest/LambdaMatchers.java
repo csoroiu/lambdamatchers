@@ -70,6 +70,8 @@ public final class LambdaMatchers {
      * The <code>matcher</code> argument will be applied on the result of the <code>mapper</code> function.
      * This method is useful to be used by other utility methods that use functions to convert the input like
      * {@link OptionalMatchers}.
+     * <p>
+     * <b>This method can be used to create smart {@link org.hamcrest.FeatureMatcher}s.</b>
      *
      * @param mapper             The function that transforms the input.
      * @param featureDescription The description of the <b>feature</b> extracted by the <code>mapper</code>.
