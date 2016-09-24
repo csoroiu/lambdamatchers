@@ -26,13 +26,16 @@ import java.util.concurrent.locks.LockSupport;
 final class RetryMatcher<T> extends BaseMatcher<T> {
 
     private static final int DEFAULT_INTERVAL_MILLIS = 50;
+
+    private final TimeUnit timeUnit;
     private final long durationNanos;
     private final long intervalNanos;
     private final Matcher<? super T> subMatcher;
 
-    private RetryMatcher(long durationNanos, long intervalNanos, Matcher<? super T> subMatcher) {
-        this.durationNanos = durationNanos;
-        this.intervalNanos = intervalNanos;
+    private RetryMatcher(long durationNanos, long intervalNanos, TimeUnit timeUnit, Matcher<? super T> subMatcher) {
+        this.timeUnit = timeUnit;
+        this.durationNanos = timeUnit.toNanos(durationNanos);
+        this.intervalNanos = timeUnit.toNanos(intervalNanos);
         this.subMatcher = subMatcher;
     }
 
@@ -58,15 +61,17 @@ final class RetryMatcher<T> extends BaseMatcher<T> {
 
     @Override
     public void describeMismatch(Object item, Description description) {
-        description.appendText("timed out after " + durationNanos + " ");
+        final long duration = timeUnit.convert(durationNanos, TimeUnit.NANOSECONDS);
+        final String timeUnitStr = timeUnit.toString().toLowerCase().replaceAll("s$", "(s)");
+        description.appendText("timed out after " + duration + " " + timeUnitStr + " ");
         subMatcher.describeMismatch(item, description);
     }
 
     static <T> Matcher<T> retry(long duration, long interval, TimeUnit timeUnit, Matcher<? super T> subMatcher) {
-        return new RetryMatcher<T>(timeUnit.toNanos(duration), timeUnit.toNanos(interval), subMatcher);
+        return new RetryMatcher<>(duration, interval, timeUnit, subMatcher);
     }
 
     static <T> Matcher<T> retry(long duration, TimeUnit timeUnit, Matcher<? super T> subMatcher) {
-        return new RetryMatcher<T>(timeUnit.toNanos(duration), TimeUnit.MILLISECONDS.toNanos(DEFAULT_INTERVAL_MILLIS), subMatcher);
+        return retry(duration, TimeUnit.MILLISECONDS.convert(DEFAULT_INTERVAL_MILLIS, timeUnit), timeUnit, subMatcher);
     }
 }

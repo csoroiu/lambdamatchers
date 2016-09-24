@@ -60,6 +60,8 @@ final class FunctionMatcher<T, U> extends FeatureMatcher<T, U> {
     }
 
     static <T, U> Matcher<T> map(Function<T, U> mapper, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
+        featureDescription = Objects.toString(featureDescription, "");
+        featureName = Objects.toString(featureName, "");
         return new FunctionMatcher<>(mapper, featureDescription, featureName, subMatcher);
     }
 
@@ -67,6 +69,12 @@ final class FunctionMatcher<T, U> extends FeatureMatcher<T, U> {
         Class<?>[] arguments = TypeResolver.resolveRawArguments(Function.class, mapper.getClass());
         String objectTypeName = arguments[0].getSimpleName();
         String featureTypeName = arguments[1].getSimpleName();
+        if (TypeResolver.Unknown.class.isAssignableFrom(arguments[0])) {
+            objectTypeName = "UnknownObjectType";
+        }
+        if (TypeResolver.Unknown.class.isAssignableFrom(arguments[1])) {
+            featureTypeName = "UnknownFieldType";
+        }
         boolean startsWithVowel = "AaEeIiOoUu".indexOf(objectTypeName.charAt(0)) >= 0;
         String article = startsWithVowel ? "an" : "a";
         return map(mapper,

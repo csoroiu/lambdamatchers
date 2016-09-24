@@ -51,6 +51,40 @@ public class LambdaMatchersTest {
     }
 
     @Test
+    public <T> void simpleTestMethodReferenceAssertionErrorUnknownFieldType() {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: a Person::UnknownFieldType \"22\"");
+        expectedException.expectMessage("     but: UnknownFieldType was <21>");
+
+        Function getAge = new Function<Person, T>() {
+            @Override
+            public T apply(Person person) {
+                return (T) (Integer) person.getAge();
+            }
+        };
+
+        Person p = new Person("Alice", 21);
+        assertThat(p, map(getAge, equalTo("22")));
+    }
+
+    @Test
+    public <T> void simpleTestMethodReferenceAssertionErrorUnknownObjectType() {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an UnknownObjectType::Integer \"22\"");
+        expectedException.expectMessage("     but: Integer was <21>");
+
+        Function getAge = new Function<T, Integer>() {
+            @Override
+            public Integer apply(T person) {
+                return ((Person) person).getAge();
+            }
+        };
+
+        Person p = new Person("Alice", 21);
+        assertThat(p, map(getAge, equalTo("22")));
+    }
+
+    @Test
     public void simpleTestLambda() {
         Person p = new Person("Alice Bob", 21);
         Function<Person, String> mapper = a -> a.getName().split(" ")[1];

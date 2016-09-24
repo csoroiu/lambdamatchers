@@ -36,7 +36,7 @@ public final class RegexMatchers {
     }
 
     /**
-     * Checks if the input char sequence matches the given regular expression <code>pattern</code>.
+     * Creates a {@link Matcher} that checks if the input char sequence matches the given regular expression <code>pattern</code>.
      *
      * @param pattern The {@link Pattern} object to match against.
      * @param <T>     The type of the char sequence implementing {@link CharSequence}.
@@ -47,7 +47,7 @@ public final class RegexMatchers {
     }
 
     /**
-     * Checks if the input char sequence matches the given <code>regex</code> pattern.
+     * Creates a {@link Matcher} that checks if the input char sequence matches the given <code>regex</code> pattern.
      *
      * @param regex The regular expression to match against.
      * @param <T>   The type of the char sequence implementing {@link CharSequence}.
@@ -58,7 +58,7 @@ public final class RegexMatchers {
     }
 
     /**
-     * Checks if the input char sequence matches the given <code>regex</code> pattern.
+     * Creates a {@link Matcher} that checks if the input char sequence matches the given <code>regex</code> pattern.
      *
      * @param regex        The regular expression to match against.
      * @param patternFlags Match flags, a bit mask that may include
@@ -74,7 +74,7 @@ public final class RegexMatchers {
     }
 
     /**
-     * Checks if the input char sequence matches any of the given patterns.
+     * Creates a {@link Matcher} that checks if the input char sequence matches any of the given patterns.
      *
      * @param patterns The regular expressions to match against.
      * @since 0.1
@@ -88,7 +88,7 @@ public final class RegexMatchers {
     }
 
     /**
-     * Checks if the input char sequence contains the given regular expression <code>pattern</code>.
+     * Creates a {@link Matcher} that checks if the input char sequence contains the given regular expression <code>pattern</code>.
      *
      * @param pattern The {@link Pattern} object to match against.
      * @param <T>     The type of the char sequence implementing {@link CharSequence}.
@@ -99,7 +99,7 @@ public final class RegexMatchers {
     }
 
     /**
-     * Checks if the input char sequence <b>contains</b> the given <code>regex</code> pattern.
+     * Creates a {@link Matcher} that checks if the input char sequence <b>contains</b> the given <code>regex</code> pattern.
      *
      * @param regex The regular expression to match against.
      * @param <T>   The type of the char sequence implementing {@link CharSequence}.
@@ -110,7 +110,7 @@ public final class RegexMatchers {
     }
 
     /**
-     * Checks if the input char sequence <b>contains</b> the given <code>regex</code> pattern.
+     * Creates a {@link Matcher} that checks if the input char sequence <b>contains</b> the given <code>regex</code> pattern.
      *
      * @param regex        The regular expression to match against.
      * @param patternFlags Match flags, a bit mask that may include
@@ -126,7 +126,7 @@ public final class RegexMatchers {
     }
 
     /**
-     * Checks if the input char sequence <b>contains</b> any of the given patterns.
+     * Creates a {@link Matcher} that checks if the input char sequence <b>contains</b> any of the given patterns.
      *
      * @param patterns The regular expressions to match against.
      * @since 0.1
@@ -140,7 +140,7 @@ public final class RegexMatchers {
     }
 
     /**
-     * Checks if the input char sequence <b>contains</b> all of the given patterns.
+     * Creates a {@link Matcher} that checks if the input char sequence <b>contains</b> all of the given patterns.
      *
      * @param patterns The regular expressions to match against.
      * @since 0.1

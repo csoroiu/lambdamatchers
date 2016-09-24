@@ -42,25 +42,25 @@ public final class OptionalMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link Optional} has a value.
+     * Creates a {@link Matcher} that checks if the given {@link Optional} has a value.
      *
      * @since 0.1
      */
     public static Matcher<Optional<?>> optionalIsPresent() {
-        return map(Optional::isPresent, "Optional.isPresent", "", equalTo(true));
+        return map(Optional::isPresent, "Optional.isPresent", null, equalTo(true));
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link Optional} is empty.
+     * Creates a {@link Matcher} that checks if the given {@link Optional} is empty.
      *
      * @since 0.1
      */
     public static Matcher<Optional<?>> optionalIsEmpty() {
-        return map(Optional::isPresent, "Optional.isPresent", "", equalTo(false));
+        return map(Optional::isPresent, "Optional.isPresent", null, equalTo(false));
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link Optional}'s content matches the given
+     * Creates a {@link Matcher} that checks if the given {@link Optional}'s content matches the given
      * <code>matcher</code> argument.
      *
      * @param matcher the {@link Matcher} to apply to {@link Optional}'s content.
@@ -68,11 +68,11 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static <T> Matcher<Optional<T>> optionalHasValue(Matcher<? super T> matcher) {
-        return allOf(optionalIsPresent(), map(Optional::get, "Optional item:", "", matcher));
+        return allOf(optionalIsPresent(), map(Optional::get, "Optional item:", null, matcher));
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link Optional}'s content is equal to the
+     * Creates a {@link Matcher} that checks if the given {@link Optional}'s content is equal to the
      * <code>value</code> argument.
      *
      * @param value The expected content of the {@link Optional}.
@@ -84,36 +84,36 @@ public final class OptionalMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link OptionalInt} has a value.
+     * Creates a {@link Matcher} that checks if the given {@link OptionalInt} has a value.
      *
      * @since 0.1
      */
     public static Matcher<OptionalInt> optionalIntIsPresent() {
-        return map(OptionalInt::isPresent, "OptionalInt.isPresent", "", equalTo(true));
+        return map(OptionalInt::isPresent, "OptionalInt.isPresent", null, equalTo(true));
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link OptionalInt} is empty.
+     * Creates a {@link Matcher} that checks if the given {@link OptionalInt} is empty.
      *
      * @since 0.1
      */
     public static Matcher<OptionalInt> optionalIntIsEmpty() {
-        return map(OptionalInt::isPresent, "OptionalInt.isPresent", "", equalTo(false));
+        return map(OptionalInt::isPresent, "OptionalInt.isPresent", null, equalTo(false));
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link OptionalInt}'s content matches the given
+     * Creates a {@link Matcher} that checks if the given {@link OptionalInt}'s content matches the given
      * <code>matcher</code> argument.
      *
      * @param matcher the {@link Matcher} to apply to {@link OptionalInt}'s content.
      * @since 0.1
      */
     public static Matcher<OptionalInt> optionalIntHasValue(Matcher<Integer> matcher) {
-        return allOf(optionalIntIsPresent(), map(OptionalInt::getAsInt, "OptionalInt item:", "", matcher));
+        return allOf(optionalIntIsPresent(), map(OptionalInt::getAsInt, "OptionalInt item:", null, matcher));
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link OptionalInt}'s content is equal to the
+     * Creates a {@link Matcher} that checks if the given {@link OptionalInt}'s content is equal to the
      * <code>value</code> argument.
      *
      * @param value The expected content of the {@link OptionalInt}.
@@ -124,36 +124,36 @@ public final class OptionalMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link OptionalLong} has a value.
+     * Creates a {@link Matcher} that checks if the given {@link OptionalLong} has a value.
      *
      * @since 0.1
      */
     public static Matcher<OptionalLong> optionalLongIsPresent() {
-        return map(OptionalLong::isPresent, "OptionalLong.isPresent", "", equalTo(true));
+        return map(OptionalLong::isPresent, "OptionalLong.isPresent", null, equalTo(true));
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link OptionalLong} is empty.
+     * Creates a {@link Matcher} that checks if the given {@link OptionalLong} is empty.
      *
      * @since 0.1
      */
     public static Matcher<OptionalLong> optionalLongIsEmpty() {
-        return map(OptionalLong::isPresent, "OptionalLong.isPresent", "", equalTo(false));
+        return map(OptionalLong::isPresent, "OptionalLong.isPresent", null, equalTo(false));
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link OptionalLong}'s content matches the given
+     * Creates a {@link Matcher} that checks if the given {@link OptionalLong}'s content matches the given
      * <code>matcher</code> argument.
      *
      * @param matcher the {@link Matcher} to apply to {@link OptionalLong}'s content.
      * @since 0.1
      */
     public static Matcher<OptionalLong> optionalLongHasValue(Matcher<Long> matcher) {
-        return allOf(optionalLongIsPresent(), map(OptionalLong::getAsLong, "OptionalLong item:", "", matcher));
+        return allOf(optionalLongIsPresent(), map(OptionalLong::getAsLong, "OptionalLong item:", null, matcher));
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link OptionalLong}'s content is equal to the
+     * Creates a {@link Matcher} that checks if the given {@link OptionalLong}'s content is equal to the
      * <code>value</code> argument.
      *
      * @param value The expected content of the {@link OptionalLong}.
@@ -164,35 +164,35 @@ public final class OptionalMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link OptionalDouble} has a value.
+     * Creates a {@link Matcher} that checks if the given {@link OptionalDouble} has a value.
      *
      * @since 0.1
      */
     public static Matcher<OptionalDouble> optionalDoubleIsPresent() {
-        return map(OptionalDouble::isPresent, "OptionalDouble.isPresent", "", equalTo(true));
+        return map(OptionalDouble::isPresent, "OptionalDouble.isPresent", null, equalTo(true));
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link OptionalDouble} is empty.
+     * Creates a {@link Matcher} that checks if the given {@link OptionalDouble} is empty.
      *
      * @since 0.1
      */
     public static Matcher<OptionalDouble> optionalDoubleIsEmpty() {
-        return map(OptionalDouble::isPresent, "OptionalDouble.isPresent", "", equalTo(false));
+        return map(OptionalDouble::isPresent, "OptionalDouble.isPresent", null, equalTo(false));
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link OptionalDouble}'s content matches the given <code>matcher</code> argument.
+     * Creates a {@link Matcher} that checks if the given {@link OptionalDouble}'s content matches the given <code>matcher</code> argument.
      *
      * @param matcher the {@link Matcher} to apply to {@link OptionalDouble}'s content.
      * @since 0.1
      */
     public static Matcher<OptionalDouble> optionalDoubleHasValue(Matcher<Double> matcher) {
-        return allOf(optionalDoubleIsPresent(), map(OptionalDouble::getAsDouble, "OptionalDouble item: ", "", matcher));
+        return allOf(optionalDoubleIsPresent(), map(OptionalDouble::getAsDouble, "OptionalDouble item: ", null, matcher));
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link OptionalDouble}'s content is equal to the <code>value</code> argument.
+     * Creates a {@link Matcher} that checks if the given {@link OptionalDouble}'s content is equal to the <code>value</code> argument.
      *
      * @param value The expected content of the {@link OptionalDouble}.
      * @since 0.1

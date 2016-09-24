@@ -58,7 +58,7 @@ public final class RetryMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
+     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
      * <code>interval</code>, until <code>duration</code> is reached.
      *
      * @param duration The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
@@ -73,7 +73,7 @@ public final class RetryMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
+     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
      * <code>50 ms</code>, until <code>duration</code> is reached.
      *
      * @param duration The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
@@ -87,7 +87,7 @@ public final class RetryMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
+     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
      * <code>intervalMillis</code>, until <code>durationMillis</code> is reached.
      * <p>
      * Example:
@@ -106,7 +106,7 @@ public final class RetryMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
+     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
      * <code>50 ms</code>, until <code>durationMillis</code> is reached.
      * <p>
      * Example:
@@ -124,7 +124,7 @@ public final class RetryMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
+     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
      * <code>50 ms</code>, until <code>durationMillis</code> is reached. This method receives a {@link Function} as
      * input and builds a mapping matcher out of the <code>mapper</code> and the received <code>matcher</code>.
      * <p>
@@ -150,7 +150,7 @@ public final class RetryMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicInteger}
+     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicInteger}
      * received as input. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
      * <p>
      * Example:
@@ -167,7 +167,7 @@ public final class RetryMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the value of the {@link AtomicInteger} is equal to the received
+     * Creates a {@link Matcher} that checks if the value of the {@link AtomicInteger} is equal to the received
      * <code>value</code>. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
      * <p>
      * Example:
@@ -184,7 +184,7 @@ public final class RetryMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicLong}
+     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicLong}
      * received as input. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
      * <p>
      * Example:
@@ -201,7 +201,7 @@ public final class RetryMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the value of the {@link AtomicLong} is equal to the received
+     * Creates a {@link Matcher} that checks if the value of the {@link AtomicLong} is equal to the received
      * <code>value</code>. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
      * <p>
      * Example:
@@ -218,7 +218,7 @@ public final class RetryMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicBoolean}
+     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicBoolean}
      * received as input. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
      * <p>
      * Example:
@@ -235,7 +235,7 @@ public final class RetryMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the value of the {@link AtomicBoolean} is equal to the received
+     * Creates a {@link Matcher} that checks if the value of the {@link AtomicBoolean} is equal to the received
      * <code>value</code>. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
      * <p>
      * Example:
@@ -252,7 +252,7 @@ public final class RetryMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicReference}
+     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicReference}
      * received as input. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
      * <p>
      * Example:
@@ -270,7 +270,7 @@ public final class RetryMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the value of the {@link AtomicReference} is equal to the received
+     * Creates a {@link Matcher} that checks if the value of the {@link AtomicReference} is equal to the received
      * <code>value</code>. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
      * <p>
      * Example:

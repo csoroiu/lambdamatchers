@@ -65,7 +65,7 @@ public final class LambdaMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} for a feature with the <code>featureDescription</code> description
+     * Creates a {@link Matcher} for a feature with the <code>featureDescription</code> description
      * and with the <code>featureName</code> name.
      * The <code>matcher</code> argument will be applied on the result of the <code>mapper</code> function.
      * This method is useful to be used by other utility methods that use functions to convert the input like
@@ -86,7 +86,7 @@ public final class LambdaMatchers {
     }
 
     /**
-     * Utility method to return a functional mapper matcher. It receives as input a <code>mapper</code> and
+     * Utility method that creates a functional mapper matcher. It receives as input a <code>mapper</code> and
      * a <code>matcher</code> that will be applied on the result of the <code>mapper</code> function.
      * It tries to auto-magically determine the type of the input object and of the <code>mapper</code> function result.
      * <p>
@@ -113,7 +113,7 @@ public final class LambdaMatchers {
     }
 
     /**
-     * Utility method that returns a matcher that converts an iterable of <code>&lt;T&gt;</code> to an iterable of
+     * Utility method that creates a matcher that converts an iterable of <code>&lt;T&gt;</code> to an iterable of
      * <code>&lt;U&gt;</code> allowing us to use an iterable matcher on the result of the mapping function.
      * <p>
      * Example:
@@ -134,7 +134,7 @@ public final class LambdaMatchers {
     }
 
     /**
-     * Utility method that returns a matcher that converts an array of <code>&lt;T&gt;</code> to an iterable of
+     * Utility method that creates a matcher that converts an array of <code>&lt;T&gt;</code> to an iterable of
      * <code>&lt;U&gt;</code> allowing us to use an iterable matcher on the result of the mapping function.
      * <p>
      * Example:
@@ -153,7 +153,7 @@ public final class LambdaMatchers {
     }
 
     /**
-     * Utility method that returns a matcher that converts a stream of <code>&lt;T&gt;</code> to an iterable of
+     * Utility method that creates a matcher that converts a stream of <code>&lt;T&gt;</code> to an iterable of
      * <code>&lt;U&gt;</code> allowing us to use an iterable matcher on the result of the mapping function.
      * <p>
      * Example:
@@ -173,7 +173,7 @@ public final class LambdaMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that applies an iterable <code>matcher</code> on the input stream. It is an adapter method.
+     * Creates a {@link Matcher} that applies an iterable <code>matcher</code> on the input stream. It is an adapter method.
      *
      * @param matcher The matcher to be applied on the resulting iterable.
      * @param <T>     The type of the elements in the input stream.
@@ -184,7 +184,7 @@ public final class LambdaMatchers {
     }
 
     /**
-     * Returns a {@link Matcher} that checks if the given {@link BaseStream} is empty.
+     * Creates a {@link Matcher} that checks if the given {@link BaseStream} is empty.
      *
      * @param <T> The type of the stream elements.
      * @param <S> The type of the stream implementing {@code BaseStream}.

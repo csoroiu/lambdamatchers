@@ -23,15 +23,11 @@ import org.junit.rules.Timeout;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.*;
 import java.util.concurrent.locks.LockSupport;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.*;
 import static ro.derbederos.hamcrest.RetryMatchers.*;
 
 
@@ -58,13 +54,21 @@ public class RetryMatchersTest {
     public void testRetryLambda() throws Exception {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         assertThat(bean, retry(500, DelayedValueBean::getValue, equalTo(7)));
+        assertThat(bean.getValueCallCount.intValue(), greaterThan(2));
+    }
+
+    @Test
+    public void testNoRetryLambda() throws Exception {
+        DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
+        assertThat(bean, retry(500, DelayedValueBean::getValue, equalTo(2)));
+        assertThat(bean.getValueCallCount.intValue(), equalTo(1));
     }
 
     @Test
     public void testRetryFailsHasProperty() throws Exception {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Expected: hasProperty(\"value\", <9>)");
-        expectedException.expectMessage("     but: timed out after 300000000 property 'value' was <7>");
+        expectedException.expectMessage("     but: timed out after 300 millisecond(s) property 'value' was <7>");
 
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         assertThat(bean, retry(300, hasProperty("value", equalTo(9))));
@@ -74,7 +78,7 @@ public class RetryMatchersTest {
     public void testRetryFailsLambda() throws Exception {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Expected: a DelayedValueBean::Integer <9>");
-        expectedException.expectMessage("     but: timed out after 300000000 Integer was <7>");
+        expectedException.expectMessage("     but: timed out after 300 millisecond(s) Integer was <7>");
 
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         assertThat(bean, retry(300, DelayedValueBean::getValue, equalTo(9)));
@@ -91,7 +95,7 @@ public class RetryMatchersTest {
     public void testRetryAtomicIntegerFails() throws Exception {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Expected: an AtomicInteger::Integer <9>");
-        expectedException.expectMessage("     but: timed out after 300000000 Integer was <7>");
+        expectedException.expectMessage("     but: timed out after 300 millisecond(s) Integer was <7>");
 
         AtomicInteger atomicInteger = new AtomicInteger(2);
         executeDelayed(100, () -> atomicInteger.set(7));
@@ -131,6 +135,7 @@ public class RetryMatchersTest {
         private final long delayNanos;
         private final int badValue;
         private final int goodValue;
+        private final LongAdder getValueCallCount = new LongAdder();
 
         DelayedValueBean(long delayMillis, int badValue, int goodValue) {
             this.delayNanos = TimeUnit.MILLISECONDS.toNanos(delayMillis);
@@ -139,6 +144,7 @@ public class RetryMatchersTest {
         }
 
         public int getValue() {
+            getValueCallCount.increment();
             if (System.nanoTime() - start < delayNanos) {
                 return badValue;
             } else {
