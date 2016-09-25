@@ -50,10 +50,11 @@ public class LambdaMatchersTest {
         assertThat(p, map(Person::getName, startsWith("B")));
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
     public <T> void simpleTestMethodReferenceAssertionErrorUnknownFieldType() {
         expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a Person::UnknownFieldType \"22\"");
+        expectedException.expectMessage("Expected: a Person::UnknownFieldType <22>");
         expectedException.expectMessage("     but: UnknownFieldType was <21>");
 
         Function getAge = new Function<Person, T>() {
@@ -64,13 +65,14 @@ public class LambdaMatchersTest {
         };
 
         Person p = new Person("Alice", 21);
-        assertThat(p, map(getAge, equalTo("22")));
+        assertThat(p, map(getAge, equalTo(22)));
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
     public <T> void simpleTestMethodReferenceAssertionErrorUnknownObjectType() {
         expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: an UnknownObjectType::Integer \"22\"");
+        expectedException.expectMessage("Expected: an UnknownObjectType::Integer <22>");
         expectedException.expectMessage("     but: Integer was <21>");
 
         Function getAge = new Function<T, Integer>() {
@@ -81,7 +83,7 @@ public class LambdaMatchersTest {
         };
 
         Person p = new Person("Alice", 21);
-        assertThat(p, map(getAge, equalTo("22")));
+        assertThat(p, map(getAge, equalTo(22)));
     }
 
     @Test
