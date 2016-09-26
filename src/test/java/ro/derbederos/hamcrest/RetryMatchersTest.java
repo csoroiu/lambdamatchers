@@ -77,7 +77,7 @@ public class RetryMatchersTest {
     @Test
     public void testRetryFailsLambda() throws Exception {
         expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a DelayedValueBean::Integer <9>");
+        expectedException.expectMessage("Expected: a DelayedValueBean having Integer <9>");
         expectedException.expectMessage("     but: timed out after 300 millisecond(s) Integer was <7>");
 
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
@@ -94,7 +94,7 @@ public class RetryMatchersTest {
     @Test
     public void testRetryAtomicIntegerFails() throws Exception {
         expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: an AtomicInteger::Integer <9>");
+        expectedException.expectMessage("Expected: an AtomicInteger having Integer <9>");
         expectedException.expectMessage("     but: timed out after 300 millisecond(s) Integer was <7>");
 
         AtomicInteger atomicInteger = new AtomicInteger(2);

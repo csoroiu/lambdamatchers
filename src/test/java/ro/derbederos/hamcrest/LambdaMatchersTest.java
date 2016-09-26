@@ -16,6 +16,7 @@
 
 package ro.derbederos.hamcrest;
 
+import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -43,7 +44,7 @@ public class LambdaMatchersTest {
     @Test
     public void simpleTestMethodReferenceAssertionError() {
         expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a Person::String a string starting with \"B\"");
+        expectedException.expectMessage("Expected: a Person having String a string starting with \"B\"");
         expectedException.expectMessage("     but: String was \"Alice\"");
 
         Person p = new Person("Alice", 21);
@@ -52,9 +53,9 @@ public class LambdaMatchersTest {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
-    public <T> void simpleTestMethodReferenceAssertionErrorUnknownFieldType() {
+    public <T> void simpleTestAnonymousClassAssertionErrorUnknownFieldType() {
         expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a Person::UnknownFieldType <22>");
+        expectedException.expectMessage("Expected: a Person having UnknownFieldType <22>");
         expectedException.expectMessage("     but: UnknownFieldType was <21>");
 
         Function getAge = new Function<Person, T>() {
@@ -70,9 +71,9 @@ public class LambdaMatchersTest {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
-    public <T> void simpleTestMethodReferenceAssertionErrorUnknownObjectType() {
+    public <T> void simpleTestAnonymousClassAssertionErrorUnknownObjectType() {
         expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: an UnknownObjectType::Integer <22>");
+        expectedException.expectMessage("Expected: an UnknownObjectType having Integer <22>");
         expectedException.expectMessage("     but: Integer was <21>");
 
         Function getAge = new Function<T, Integer>() {
@@ -84,6 +85,17 @@ public class LambdaMatchersTest {
 
         Person p = new Person("Alice", 21);
         assertThat(p, map(getAge, equalTo(22)));
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Test
+    public void simpleTestAssertionInvalidInputType() {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: a Person having Integer <22>");
+        expectedException.expectMessage("     but: was a java.lang.String (\"22\")");
+
+        Matcher matcher = map(Person::getAge, equalTo(22));
+        assertThat("22", matcher);
     }
 
     @Test
