@@ -68,7 +68,7 @@ public class RetryMatchersTest {
     public void testRetryFailsHasProperty() throws Exception {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Expected: hasProperty(\"value\", <9>)");
-        expectedException.expectMessage("     but: timed out after 300 millisecond(s) property 'value' was <7>");
+        expectedException.expectMessage("     but: after 300 millisecond(s) property 'value' was <7>");
 
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         assertThat(bean, retry(300, hasProperty("value", equalTo(9))));
@@ -78,7 +78,7 @@ public class RetryMatchersTest {
     public void testRetryFailsLambda() throws Exception {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Expected: a DelayedValueBean having Integer <9>");
-        expectedException.expectMessage("     but: timed out after 300 millisecond(s) Integer was <7>");
+        expectedException.expectMessage("     but: after 300 millisecond(s) Integer was <7>");
 
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         assertThat(bean, retry(300, DelayedValueBean::getValue, equalTo(9)));
@@ -95,7 +95,7 @@ public class RetryMatchersTest {
     public void testRetryAtomicIntegerFails() throws Exception {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Expected: an AtomicInteger having Integer <9>");
-        expectedException.expectMessage("     but: timed out after 300 millisecond(s) Integer was <7>");
+        expectedException.expectMessage("     but: after 300 millisecond(s) Integer was <7>");
 
         AtomicInteger atomicInteger = new AtomicInteger(2);
         executeDelayed(100, () -> atomicInteger.set(7));

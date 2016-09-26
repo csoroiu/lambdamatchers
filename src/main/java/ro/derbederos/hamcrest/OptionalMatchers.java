@@ -68,7 +68,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static <T> Matcher<Optional<T>> optionalHasValue(Matcher<? super T> matcher) {
-        return allOf(optionalIsPresent(), map(Optional::get, "Optional item:", null, matcher));
+        return allOf(optionalIsPresent(), map(Optional::get, "Optional having value", null, matcher));
     }
 
     /**
@@ -109,7 +109,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static Matcher<OptionalInt> optionalIntHasValue(Matcher<Integer> matcher) {
-        return allOf(optionalIntIsPresent(), map(OptionalInt::getAsInt, "OptionalInt item:", null, matcher));
+        return allOf(optionalIntIsPresent(), map(OptionalInt::getAsInt, "OptionalInt having value", null, matcher));
     }
 
     /**
@@ -149,7 +149,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static Matcher<OptionalLong> optionalLongHasValue(Matcher<Long> matcher) {
-        return allOf(optionalLongIsPresent(), map(OptionalLong::getAsLong, "OptionalLong item:", null, matcher));
+        return allOf(optionalLongIsPresent(), map(OptionalLong::getAsLong, "OptionalLong having value", null, matcher));
     }
 
     /**
@@ -188,7 +188,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static Matcher<OptionalDouble> optionalDoubleHasValue(Matcher<Double> matcher) {
-        return allOf(optionalDoubleIsPresent(), map(OptionalDouble::getAsDouble, "OptionalDouble item: ", null, matcher));
+        return allOf(optionalDoubleIsPresent(), map(OptionalDouble::getAsDouble, "OptionalDouble having value ", null, matcher));
     }
 
     /**
