@@ -32,9 +32,9 @@ final class FunctionMatcher<T, U> extends TypeSafeMatcher<T> {
     private T lastInput = null;
     private U lastValue = null;
 
-    private FunctionMatcher(Function<T, U> mapper, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
-        super(resolveInputType(Objects.requireNonNull(mapper)));
-        this.mapper = mapper;
+    private FunctionMatcher(Function<T, U> mapper, Class<?> inputType, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
+        super(inputType);
+        this.mapper = Objects.requireNonNull(mapper);
         this.subMatcher = Objects.requireNonNull(subMatcher);
         this.featureDescription = Objects.toString(featureDescription, "").trim();
         this.featureName = Objects.toString(featureName, "").trim();
@@ -75,7 +75,8 @@ final class FunctionMatcher<T, U> extends TypeSafeMatcher<T> {
     }
 
     static <T, U> Matcher<T> map(Function<T, U> mapper, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
-        return new FunctionMatcher<>(mapper, featureDescription, featureName, subMatcher);
+        Objects.requireNonNull(mapper);
+        return new FunctionMatcher<>(mapper, resolveInputType(mapper), featureDescription, featureName, subMatcher);
     }
 
     static <T, U> Matcher<T> map(Function<T, U> mapper, Matcher<? super U> matcher) {
