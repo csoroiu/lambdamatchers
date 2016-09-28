@@ -22,7 +22,6 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 final class FunctionMatcher<T, U> extends TypeSafeMatcher<T> {
     private final String featureDescription;

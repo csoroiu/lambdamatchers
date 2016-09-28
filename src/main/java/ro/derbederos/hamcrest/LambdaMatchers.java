@@ -19,7 +19,6 @@ package ro.derbederos.hamcrest;
 import org.hamcrest.Matcher;
 
 import java.util.ArrayList;
-import java.util.function.Function;
 
 /**
  * This class provides a set of mapping matchers based on java 8 functional interfaces (lambdas).

@@ -20,7 +20,6 @@ import org.hamcrest.Matcher;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.BaseStream;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -67,7 +66,7 @@ public final class StreamMatchers {
      */
     public static <T, U> Matcher<Stream<? extends T>> mapStream(Function<T, U> mapper,
             Matcher<Iterable<? super U>> matcher) {
-        return map(stream -> stream.map(mapper).collect(Collectors.toList()), matcher);
+        return map(stream -> stream.map(mapper::apply).collect(Collectors.toList()), matcher);
     }
 
     /**
