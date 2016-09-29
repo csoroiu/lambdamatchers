@@ -24,7 +24,6 @@ import org.junit.rules.ExpectedException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -251,62 +250,6 @@ public class LambdaMatchersTest {
         Person[] array = {p0, p1, p2};
 
         assertThat(array, hasItemInArray(hasProperty("age", equalTo(21))));
-    }
-
-    @Test
-    public void streamIsEmpty() {
-        assertThat(Stream.empty(), emptyStream());
-    }
-
-    @Test
-    public void streamIsEmptyAssertionError() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("an empty iterable");
-        expectedException.expectMessage("[\"alabala\",\"trilulilu\"]");
-
-        assertThat(Stream.of("alabala", "trilulilu"), emptyStream());
-    }
-
-    @Test
-    public void streamHasItemMatcherTestMapStream() {
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        Stream<Person> stream = Stream.of(p0, p1, p2);
-
-        assertThat(stream, mapStream(Person::getName, hasItem("Ana Pop")));
-    }
-
-    @Test
-    public void streamHasItemMatcherTestMapStreamAssertionError() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("a collection containing \"Ana Pop1\"");
-        expectedException.expectMessage("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"");
-
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        Stream<Person> stream = Stream.of(p0, p1, p2);
-
-        assertThat(stream, mapStream(Person::getName, hasItem("Ana Pop1")));
-    }
-
-    @Test
-    public void streamHasItemMatcherTestToIterable() {
-        Stream<String> stream = Stream.of("Alice Bob", "Ana Pop", "Ariana G");
-
-        assertThat(stream, toIterable(hasItem("Ana Pop")));
-    }
-
-    @Test
-    public void streamHasItemMatcherTestToIterableAssertionError() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("a collection containing \"Ana Pop1\"");
-        expectedException.expectMessage("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"");
-
-        Stream<String> stream = Stream.of("Alice Bob", "Ana Pop", "Ariana G");
-
-        assertThat(stream, toIterable(hasItem("Ana Pop1")));
     }
 
     @Test

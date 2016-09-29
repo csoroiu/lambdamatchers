@@ -19,13 +19,7 @@ package ro.derbederos.hamcrest;
 import org.hamcrest.Matcher;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
-import java.util.stream.BaseStream;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.hamcrest.Matchers.emptyIterable;
 
 /**
  * This class provides a set of mapping matchers based on java 8 functional interfaces (lambdas).
@@ -51,8 +45,6 @@ import static org.hamcrest.Matchers.emptyIterable;
  * assertThat(list, mapIterable(Person::getName, hasItem("Ana")));
  *
  * assertThat(array, mapArray(Person::getName, hasItem(startsWith("Ana"))));
- *
- * assertThat(stream, mapStream(Person::getName, hasItem(startsWith("Ana"))));
  * </pre>
  *
  * @since 0.1
@@ -164,55 +156,5 @@ public final class LambdaMatchers {
             result.add(mapper.apply(element));
         }
         return result;
-    }
-
-    /**
-     * Utility method that creates a matcher that converts a stream of <code>&lt;T&gt;</code> to an iterable of
-     * <code>&lt;U&gt;</code> allowing us to use an iterable matcher on the result of the mapping function.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(stream, mapStream(Person::getName, hasItem(startsWith("Ana"))));
-     * </pre>
-     *
-     * @param mapper  The function that transforms every element of the input stream.
-     * @param matcher The matcher to be applied on the resulting iterable.
-     * @param <T>     The type of the elements in the input stream.
-     * @param <U>     The type of the result of the <code>mapper</code> function.
-     * @since 0.1
-     */
-    public static <T, U> Matcher<Stream<? extends T>> mapStream(Function<T, U> mapper,
-            Matcher<Iterable<? super U>> matcher) {
-        return map(stream -> stream.map(mapper).collect(Collectors.toList()), matcher);
-    }
-
-    /**
-     * Creates a {@link Matcher} that applies an iterable <code>matcher</code> on the input stream. It is an adapter method.
-     *
-     * @param matcher The matcher to be applied on the resulting iterable.
-     * @param <T>     The type of the elements in the input stream.
-     * @since 0.1
-     */
-    public static <T> Matcher<Stream<? extends T>> toIterable(Matcher<Iterable<? super T>> matcher) {
-        return mapStream(a -> a, matcher);
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the given {@link BaseStream} is empty.
-     *
-     * @param <T> The type of the stream elements.
-     * @param <S> The type of the stream implementing {@code BaseStream}.
-     * @since 0.1
-     */
-    public static <T, S extends BaseStream<T, S>> Matcher<BaseStream<T, S>> emptyStream() {
-        return map(baseStreamToIterable(), emptyIterable());
-    }
-
-    private static <S extends BaseStream<T, S>, T> Function<BaseStream<T, S>, Iterable<T>> baseStreamToIterable() {
-        return stream -> {
-            List<T> target = new ArrayList<>();
-            stream.iterator().forEachRemaining(target::add);
-            return target;
-        };
     }
 }

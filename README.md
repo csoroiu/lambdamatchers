@@ -15,8 +15,14 @@ assertThat(list, hasItem(map(Person::getName, startsWith("Alice"))));
 assertThat(list, mapIterable(Person::getName, hasItem("Ana")));
 
 assertThat(array, mapArray(Person::getName, hasItem(startsWith("Ana"))));
-
+```
+* **[StreamMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/StreamMatchersTest.java)**. Some examples are:
+```java
 assertThat(stream, mapStream(Person::getName, hasItem(startsWith("Ana"))));
+
+assertThat(stream, toIterable(hasItem("Ana Pop"));
+
+assertThat(Stream.empty(), emptyStream());
 ```
 * **[OptionalMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/OptionalMatchersTest.java)**
 * **[RegexMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/RegexMatchersTest.java)**
