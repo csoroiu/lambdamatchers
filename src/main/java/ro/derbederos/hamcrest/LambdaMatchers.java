@@ -24,7 +24,6 @@ import java.util.function.Function;
 import java.util.stream.BaseStream;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import static org.hamcrest.Matchers.emptyIterable;
 
@@ -129,8 +128,15 @@ public final class LambdaMatchers {
      */
     public static <T, U> Matcher<Iterable<? extends T>> mapIterable(Function<T, U> mapper,
             Matcher<Iterable<? super U>> matcher) {
-        return map(iterator -> StreamSupport.stream(iterator.spliterator(), false).map(mapper)
-                .collect(Collectors.toList()), matcher);
+        return map(iterable -> transformIterable(mapper, iterable), matcher);
+    }
+
+    private static <T, U> Iterable<U> transformIterable(Function<T, U> mapper, Iterable<? extends T> iterable) {
+        ArrayList<U> result = new ArrayList<>();
+        for (T element : iterable) {
+            result.add(mapper.apply(element));
+        }
+        return result;
     }
 
     /**
@@ -149,7 +155,15 @@ public final class LambdaMatchers {
      * @since 0.1
      */
     public static <T, U> Matcher<T[]> mapArray(Function<T, U> mapper, Matcher<Iterable<? super U>> matcher) {
-        return map(array -> Stream.of(array).map(mapper).collect(Collectors.toList()), matcher);
+        return map(array -> transformArray(mapper, array), matcher);
+    }
+
+    private static <T, U> Iterable<U> transformArray(Function<T, U> mapper, T[] array) {
+        ArrayList<U> result = new ArrayList<>(array.length);
+        for (T element : array) {
+            result.add(mapper.apply(element));
+        }
+        return result;
     }
 
     /**

@@ -16,27 +16,46 @@
 
 package ro.derbederos.hamcrest;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.Timeout;
 
-import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.*;
-import java.util.concurrent.locks.LockSupport;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static ro.derbederos.hamcrest.RetryMatchers.*;
 
-
 public class RetryMatchersTest {
-    @Rule
-    public Timeout TIMEOUT = Timeout.millis(700);
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+
+    @Rule
+    public Timeout TIMEOUT = Timeout.millis(700);
+
+    private static ScheduledExecutorService executorService;
+
+    @BeforeClass
+    public static void beforeRetryMatchersTest() {
+        executorService = Executors.newSingleThreadScheduledExecutor();
+    }
+
+    @AfterClass
+    public static void afterRetryMatchersTest() throws Exception {
+        executorService.shutdown();
+        executorService.awaitTermination(100, TimeUnit.MILLISECONDS);
+    }
+
+    private static void executeDelayed(long delayMillis, Runnable runnable) {
+        executorService.schedule(runnable, delayMillis, TimeUnit.MILLISECONDS);
+    }
 
     @Test
     public void testRetryHasProperty() throws Exception {
@@ -52,7 +71,7 @@ public class RetryMatchersTest {
 
     @Test
     public void testRetryLambda() throws Exception {
-        DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
+        DelayedValueBean bean = new DelayedValueBean(144, 2, 7);
         assertThat(bean, retry(500, DelayedValueBean::getValue, equalTo(7)));
         assertThat(bean.getValueCallCount.intValue(), greaterThan(2));
     }
@@ -123,19 +142,12 @@ public class RetryMatchersTest {
         assertThat(atomicString, retryAtomicReference(500, "Expecto Patronum"));
     }
 
-    private void executeDelayed(long delayMillis, Runnable runnable) {
-        ForkJoinPool.commonPool().submit(() -> {
-            LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(delayMillis));
-            runnable.run();
-        });
-    }
-
     public static class DelayedValueBean {
         private final long start = System.nanoTime();
         private final long delayNanos;
         private final int badValue;
         private final int goodValue;
-        private final LongAdder getValueCallCount = new LongAdder();
+        private final AtomicInteger getValueCallCount = new AtomicInteger();
 
         DelayedValueBean(long delayMillis, int badValue, int goodValue) {
             this.delayNanos = TimeUnit.MILLISECONDS.toNanos(delayMillis);
@@ -144,7 +156,7 @@ public class RetryMatchersTest {
         }
 
         public int getValue() {
-            getValueCallCount.increment();
+            getValueCallCount.incrementAndGet();
             if (System.nanoTime() - start < delayNanos) {
                 return badValue;
             } else {
