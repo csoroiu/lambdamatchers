@@ -42,7 +42,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.map;
  * assertThat(Stream.empty(), emptyStream());
  * </pre>
  *
- * @since 0.1
+ * @since 0.6
  */
 public final class StreamMatchers {
 
@@ -67,7 +67,7 @@ public final class StreamMatchers {
      */
     public static <T, U> Matcher<Stream<? extends T>> mapStream(Function<T, U> mapper,
             Matcher<Iterable<? super U>> matcher) {
-        return map(stream -> stream.map(mapper::apply).collect(Collectors.toList()), matcher);
+        return map(stream -> stream.map(mapper).collect(Collectors.toList()), matcher);
     }
 
     /**
@@ -83,7 +83,7 @@ public final class StreamMatchers {
      * @since 0.1
      */
     public static <T> Matcher<Stream<? extends T>> toIterable(Matcher<Iterable<? super T>> matcher) {
-        return mapStream(a -> a, matcher);
+        return mapStream(Function.identity(), matcher);
     }
 
     /**
@@ -99,14 +99,12 @@ public final class StreamMatchers {
      * @since 0.1
      */
     public static <T, S extends BaseStream<T, S>> Matcher<BaseStream<T, S>> emptyStream() {
-        return map(baseStreamToIterable(), emptyIterable());
+        return map(StreamMatchers::baseStreamToIterable, emptyIterable());
     }
 
-    private static <S extends BaseStream<T, S>, T> Function<BaseStream<T, S>, Iterable<T>> baseStreamToIterable() {
-        return stream -> {
-            List<T> target = new ArrayList<>();
-            stream.iterator().forEachRemaining(target::add);
-            return target;
-        };
+    private static <S extends BaseStream<T, S>, T> Iterable<T> baseStreamToIterable(BaseStream<T, S> stream) {
+        List<T> target = new ArrayList<>();
+        stream.iterator().forEachRemaining(target::add);
+        return target;
     }
 }
