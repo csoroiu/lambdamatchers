@@ -36,7 +36,7 @@ assertThat(atomicReferenceSpell, retryAtomicReference(500, powerfulThan("Expecto
 
 assertThat(atomicInteger, retryAtomicInteger(300, 9));
 
-assertThat(atomicLong, retryAtomicLong(300, greatherThan(10)));
+assertThat(atomicLong, retryAtomicLong(300, greaterThan(10L)));
 ```
 
 [build-status-svg]: https://travis-ci.org/csoroiu/lambdamatchers.svg?branch=master

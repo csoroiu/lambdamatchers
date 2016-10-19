@@ -43,7 +43,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.map;
  *
  * assertThat(atomicInteger, retryAtomicInteger(300, 9));
  *
- * assertThat(atomicLong, retryAtomicLong(300, greatherThan(10)));
+ * assertThat(atomicLong, retryAtomicLong(300, greaterThan(10L)));
  * </pre>
  * <p>
  * <i>These matchers are not compatible with streams, if received directly as an input.
@@ -155,7 +155,7 @@ public final class RetryMatchers {
      * <p>
      * Example:
      * <pre>
-     * assertThat(atomicInteger, retryAtomicInteger(300, greatherThan(10)));
+     * assertThat(atomicInteger, retryAtomicInteger(300, greaterThan(10)));
      * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
@@ -163,7 +163,7 @@ public final class RetryMatchers {
      * @since 0.2
      */
     public static Matcher<AtomicInteger> retryAtomicInteger(long durationMillis, Matcher<Integer> matcher) {
-        return retry(durationMillis, AtomicInteger::get, matcher);
+        return retry(durationMillis, AtomicInteger::intValue, matcher);
     }
 
     /**
@@ -189,7 +189,7 @@ public final class RetryMatchers {
      * <p>
      * Example:
      * <pre>
-     * assertThat(atomicLong, retryAtomicLong(300, greatherThan(10)));
+     * assertThat(atomicLong, retryAtomicLong(300, greaterThan(10)));
      * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
@@ -197,7 +197,7 @@ public final class RetryMatchers {
      * @since 0.2
      */
     public static Matcher<AtomicLong> retryAtomicLong(long durationMillis, Matcher<Long> matcher) {
-        return retry(durationMillis, AtomicLong::get, matcher);
+        return retry(durationMillis, AtomicLong::longValue, matcher);
     }
 
     /**
