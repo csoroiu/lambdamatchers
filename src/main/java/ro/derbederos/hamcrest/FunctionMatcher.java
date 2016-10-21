@@ -71,6 +71,11 @@ final class FunctionMatcher<T, U> extends TypeSafeMatcher<T> {
         String featureTypeName = featureType.getSimpleName();
         if (TypeResolver.Unknown.class.isAssignableFrom(featureType)) {
             featureTypeName = "UnknownFieldType";
+        } else {
+            String methodRefString = MethodRefResolver.resolveMethodRefName(mapper.getClass());
+            if (methodRefString != null) {
+                featureTypeName = methodRefString;
+            }
         }
         return map(mapper, featureTypeName, matcher);
     }

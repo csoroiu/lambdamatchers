@@ -17,6 +17,7 @@
 package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -35,20 +36,36 @@ public class LambdaMatchersTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void simpleTestMethodReference() {
+    public void simpleTestInstanceMethodReference() {
         Person p = new Person("Alice", 21);
         assertThat(p, map(Person::getName, startsWith("A")));
     }
 
     @Test
-    public void simpleTestMethodReferenceAssertionError() {
+    public void simpleTestInstanceMethodReferenceAssertionError() {
         expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a Person having String a string starting with \"B\"");
-        expectedException.expectMessage("     but: String was \"Alice\"");
+        expectedException.expectMessage("Expected: a Person having `String Person.getName()` a string starting with \"B\"");
+        expectedException.expectMessage("     but: `String Person.getName()` was \"Alice\"");
 
         Person p = new Person("Alice", 21);
         assertThat(p, map(Person::getName, startsWith("B")));
     }
+
+    @Test
+    public void simpleTestConstructorReference() {
+        assertThat("4", map(Integer::new, equalTo(4)));
+    }
+
+    @Test
+    @Ignore //ignore until constructor reference is released in typetools
+    public void simpleTestConstructorReferenceAssertionError() {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: a String having `new Integer(String)` <5>");
+        expectedException.expectMessage("     but: `new Integer(String)` was <4>");
+
+        assertThat("4", map(Integer::new, equalTo(5)));
+    }
+
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
@@ -90,7 +107,7 @@ public class LambdaMatchersTest {
     @Test
     public void simpleTestInvalidInputTypeAssertionError() {
         expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a Person having Integer <22>");
+        expectedException.expectMessage("Expected: a Person having `int Person.getAge()` <22>");
         expectedException.expectMessage("     but: was a java.lang.String (\"22\")");
 
         Matcher matcher = map(Person::getAge, equalTo(22));
@@ -102,6 +119,17 @@ public class LambdaMatchersTest {
         Person p = new Person("Alice Bob", 21);
         Function<Person, String> mapper = a -> a.getName().split(" ")[1];
         assertThat(p, map(mapper, equalTo("Bob")));
+    }
+
+    @Test
+    public void simpleTestLambdaAssertionError() {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: a Person having `String lambda$(Person)` \"Pop\"");
+        expectedException.expectMessage("     but: `String lambda$(Person)` was \"Bob\"");
+
+        Person p = new Person("Alice Bob", 21);
+        Function<Person, String> mapper = a -> a.getName().split(" ")[1];
+        assertThat(p, map(mapper, equalTo("Pop")));
     }
 
     @Test
