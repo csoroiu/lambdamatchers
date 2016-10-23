@@ -65,36 +65,31 @@ final class FunctionMatcher<T, U> extends TypeSafeMatcher<T> {
         return subMatcher.matches(lastValue);
     }
 
-    private static <T, U> Class<?> resolveInputType(Function<T, U> mapper) {
-        Class<?>[] arguments = TypeResolver.resolveRawArguments(Function.class, mapper.getClass());
-        Class<?> type = arguments[0];
-        if (TypeResolver.Unknown.class.isAssignableFrom(type)) {
-            type = Object.class;
-        }
-        return type;
-    }
-
-    static <T, U> Matcher<T> map(Function<T, U> mapper, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
-        Objects.requireNonNull(mapper);
-        return new FunctionMatcher<>(mapper, resolveInputType(mapper), featureDescription, featureName, subMatcher);
-    }
-
     static <T, U> Matcher<T> map(Function<T, U> mapper, Matcher<? super U> matcher) {
         Objects.requireNonNull(mapper);
-        Class<?>[] arguments = TypeResolver.resolveRawArguments(Function.class, mapper.getClass());
-        String objectTypeName = arguments[0].getSimpleName();
-        String featureTypeName = arguments[1].getSimpleName();
-        if (TypeResolver.Unknown.class.isAssignableFrom(arguments[0])) {
-            objectTypeName = "UnknownObjectType";
-        }
-        if (TypeResolver.Unknown.class.isAssignableFrom(arguments[1])) {
+        Class<?> featureType = TypeResolver.resolveRawArguments(Function.class, mapper.getClass())[1];
+        String featureTypeName = featureType.getSimpleName();
+        if (TypeResolver.Unknown.class.isAssignableFrom(featureType)) {
             featureTypeName = "UnknownFieldType";
         }
+        return map(mapper, featureTypeName, matcher);
+    }
+
+    static <T, U> Matcher<T> map(Function<T, U> mapper, String featureTypeName, Matcher<? super U> matcher) {
+        Objects.requireNonNull(mapper);
+        Class<?> inputType = TypeResolver.resolveRawArguments(Function.class, mapper.getClass())[0];
+        String objectTypeName = inputType.getSimpleName();
+        if (TypeResolver.Unknown.class.isAssignableFrom(inputType)) {
+            inputType = Object.class;
+            objectTypeName = "UnknownObjectType";
+        }
+        String featureDescription = buildFeatureDescription(objectTypeName, featureTypeName);
+        return new FunctionMatcher<>(mapper, inputType, featureDescription, featureTypeName, matcher);
+    }
+
+    private static String buildFeatureDescription(String objectTypeName, String featureTypeName) {
         boolean startsWithVowel = "AaEeIiOoUu".indexOf(objectTypeName.charAt(0)) >= 0;
         String article = startsWithVowel ? "an" : "a";
-        return map(mapper,
-                article + " " + objectTypeName + " having " + featureTypeName,
-                featureTypeName,
-                matcher);
+        return article + " " + objectTypeName + " having " + featureTypeName;
     }
 }

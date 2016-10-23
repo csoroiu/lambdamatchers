@@ -56,24 +56,22 @@ public final class LambdaMatchers {
     }
 
     /**
-     * Creates a {@link Matcher} for a feature with the <code>featureDescription</code> description
-     * and with the <code>featureName</code> name.
+     * Creates a {@link Matcher} for an object having a feature with <code>featureName</code> name.
      * The <code>matcher</code> argument will be applied on the result of the <code>mapper</code> function.
      * This method is useful to be used by other utility methods that use functions to convert the input like
      * {@link OptionalMatchers}.
      * <p>
-     * <b>This method can be used to create smart {@link org.hamcrest.FeatureMatcher}s.</b>
+     * <b>This method can be used to easily create feature matchers.</b>
      *
-     * @param mapper             The function that transforms the input.
-     * @param featureDescription The description of the <b>feature</b> extracted by the <code>mapper</code>.
-     * @param featureName        The name of the <b>feature</b> extracted by the mapper.
-     * @param matcher            The {@link Matcher} to be applied on the result of the <code>mapper</code> function.
-     * @param <T>                The type of the input.
-     * @param <U>                The type of the result of the <code>mapper</code> function.
-     * @since 0.1
+     * @param mapper      The function that transforms the input.
+     * @param featureName The name of the <b>feature</b> extracted by the mapper.
+     * @param matcher     The {@link Matcher} to be applied on the result of the <code>mapper</code> function.
+     * @param <T>         The type of the input.
+     * @param <U>         The type of the result of the <code>mapper</code> function.
+     * @since 0.7
      */
-    public static <T, U> Matcher<T> map(Function<T, U> mapper, String featureDescription, String featureName, Matcher<? super U> matcher) {
-        return FunctionMatcher.map(mapper, featureDescription, featureName, matcher);
+    public static <T, U> Matcher<T> map(Function<T, U> mapper, String featureName, Matcher<? super U> matcher) {
+        return FunctionMatcher.map(mapper, featureName, matcher);
     }
 
     /**
