@@ -87,7 +87,7 @@ public class RetryMatchersTest {
     }
 
     @Test
-    public void testRetryFailsHasProperty() throws Exception {
+    public void testRetryHasPropertyAssertionError() throws Exception {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Expected: hasProperty(\"value\", <9>)");
         expectedException.expectMessage("     but: after 300 millisecond(s) property 'value' was <7>");
@@ -97,7 +97,7 @@ public class RetryMatchersTest {
     }
 
     @Test
-    public void testRetryFailsLambda() throws Exception {
+    public void testRetryLambdaAssertionError() throws Exception {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Expected: a DelayedValueBean having Integer <9>");
         expectedException.expectMessage("     but: after 300 millisecond(s) Integer was <7>");
@@ -114,7 +114,7 @@ public class RetryMatchersTest {
     }
 
     @Test
-    public void testRetryAtomicIntegerFails() throws Exception {
+    public void testRetryAtomicIntegerAssertionError() throws Exception {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Expected: an AtomicInteger having Integer <9>");
         expectedException.expectMessage("     but: after 300 millisecond(s) Integer was <7>");

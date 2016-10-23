@@ -88,7 +88,7 @@ public class LambdaMatchersTest {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
-    public void simpleTestAssertionInvalidInputType() {
+    public void simpleTestInvalidInputTypeAssertionError() {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Expected: a Person having Integer <22>");
         expectedException.expectMessage("     but: was a java.lang.String (\"22\")");
