@@ -4,6 +4,18 @@
 [![License][license-svg]][license-link]
 
 This library implements some hamcrest matchers usable with Java 8 and a set of utility functions built on top of them.
+Considering the fact that this library is intended to be used in tests, in case of failure, meaningful messages are shown in order to help figuring out what is wrong even before looking at the source code.
+
+Such an error message for the code:
+```java
+assertThat(list, everyItem(map(Person::getAge, greaterThanOrEqualTo(22))));
+```
+could be:
+```
+java.lang.AssertionError: 
+Expected: every item is a Person having `int Person.getAge()` a value equal to or greater than <22>
+     but: an item `int Person.getAge()` <21> was less than <22>
+```
 
 The usages of the matchers can be seen in:
 * **[LambdaMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/LambdaMatchersTest.java)**. Some examples are:
