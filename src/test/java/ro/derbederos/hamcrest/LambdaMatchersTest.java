@@ -36,19 +36,39 @@ public class LambdaMatchersTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void simpleTestInstanceMethodReference() {
+    public void simpleTestObjectMethodReference() {
         Person p = new Person("Alice", 21);
         assertThat(p, map(Person::getName, startsWith("A")));
     }
 
     @Test
-    public void simpleTestInstanceMethodReferenceAssertionError() {
+    public void simpleTestObjectMethodReferenceAssertionError() {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Expected: a Person having `String Person.getName()` a string starting with \"B\"");
         expectedException.expectMessage("     but: `String Person.getName()` was \"Alice\"");
 
         Person p = new Person("Alice", 21);
         assertThat(p, map(Person::getName, startsWith("B")));
+    }
+
+    private String getPersonName(Person p) {
+        return p.getName();
+    }
+
+    @Test
+    public void simpleTestInstanceObjectMethodReference() {
+        Person p = new Person("Alice", 21);
+        assertThat(p, map(this::getPersonName, startsWith("A")));
+    }
+
+    @Test
+    public void simpleTestInstanceMethodReferenceAssertionError() {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: a Person having `String LambdaMatchersTest.getPersonName(Person)` a string starting with \"B\"");
+        expectedException.expectMessage("     but: `String LambdaMatchersTest.getPersonName(Person)` was \"Alice\"");
+
+        Person p = new Person("Alice", 21);
+        assertThat(p, map(this::getPersonName, startsWith("B")));
     }
 
     @Test
@@ -67,12 +87,12 @@ public class LambdaMatchersTest {
     }
 
     @Test
-    public void simpleTestObjectMethodReference() {
+    public void simpleTestObjectClassMethodReference() {
         assertThat(4d, map(Object::toString, equalTo("4.0")));
     }
 
     @Test
-    public void simpleTestObjectMethodReferenceAssertionError() {
+    public void simpleTestObjectClassMethodReferenceAssertionError() {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Expected: an Object having `String Object.toString()` \"4\"");
         expectedException.expectMessage("     but: `String Object.toString()` was \"4.0\"");
