@@ -66,6 +66,19 @@ public class LambdaMatchersTest {
         assertThat("4", map(Integer::new, equalTo(5)));
     }
 
+    @Test
+    public void simpleTestObjectMethodReference() {
+        assertThat(4d, map(Object::toString, equalTo("4.0")));
+    }
+
+    @Test
+    public void simpleTestObjectMethodReferenceAssertionError() {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an Object having `String Object.toString()` \"4\"");
+        expectedException.expectMessage("     but: `String Object.toString()` was \"4.0\"");
+
+        assertThat(4d, map(Object::toString, equalTo("4")));
+    }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
