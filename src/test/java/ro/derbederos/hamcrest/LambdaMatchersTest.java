@@ -33,7 +33,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.*;
 public class LambdaMatchersTest {
 
     @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    public final ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void simpleTestObjectMethodReference() {

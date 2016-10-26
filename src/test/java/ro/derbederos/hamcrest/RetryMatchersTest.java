@@ -38,7 +38,7 @@ import static ro.derbederos.hamcrest.RetryMatchers.*;
 public class RetryMatchersTest {
 
     @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    public final ExpectedException expectedException = ExpectedException.none();
 
     @Rule
     public Timeout TIMEOUT = Timeout.millis(700);

@@ -30,7 +30,7 @@ import static ro.derbederos.hamcrest.StreamMatchers.*;
 public class StreamMatchersTest {
 
     @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    public final ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void streamIsEmpty() {
