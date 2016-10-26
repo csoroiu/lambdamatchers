@@ -14,13 +14,25 @@
  * limitations under the License.
  */
 
-package ro.derbederos.hamcrest;
+package ro.derbederos.hamcrest.internal;
 
-import java.lang.annotation.*;
+import java.lang.reflect.Member;
 
-@Retention(RetentionPolicy.CLASS)
-@Documented
-@Inherited
-@Target({ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.TYPE, ElementType.LOCAL_VARIABLE})
-public @interface Java8API {
+enum NullMethodRefResolver implements MethodRefResolver {
+    INSTANCE;
+
+    @Override
+    public boolean isAvailable() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsClass(Class<?> lambdaClass) {
+        return true;
+    }
+
+    @Override
+    public Member resolveMethodReference(Class<?> functionalInterface, Class<?> lambdaFunction) {
+        return null;
+    }
 }

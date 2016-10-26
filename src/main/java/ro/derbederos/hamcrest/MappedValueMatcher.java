@@ -22,6 +22,7 @@ import java8.util.function.Supplier;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import ro.derbederos.hamcrest.internal.SmartMethodRefResolver;
 
 import static java8.util.Objects.requireNonNull;
 
@@ -67,10 +68,15 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
         return subMatcher.matches(lastValue);
     }
 
+    private static final SmartMethodRefResolver RESOLVER = new SmartMethodRefResolver();
+
     private static <T> String getFeatureTypeName(T mapper, Class<T> mapperInterface, int resultIndex) {
         mapper = requireNonNull(mapper);
-        String featureTypeName = MethodRefResolver.resolveMethodRefName(mapper.getClass());
-        if (featureTypeName == null) {
+        String featureTypeName;
+        String methodRefString = RESOLVER.methodToString(RESOLVER.resolveMethodReference(mapperInterface, mapper.getClass()));
+        if (methodRefString != null) {
+            featureTypeName = '`' + methodRefString + '`';
+        } else {
             Class<?> featureType = TypeResolver.resolveRawArguments(mapperInterface, mapper.getClass())[resultIndex];
             featureTypeName = featureType.getSimpleName();
             if (TypeResolver.Unknown.class.isAssignableFrom(featureType)) {
