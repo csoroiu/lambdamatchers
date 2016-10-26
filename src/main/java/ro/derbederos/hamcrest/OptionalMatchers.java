@@ -60,7 +60,7 @@ public final class OptionalMatchers {
 
     /**
      * Creates a {@link Matcher} that checks if the given {@link Optional}'s content matches the given
-     * <code>matcher</code> argument.
+     * {@code matcher} argument.
      *
      * @param matcher the {@link Matcher} to apply to {@link Optional}'s content.
      * @param <T>     The type of the {@link Optional}'s content.
@@ -72,7 +72,7 @@ public final class OptionalMatchers {
 
     /**
      * Creates a {@link Matcher} that checks if the given {@link Optional}'s content is equal to the
-     * <code>value</code> argument.
+     * {@code value} argument.
      *
      * @param value The expected content of the {@link Optional}.
      * @param <T>   The type of the {@link Optional}'s content.
@@ -102,7 +102,7 @@ public final class OptionalMatchers {
 
     /**
      * Creates a {@link Matcher} that checks if the given {@link OptionalInt}'s content matches the given
-     * <code>matcher</code> argument.
+     * {@code matcher} argument.
      *
      * @param matcher the {@link Matcher} to apply to {@link OptionalInt}'s content.
      * @since 0.1
@@ -113,7 +113,7 @@ public final class OptionalMatchers {
 
     /**
      * Creates a {@link Matcher} that checks if the given {@link OptionalInt}'s content is equal to the
-     * <code>value</code> argument.
+     * {@code value} argument.
      *
      * @param value The expected content of the {@link OptionalInt}.
      * @since 0.1
@@ -142,7 +142,7 @@ public final class OptionalMatchers {
 
     /**
      * Creates a {@link Matcher} that checks if the given {@link OptionalLong}'s content matches the given
-     * <code>matcher</code> argument.
+     * {@code matcher} argument.
      *
      * @param matcher the {@link Matcher} to apply to {@link OptionalLong}'s content.
      * @since 0.1
@@ -153,7 +153,7 @@ public final class OptionalMatchers {
 
     /**
      * Creates a {@link Matcher} that checks if the given {@link OptionalLong}'s content is equal to the
-     * <code>value</code> argument.
+     * {@code value} argument.
      *
      * @param value The expected content of the {@link OptionalLong}.
      * @since 0.1
@@ -181,7 +181,7 @@ public final class OptionalMatchers {
     }
 
     /**
-     * Creates a {@link Matcher} that checks if the given {@link OptionalDouble}'s content matches the given <code>matcher</code> argument.
+     * Creates a {@link Matcher} that checks if the given {@link OptionalDouble}'s content matches the given {@code matcher} argument.
      *
      * @param matcher the {@link Matcher} to apply to {@link OptionalDouble}'s content.
      * @since 0.1
@@ -191,7 +191,7 @@ public final class OptionalMatchers {
     }
 
     /**
-     * Creates a {@link Matcher} that checks if the given {@link OptionalDouble}'s content is equal to the <code>value</code> argument.
+     * Creates a {@link Matcher} that checks if the given {@link OptionalDouble}'s content is equal to the {@code value} argument.
      *
      * @param value The expected content of the {@link OptionalDouble}.
      * @since 0.1

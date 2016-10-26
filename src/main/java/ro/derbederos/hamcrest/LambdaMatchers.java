@@ -56,8 +56,8 @@ public final class LambdaMatchers {
     }
 
     /**
-     * Creates a {@link Matcher} for an object having a feature with <code>featureName</code> name.
-     * The <code>matcher</code> argument will be applied on the result of the <code>mapper</code> function.
+     * Creates a {@link Matcher} for an object having a feature with {@code featureName} name.
+     * The {@code matcher} argument will be applied on the result of the {@code mapper} function.
      * This method is useful to be used by other utility methods that use functions to convert the input like
      * {@link OptionalMatchers}.
      * <p>
@@ -65,9 +65,9 @@ public final class LambdaMatchers {
      *
      * @param mapper      The function that transforms the input.
      * @param featureName The name of the <b>feature</b> extracted by the mapper.
-     * @param matcher     The {@link Matcher} to be applied on the result of the <code>mapper</code> function.
+     * @param matcher     The {@link Matcher} to be applied on the result of the {@code mapper} function.
      * @param <T>         The type of the input.
-     * @param <U>         The type of the result of the <code>mapper</code> function.
+     * @param <U>         The type of the result of the {@code mapper} function.
      * @since 0.7
      */
     public static <T, U> Matcher<T> map(Function<T, U> mapper, String featureName, Matcher<? super U> matcher) {
@@ -75,9 +75,9 @@ public final class LambdaMatchers {
     }
 
     /**
-     * Utility method that creates a functional mapper matcher. It receives as input a <code>mapper</code> and
-     * a <code>matcher</code> that will be applied on the result of the <code>mapper</code> function.
-     * It tries to auto-magically determine the type of the input object and of the <code>mapper</code> function result.
+     * Utility method that creates a functional mapper matcher. It receives as input a {@code mapper} and
+     * a {@code matcher} that will be applied on the result of the {@code mapper} function.
+     * It tries to auto-magically determine the type of the input object and of the {@code mapper} function result.
      * <p>
      * This method is useful ca used to extract properties of objects, or call other functions.
      * It can be used to replace {@link org.hamcrest.Matchers#hasProperty(String, Matcher)}.
@@ -92,9 +92,9 @@ public final class LambdaMatchers {
      * </pre>
      *
      * @param mapper  The function that transforms the input.
-     * @param matcher The {@link Matcher} to be applied on the result of the <code>mapper</code> function.
+     * @param matcher The {@link Matcher} to be applied on the result of the {@code mapper} function.
      * @param <T>     The type of the input.
-     * @param <U>     The type of the result of the <code>mapper</code> function.
+     * @param <U>     The type of the result of the {@code mapper} function.
      * @since 0.1
      */
     public static <T, U> Matcher<T> map(Function<T, U> mapper, Matcher<? super U> matcher) {
@@ -102,8 +102,8 @@ public final class LambdaMatchers {
     }
 
     /**
-     * Utility method that creates a matcher that converts an iterable of <code>&lt;T&gt;</code> to an iterable of
-     * <code>&lt;U&gt;</code> allowing us to use an iterable matcher on the result of the mapping function.
+     * Utility method that creates a matcher that converts an iterable of {@code <T>} to an iterable of
+     * {@code <U>} allowing us to use an iterable matcher on the result of the mapping function.
      * <p>
      * Example:
      * <pre>
@@ -113,7 +113,7 @@ public final class LambdaMatchers {
      * @param mapper  The function that transforms every element of the input iterable.
      * @param matcher The matcher to be applied on the resulting iterable.
      * @param <T>     The type of the elements in the input iterable.
-     * @param <U>     The type of the result of the <code>mapper</code> function.
+     * @param <U>     The type of the result of the {@code mapper} function.
      * @since 0.1
      */
     public static <T, U> Matcher<Iterable<? extends T>> mapIterable(Function<T, U> mapper,
@@ -130,8 +130,8 @@ public final class LambdaMatchers {
     }
 
     /**
-     * Utility method that creates a matcher that converts an array of <code>&lt;T&gt;</code> to an iterable of
-     * <code>&lt;U&gt;</code> allowing us to use an iterable matcher on the result of the mapping function.
+     * Utility method that creates a matcher that converts an array of {@code <T>} to an iterable of
+     * {@code <U>} allowing us to use an iterable matcher on the result of the mapping function.
      * <p>
      * Example:
      * <pre>
@@ -141,7 +141,7 @@ public final class LambdaMatchers {
      * @param mapper  The function that transforms every element of the input array.
      * @param matcher The matcher to be applied on the resulting iterable.
      * @param <T>     The type of the elements in the input array.
-     * @param <U>     The type of the result of the <code>mapper</code> function.
+     * @param <U>     The type of the result of the {@code mapper} function.
      * @since 0.1
      */
     public static <T, U> Matcher<T[]> mapArray(Function<T, U> mapper, Matcher<Iterable<? super U>> matcher) {

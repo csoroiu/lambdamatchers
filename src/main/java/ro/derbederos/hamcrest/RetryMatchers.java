@@ -58,12 +58,12 @@ public final class RetryMatchers {
     }
 
     /**
-     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
-     * <code>interval</code>, until <code>duration</code> is reached.
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the input, every
+     * {@code interval}, until {@code duration} is reached.
      *
-     * @param duration The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
+     * @param duration The duration of the retry. Will fail afterwards if {@code matcher} fails.
      * @param interval The interval between two consecutive checks.
-     * @param timeUnit The {@link TimeUnit} in which <code>duration</code> and <code>interval</code> are represented.
+     * @param timeUnit The {@link TimeUnit} in which {@code duration} and {@code interval} are represented.
      * @param matcher  The {@link Matcher} to be applied on the input.
      * @param <T>      The type of the input.
      * @since 0.2
@@ -73,11 +73,11 @@ public final class RetryMatchers {
     }
 
     /**
-     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
-     * <code>50 ms</code>, until <code>duration</code> is reached.
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the input, every
+     * {@code 50 ms}, until {@code duration} is reached.
      *
-     * @param duration The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
-     * @param timeUnit The {@link TimeUnit} in which <code>duration</code> is represented.
+     * @param duration The duration of the retry. Will fail afterwards if {@code matcher} fails.
+     * @param timeUnit The {@link TimeUnit} in which {@code duration} is represented.
      * @param matcher  The {@link Matcher} to be applied on the input.
      * @param <T>      The type of the input.
      * @since 0.2
@@ -87,15 +87,15 @@ public final class RetryMatchers {
     }
 
     /**
-     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
-     * <code>intervalMillis</code>, until <code>durationMillis</code> is reached.
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the input, every
+     * {@code intervalMillis}, until {@code durationMillis} is reached.
      * <p>
      * Example:
      * <pre>
      * assertThat(bean, retry(500, 25, hasProperty("value", equalTo(7))));
      * </pre>
      *
-     * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
      * @param intervalMillis The interval between two consecutive checks.
      * @param matcher        The {@link Matcher} to be applied on the input.
      * @param <T>            The type of the input.
@@ -106,15 +106,15 @@ public final class RetryMatchers {
     }
 
     /**
-     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
-     * <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the input, every
+     * {@code 50 ms}, until {@code durationMillis} is reached.
      * <p>
      * Example:
      * <pre>
      * assertThat(bean, retry(300, hasProperty("value", equalTo(9))));
      * </pre>
      *
-     * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
      * @param matcher        The {@link Matcher} to be applied on the input.
      * @param <T>            The type of the input.
      * @since 0.2
@@ -124,9 +124,9 @@ public final class RetryMatchers {
     }
 
     /**
-     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the input, every
-     * <code>50 ms</code>, until <code>durationMillis</code> is reached. This method receives a {@link Function} as
-     * input and builds a mapping matcher out of the <code>mapper</code> and the received <code>matcher</code>.
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the input, every
+     * {@code 50 ms}, until {@code durationMillis} is reached. This method receives a {@link Function} as
+     * input and builds a mapping matcher out of the {@code mapper} and the received {@code matcher}.
      * <p>
      * It is a shortcut for:
      * <pre>
@@ -138,11 +138,11 @@ public final class RetryMatchers {
      * assertThat(bean, retry(500, b -&gt; b.getValue(), equalTo(7)));
      * </pre>
      *
-     * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
      * @param mapper         The function that transforms the input.
-     * @param matcher        The {@link Matcher} to be applied on the result of the <code>mapper</code> function.
+     * @param matcher        The {@link Matcher} to be applied on the result of the {@code mapper} function.
      * @param <T>            The type of the input.
-     * @param <U>            The type of the result of the <code>mapper</code> function.
+     * @param <U>            The type of the result of the {@code mapper} function.
      * @since 0.3
      */
     public static <T, U> Matcher<T> retry(long durationMillis, Function<T, U> mapper, Matcher<? super U> matcher) {
@@ -150,15 +150,15 @@ public final class RetryMatchers {
     }
 
     /**
-     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicInteger}
-     * received as input. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link AtomicInteger}
+     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
      * <p>
      * Example:
      * <pre>
      * assertThat(atomicInteger, retryAtomicInteger(300, greaterThan(10)));
      * </pre>
      *
-     * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
      * @param matcher        The {@link Matcher} to be applied on the value of the {@link AtomicInteger}.
      * @since 0.2
      */
@@ -168,7 +168,7 @@ public final class RetryMatchers {
 
     /**
      * Creates a {@link Matcher} that checks if the value of the {@link AtomicInteger} is equal to the received
-     * <code>value</code>. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * {@code value}. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
      * <p>
      * Example:
      * <pre>
@@ -184,15 +184,15 @@ public final class RetryMatchers {
     }
 
     /**
-     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicLong}
-     * received as input. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link AtomicLong}
+     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
      * <p>
      * Example:
      * <pre>
      * assertThat(atomicLong, retryAtomicLong(300, greaterThan(10)));
      * </pre>
      *
-     * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
      * @param matcher        The {@link Matcher} to be applied on the value of the {@link AtomicLong}.
      * @since 0.2
      */
@@ -202,7 +202,7 @@ public final class RetryMatchers {
 
     /**
      * Creates a {@link Matcher} that checks if the value of the {@link AtomicLong} is equal to the received
-     * <code>value</code>. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * {@code value}. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
      * <p>
      * Example:
      * <pre>
@@ -218,15 +218,15 @@ public final class RetryMatchers {
     }
 
     /**
-     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicBoolean}
-     * received as input. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link AtomicBoolean}
+     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
      * <p>
      * Example:
      * <pre>
      * assertThat(atomicBoolean, retryAtomicBoolean(300, equalTo(false)));
      * </pre>
      *
-     * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
      * @param matcher        The {@link Matcher} to be applied on the value of the {@link AtomicBoolean}.
      * @since 0.2
      */
@@ -236,7 +236,7 @@ public final class RetryMatchers {
 
     /**
      * Creates a {@link Matcher} that checks if the value of the {@link AtomicBoolean} is equal to the received
-     * <code>value</code>. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * {@code value}. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
      * <p>
      * Example:
      * <pre>
@@ -252,15 +252,15 @@ public final class RetryMatchers {
     }
 
     /**
-     * Creates a {@link Matcher} that checks if the given <code>matcher</code> matches the value of the {@link AtomicReference}
-     * received as input. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link AtomicReference}
+     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
      * <p>
      * Example:
      * <pre>
      * assertThat(atomicReferenceSpell, retryAtomicReference(500, powerfulThan("Expecto Patronum")));
      * </pre>
      *
-     * @param durationMillis The duration of the retry. Will fail afterwards if <code>matcher</code> fails.
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
      * @param matcher        The {@link Matcher} to be applied on the value of the {@link AtomicReference}.
      * @param <V>            The type of the {@link AtomicReference} value.
      * @since 0.2
@@ -271,7 +271,7 @@ public final class RetryMatchers {
 
     /**
      * Creates a {@link Matcher} that checks if the value of the {@link AtomicReference} is equal to the received
-     * <code>value</code>. It retries every <code>50 ms</code>, until <code>durationMillis</code> is reached.
+     * {@code value}. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
      * <p>
      * Example:
      * <pre>
