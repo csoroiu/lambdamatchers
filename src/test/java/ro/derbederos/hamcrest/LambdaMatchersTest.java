@@ -62,7 +62,7 @@ public class LambdaMatchersTest {
     }
 
     @Test
-    public void simpleTestInstanceMethodReferenceAssertionError() {
+    public void simpleTestInstanceObjectMethodReferenceAssertionError() {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Expected: a Person having `String LambdaMatchersTest.getPersonName(Person)` a string starting with \"B\"");
         expectedException.expectMessage("     but: `String LambdaMatchersTest.getPersonName(Person)` was \"Alice\"");
