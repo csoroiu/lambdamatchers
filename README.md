@@ -5,7 +5,7 @@
 
 This library implements some hamcrest matchers usable with Java 8 and a set of utility functions built on top of them.
 
-**Le pièce de résistance** is the **[LambdaMatchers](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/LambdaMatchers.java)**
+**La pièce de résistance** is the **[LambdaMatchers](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/LambdaMatchers.java)**
 **`map`** method.
 
 ## Usage
