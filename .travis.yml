@@ -14,6 +14,7 @@ os:
 
 env:
   matrix:
-    - PHASE='-Pjacoco'
-    - PHASE='-Pretrolambda'
-    - PHASE='-Pretrolambda -Pjacoco'
+    - MAVEN_JACOCO=true
+    - MAVEN_RETROLAMBDA=true
+    - MAVEN_JACOCO=true
+      MAVEN_RETROLAMBDA=true

@@ -119,6 +119,10 @@
             <id>retrolambda</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>env.MAVEN_RETROLAMBDA</name>
+                    <value>true</value>
+                </property>
             </activation>
             <build>
                 <plugins>
@@ -145,6 +149,10 @@
             <id>jacoco</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>env.MAVEN_JACOCO</name>
+                    <value>true</value>
+                </property>
             </activation>
             <build>
                 <plugins>
