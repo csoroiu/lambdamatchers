@@ -14,7 +14,7 @@ os:
 
 env:
   matrix:
+    -
     - MAVEN_JACOCO=true
     - MAVEN_RETROLAMBDA=true
-    - MAVEN_JACOCO=true
-      MAVEN_RETROLAMBDA=true
+    - MAVEN_JACOCO=true MAVEN_RETROLAMBDA=true
