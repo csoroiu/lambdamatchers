@@ -29,12 +29,12 @@ class MatcherDescriptionAssert {
     static void assertDescription(Matcher<String> descriptionMatcher, Matcher<?> matcher) {
         Description description = new StringDescription();
         description.appendDescriptionOf(matcher);
-        assertThat("Expected description", description.toString(), descriptionMatcher);
+        assertThat("Description does not match.", description.toString(), descriptionMatcher);
     }
 
     static <T> void assertMismatchDescription(Matcher<String> descriptionMatcher, T arg, Matcher<? super T> matcher) {
-        assertThat("Precondition: Matcher should not match item.", matcher.matches(arg), equalTo(false));
-        assertThat("Expected mismatch description", mismatchDescription(matcher, arg), descriptionMatcher);
+        assertThat("Matcher should not match item.", matcher.matches(arg), equalTo(false));
+        assertThat("Mismatch description does not match.", mismatchDescription(matcher, arg), descriptionMatcher);
     }
 
     private static <T> String mismatchDescription(Matcher<? super T> matcher, T arg) {
