@@ -16,9 +16,7 @@
 
 package ro.derbederos.hamcrest;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -31,10 +29,6 @@ import static ro.derbederos.hamcrest.LambdaMatchers.map;
 import static ro.derbederos.hamcrest.OptionalMatchers.*;
 
 public class OptionalMatchersTest {
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
     @Test
     public void testOptionalPresent() throws Exception {
         assertThat(Optional.of("abc"), optionalIsPresent());

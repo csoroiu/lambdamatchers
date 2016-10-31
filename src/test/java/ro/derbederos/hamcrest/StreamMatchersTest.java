@@ -16,75 +16,62 @@
 
 package ro.derbederos.hamcrest;
 
-import org.junit.Rule;
+import org.hamcrest.Matcher;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import ro.derbederos.hamcrest.LambdaMatchersTest.Person;
 
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.*;
+import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
+import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 import static ro.derbederos.hamcrest.StreamMatchers.*;
 
 public class StreamMatchersTest {
-
-    @Rule
-    public final ExpectedException expectedException = ExpectedException.none();
-
     @Test
     public void streamIsEmpty() {
         assertThat(Stream.empty(), emptyStream());
     }
 
     @Test
-    public void streamIsEmptyAssertionError() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("an empty iterable");
-        expectedException.expectMessage("[\"alabala\",\"trilulilu\"]");
-
-        assertThat(Stream.of("alabala", "trilulilu"), emptyStream());
+    public void streamIsEmptyDescription() {
+        assertDescription(endsWith("an empty iterable"), emptyStream());
+        assertMismatchDescription(endsWith("[\"alabala\",\"trilulilu\"]"),
+                Stream.of("alabala", "trilulilu"), emptyStream());
     }
 
     @Test
     public void streamHasItemMatcherTestMapStream() {
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        Stream<Person> stream = Stream.of(p0, p1, p2);
-
+        Stream<Person> stream = Stream.of(new Person("Alice Bob", 21),
+                new Person("Ana Pop", 21),
+                new Person("Ariana G", 21));
         assertThat(stream, mapStream(Person::getName, hasItem("Ana Pop")));
     }
 
     @Test
-    public void streamHasItemMatcherTestMapStreamAssertionError() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("a collection containing \"Ana Pop1\"");
-        expectedException.expectMessage("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"");
-
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        Stream<Person> stream = Stream.of(p0, p1, p2);
-
-        assertThat(stream, mapStream(Person::getName, hasItem("Ana Pop1")));
+    public void streamHasItemMatcherTestMapStreamDescription() {
+        Stream<Person> stream = Stream.of(new Person("Alice Bob", 21),
+                new Person("Ana Pop", 21),
+                new Person("Ariana G", 21));
+        Matcher<Stream<? extends Person>> streamMatcher = mapStream(Person::getName, hasItem("Ana Pop1"));
+        assertDescription(endsWith("a collection containing \"Ana Pop1\""), streamMatcher);
+        assertMismatchDescription(containsString("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
+                stream, streamMatcher);
     }
 
     @Test
     public void streamHasItemMatcherTestToIterable() {
         Stream<String> stream = Stream.of("Alice Bob", "Ana Pop", "Ariana G");
-
         assertThat(stream, toIterable(hasItem("Ana Pop")));
     }
 
     @Test
-    public void streamHasItemMatcherTestToIterableAssertionError() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("a collection containing \"Ana Pop1\"");
-        expectedException.expectMessage("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"");
-
+    public void streamHasItemMatcherTestToIterableDescription() {
         Stream<String> stream = Stream.of("Alice Bob", "Ana Pop", "Ariana G");
-
-        assertThat(stream, toIterable(hasItem("Ana Pop1")));
+        Matcher<Stream<? extends String>> streamMatcher = toIterable(hasItem("Ana Pop1"));
+        assertDescription(endsWith("a collection containing \"Ana Pop1\""), streamMatcher);
+        assertMismatchDescription(containsString("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
+                stream, streamMatcher);
     }
 }

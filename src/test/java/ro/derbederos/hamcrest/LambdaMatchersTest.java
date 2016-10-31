@@ -18,9 +18,7 @@ package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
 import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,12 +27,10 @@ import java.util.function.Function;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static ro.derbederos.hamcrest.LambdaMatchers.*;
+import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
+import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 
 public class LambdaMatchersTest {
-
-    @Rule
-    public final ExpectedException expectedException = ExpectedException.none();
-
     @Test
     public void simpleTestObjectMethodReference() {
         Person p = new Person("Alice", 21);
@@ -42,13 +38,11 @@ public class LambdaMatchersTest {
     }
 
     @Test
-    public void simpleTestObjectMethodReferenceAssertionError() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a Person having `String Person.getName()` a string starting with \"B\"");
-        expectedException.expectMessage("     but: `String Person.getName()` was \"Alice\"");
-
-        Person p = new Person("Alice", 21);
-        assertThat(p, map(Person::getName, startsWith("B")));
+    public void simpleTestObjectMethodReferenceDescription() {
+        Matcher<Person> mapMatcher = map(Person::getName, startsWith("B"));
+        assertDescription(equalTo("a Person having `String Person.getName()` a string starting with \"B\""), mapMatcher);
+        assertMismatchDescription(equalTo("`String Person.getName()` was \"Alice\""),
+                new Person("Alice", 21), mapMatcher);
     }
 
     private String getPersonName(Person p) {
@@ -62,13 +56,11 @@ public class LambdaMatchersTest {
     }
 
     @Test
-    public void simpleTestInstanceObjectMethodReferenceAssertionError() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a Person having `String LambdaMatchersTest.getPersonName(Person)` a string starting with \"B\"");
-        expectedException.expectMessage("     but: `String LambdaMatchersTest.getPersonName(Person)` was \"Alice\"");
-
-        Person p = new Person("Alice", 21);
-        assertThat(p, map(this::getPersonName, startsWith("B")));
+    public void simpleTestInstanceObjectMethodReferenceDescription() {
+        Matcher<Person> mapMatcher = map(this::getPersonName, startsWith("B"));
+        assertDescription(equalTo("a Person having `String LambdaMatchersTest.getPersonName(Person)` a string starting with \"B\""), mapMatcher);
+        assertMismatchDescription(equalTo("`String LambdaMatchersTest.getPersonName(Person)` was \"Alice\""),
+                new Person("Alice", 21), mapMatcher);
     }
 
     @Test
@@ -78,12 +70,10 @@ public class LambdaMatchersTest {
 
     @Test
     @Ignore //ignore until constructor reference is released in typetools
-    public void simpleTestConstructorReferenceAssertionError() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a String having `new Integer(String)` <5>");
-        expectedException.expectMessage("     but: `new Integer(String)` was <4>");
-
-        assertThat("4", map(Integer::new, equalTo(5)));
+    public void simpleTestConstructorReferenceDescription() {
+        Matcher<String> mapMatcher = map(Integer::new, equalTo(5));
+        assertDescription(equalTo("a String having `new Integer(String)` <5>"), mapMatcher);
+        assertMismatchDescription(equalTo("`new Integer(String)` was <4>"), "4", mapMatcher);
     }
 
     @Test
@@ -92,59 +82,50 @@ public class LambdaMatchersTest {
     }
 
     @Test
-    public void simpleTestObjectClassMethodReferenceAssertionError() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: an Object having `String Object.toString()` \"4\"");
-        expectedException.expectMessage("     but: `String Object.toString()` was \"4.0\"");
-
-        assertThat(4d, map(Object::toString, equalTo("4")));
+    public void simpleTestObjectClassMethodReferenceDescription() {
+        Matcher<Object> mapMatcher = map(Object::toString, equalTo("4"));
+        assertDescription(equalTo("an Object having `String Object.toString()` \"4\""), mapMatcher);
+        assertMismatchDescription(equalTo("`String Object.toString()` was \"4.0\""),
+                4d, mapMatcher);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
-    public <T> void simpleTestAnonymousClassAssertionErrorUnknownFieldType() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a Person having UnknownFieldType <22>");
-        expectedException.expectMessage("     but: UnknownFieldType was <21>");
-
+    public <T> void simpleTestAnonymousClassDescriptionUnknownFieldType() {
         Function getAge = new Function<Person, T>() {
             @Override
             public T apply(Person person) {
                 return (T) (Integer) person.getAge();
             }
         };
-
-        Person p = new Person("Alice", 21);
-        assertThat(p, map(getAge, equalTo(22)));
+        Matcher<Person> mapMatcher = map(getAge, equalTo(22));
+        assertDescription(equalTo("a Person having UnknownFieldType <22>"), mapMatcher);
+        assertMismatchDescription(equalTo("UnknownFieldType was <21>"),
+                new Person("Alice", 21), mapMatcher);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
-    public <T> void simpleTestAnonymousClassAssertionErrorUnknownObjectType() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: an UnknownObjectType having Integer <22>");
-        expectedException.expectMessage("     but: Integer was <21>");
-
+    public <T> void simpleTestAnonymousClassDescriptionUnknownObjectType() {
         Function getAge = new Function<T, Integer>() {
             @Override
             public Integer apply(T person) {
                 return ((Person) person).getAge();
             }
         };
-
-        Person p = new Person("Alice", 21);
-        assertThat(p, map(getAge, equalTo(22)));
+        Matcher<Person> mapMatcher = map(getAge, equalTo(22));
+        assertDescription(equalTo("an UnknownObjectType having Integer <22>"), mapMatcher);
+        assertMismatchDescription(equalTo("Integer was <21>"),
+                new Person("Alice", 21), mapMatcher);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
-    public void simpleTestInvalidInputTypeAssertionError() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a Person having `int Person.getAge()` <22>");
-        expectedException.expectMessage("     but: was a java.lang.String (\"22\")");
-
-        Matcher matcher = map(Person::getAge, equalTo(22));
-        assertThat("22", matcher);
+    public void simpleTestInvalidInputTypeDescription() {
+        Matcher mapMatcher = map(Person::getAge, equalTo(22));
+        assertDescription(equalTo("a Person having `int Person.getAge()` <22>"), mapMatcher);
+        assertMismatchDescription(equalTo("was a java.lang.String (\"22\")"),
+                "22", mapMatcher);
     }
 
     @Test
@@ -155,14 +136,12 @@ public class LambdaMatchersTest {
     }
 
     @Test
-    public void simpleTestLambdaAssertionError() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a Person having `String lambda$(Person)` \"Pop\"");
-        expectedException.expectMessage("     but: `String lambda$(Person)` was \"Bob\"");
-
-        Person p = new Person("Alice Bob", 21);
+    public void simpleTestLambdaDescription() {
         Function<Person, String> mapper = a -> a.getName().split(" ")[1];
-        assertThat(p, map(mapper, equalTo("Pop")));
+        Matcher<Person> mapMatcher = map(mapper, equalTo("Pop"));
+        assertDescription(equalTo("a Person having `String lambda$(Person)` \"Pop\""), mapMatcher);
+        assertMismatchDescription(equalTo("`String lambda$(Person)` was \"Bob\""),
+                new Person("Alice Bob", 21), mapMatcher);
     }
 
     @Test
@@ -191,82 +170,66 @@ public class LambdaMatchersTest {
 
     @Test
     public void listTestMethodReference() {
-        Person p0 = new Person("Alice", 21);
-        Person p1 = new Person("Ana", 21);
-        Person p2 = new Person("Ariana", 21);
-        List<Person> list = Arrays.asList(p0, p1, p2);
-
+        List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
+                new Person("Ana Pop", 21),
+                new Person("Ariana G", 21));
         assertThat(list, everyItem(map(Person::getAge, equalTo(21))));
     }
 
     @Test
     public void listTestLambda() {
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Bob", 21);
-        Person p2 = new Person("Ariana Bob", 21);
-        List<Person> list = Arrays.asList(p0, p1, p2);
-
+        List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
+                new Person("Ana Bob", 21),
+                new Person("Ariana Bob", 21));
         Function<Person, String> mapper = a -> a.getName().split(" ")[1];
         assertThat(list, everyItem(map(mapper, equalTo("Bob"))));
     }
 
     @Test
     public void listTestHasProperty() {
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Bob", 21);
-        Person p2 = new Person("Ariana Bob", 21);
-        List<Person> list = Arrays.asList(p0, p1, p2);
-
+        List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
+                new Person("Ana Pop", 21),
+                new Person("Ariana G", 21));
         assertThat(list, everyItem(hasProperty("age", equalTo(21))));
     }
 
     @Test
     public void listNotMatcherTestMethodReference() {
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        List<Person> list = Arrays.asList(p0, p1, p2);
-
+        List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
+                new Person("Ana Pop", 21),
+                new Person("Ariana G", 21));
         assertThat(list, not(everyItem(map(Person::getName, startsWith("Alice")))));
     }
 
     @Test
     public void listBetterNotMatcherTestMethodReference() {
-        Person p0 = new Person("Alic Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        List<Person> list = Arrays.asList(p0, p1, p2);
-
-        assertThat(list, everyItem(map(Person::getName, not(startsWith("Alice")))));
+        List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
+                new Person("Ana Pop", 21),
+                new Person("Ariana G", 21));
+        assertThat(list, everyItem(map(Person::getName, not(startsWith("Alices")))));
     }
 
     @Test
     public void listBetterNotMatcherHasProperty() {
-        Person p0 = new Person("Alic Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        List<Person> list = Arrays.asList(p0, p1, p2);
-
-        assertThat(list, everyItem(hasProperty("name", not(startsWith("Alice")))));
+        List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
+                new Person("Ana Pop", 21),
+                new Person("Ariana G", 21));
+        assertThat(list, everyItem(hasProperty("name", not(startsWith("Alices")))));
     }
 
     @Test
     public void listHasItemMatcherTestMethodReference() {
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        List<Person> list = Arrays.asList(p0, p1, p2);
-
+        List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
+                new Person("Ana Pop", 21),
+                new Person("Ariana G", 21));
         assertThat(list, hasItem(map(Person::getName, startsWith("Alice"))));
     }
 
     @Test
     public void listHasItemMatcherTestLambda() {
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        List<Person> list = Arrays.asList(p0, p1, p2);
-
+        List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
+                new Person("Ana Pop", 21),
+                new Person("Ariana G", 21));
         // in case of inlining the following line, an explicit cast is needed
         Function<Person, Integer> mapper = (person) -> person.getAge() + 1;
         assertThat(list, hasItem(map(mapper, equalTo(22))));
@@ -274,91 +237,63 @@ public class LambdaMatchersTest {
 
     @Test
     public void listHasItemMatcherTestHasProperty() {
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        List<Person> list = Arrays.asList(p0, p1, p2);
-
+        List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
+                new Person("Ana Pop", 21),
+                new Person("Ariana G", 21));
         assertThat(list, hasItem(hasProperty("age", equalTo(21))));
     }
 
     @Test
     public void arrayHasItemMatcherTestMethodReference() {
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        Person[] array = {p0, p1, p2};
-
+        Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21), new Person("Ariana G", 21)};
         assertThat(array, hasItemInArray(map(Person::getName, startsWith("Alice"))));
     }
 
     @Test
     public void arrayHasItemMatcherTestLambda() {
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        Person[] array = {p0, p1, p2};
-
+        Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21), new Person("Ariana G", 21)};
         Function<Person, Integer> mapper = (person) -> person.getAge() + 1;
         assertThat(array, hasItemInArray(map(mapper, equalTo(22))));
     }
 
     @Test
     public void arrayHasItemMatcherTestHasProperty() {
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        Person[] array = {p0, p1, p2};
-
+        Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21), new Person("Ariana G", 21)};
         assertThat(array, hasItemInArray(hasProperty("age", equalTo(21))));
     }
 
     @Test
     public void listHasItemMatcherTestMapIterable() {
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        List<Person> list = Arrays.asList(p0, p1, p2);
-
+        List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
+                new Person("Ana Pop", 21),
+                new Person("Ariana G", 21));
         assertThat(list, mapIterable(Person::getName, hasItem("Ana Pop")));
     }
 
     @Test
-    public void listHasItemMatcherTestMapIterableAssertionError() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("a collection containing \"Ana Pop1\"");
-        expectedException.expectMessage("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"");
-
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        List<Person> list = Arrays.asList(p0, p1, p2);
-
-        assertThat(list, mapIterable(Person::getName, hasItem("Ana Pop1")));
+    public void listHasItemMatcherTestMapIterableDescription() {
+        List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
+                new Person("Ana Pop", 21),
+                new Person("Ariana G", 21));
+        Matcher<Iterable<? extends Person>> mapMatcher = mapIterable(Person::getName, hasItem("Ana Pop1"));
+        assertDescription(equalTo("an Iterable having `Iterable lambda$(Function, Iterable)` a collection containing \"Ana Pop1\""), mapMatcher);
+        assertMismatchDescription(equalTo("`Iterable lambda$(Function, Iterable)` was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
+                list, mapMatcher);
     }
 
     @Test
     public void arrayHasItemMatcherTestMapArray() {
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        Person[] array = {p0, p1, p2};
-
+        Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21), new Person("Ariana G", 21)};
         assertThat(array, mapArray(Person::getName, hasItem(startsWith("Ana"))));
     }
 
     @Test
-    public void arrayHasItemMatcherTestMapArrayAssertionError() {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("a collection containing a string starting with \"Ana1\"");
-        expectedException.expectMessage("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"");
-
-        Person p0 = new Person("Alice Bob", 21);
-        Person p1 = new Person("Ana Pop", 21);
-        Person p2 = new Person("Ariana G", 21);
-        Person[] array = {p0, p1, p2};
-
-        assertThat(array, mapArray(Person::getName, hasItem(startsWith("Ana1"))));
+    public void arrayHasItemMatcherTestMapArrayDescription() {
+        Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21), new Person("Ariana G", 21)};
+        Matcher<Person[]> mapMatcher = mapArray(Person::getName, hasItem(startsWith("Ana1")));
+        assertDescription(equalTo("an Object[] having `Iterable lambda$(Function, Object[])` a collection containing a string starting with \"Ana1\""), mapMatcher);
+        assertMismatchDescription(equalTo("`Iterable lambda$(Function, Object[])` was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
+                array, mapMatcher);
     }
 
     public static class Person {

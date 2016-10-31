@@ -16,11 +16,11 @@
 
 package ro.derbederos.hamcrest;
 
+import org.hamcrest.Matcher;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.rules.Timeout;
 
 import java.util.concurrent.Executors;
@@ -33,13 +33,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
+import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 import static ro.derbederos.hamcrest.RetryMatchers.*;
 
 public class RetryMatchersTest {
-
-    @Rule
-    public final ExpectedException expectedException = ExpectedException.none();
-
     @Rule
     public Timeout TIMEOUT = Timeout.millis(700);
 
@@ -87,23 +85,22 @@ public class RetryMatchersTest {
     }
 
     @Test
-    public void testRetryHasPropertyAssertionError() throws Exception {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: hasProperty(\"value\", <9>)");
-        expectedException.expectMessage("     but: after 300 millisecond(s) property 'value' was <7>");
-
+    public void testRetryHasPropertyDescription() throws Exception {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
-        assertThat(bean, retry(300, hasProperty("value", equalTo(9))));
+        Matcher<Object> retryMatcher = retry(300, hasProperty("value", equalTo(9)));
+        assertDescription(equalTo("hasProperty(\"value\", <9>)"), retryMatcher);
+        assertMismatchDescription(equalTo("after 300 millisecond(s) property 'value' was <7>"),
+                bean, retryMatcher);
     }
 
     @Test
-    public void testRetryLambdaAssertionError() throws Exception {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a DelayedValueBean having `int DelayedValueBean.getValue()` <9>");
-        expectedException.expectMessage("     but: after 300 millisecond(s) `int DelayedValueBean.getValue()` was <7>");
-
+    public void testRetryLambdaDescription() throws Exception {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
-        assertThat(bean, retry(300, DelayedValueBean::getValue, equalTo(9)));
+        Matcher<DelayedValueBean> retryMatcher = retry(300, DelayedValueBean::getValue, equalTo(9));
+        assertDescription(equalTo("a DelayedValueBean having `int DelayedValueBean.getValue()` <9>"), retryMatcher);
+        assertMismatchDescription(equalTo("after 300 millisecond(s) `int DelayedValueBean.getValue()` was <7>"),
+                bean, retryMatcher);
+
     }
 
     @Test
@@ -114,14 +111,12 @@ public class RetryMatchersTest {
     }
 
     @Test
-    public void testRetryAtomicIntegerAssertionError() throws Exception {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: an AtomicInteger having `int AtomicInteger.intValue()` <9>");
-        expectedException.expectMessage("     but: after 300 millisecond(s) `int AtomicInteger.intValue()` was <7>");
-
-        AtomicInteger atomicInteger = new AtomicInteger(2);
-        executeDelayed(100, () -> atomicInteger.set(7));
-        assertThat(atomicInteger, retryAtomicInteger(300, 9));
+    public void testRetryAtomicIntegerDescription() throws Exception {
+        AtomicInteger atomicInteger = new AtomicInteger(7);
+        Matcher<AtomicInteger> retryMatcher = retryAtomicInteger(300, 9);
+        assertDescription(equalTo("an AtomicInteger having `int AtomicInteger.intValue()` <9>"), retryMatcher);
+        assertMismatchDescription(equalTo("after 300 millisecond(s) `int AtomicInteger.intValue()` was <7>"),
+                atomicInteger, retryMatcher);
     }
 
     @Test

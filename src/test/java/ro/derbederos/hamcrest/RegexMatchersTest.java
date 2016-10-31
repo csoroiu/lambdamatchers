@@ -16,22 +16,18 @@
 
 package ro.derbederos.hamcrest;
 
-import org.junit.Rule;
+import org.hamcrest.Matcher;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.regex.Pattern;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
+import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
+import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 import static ro.derbederos.hamcrest.RegexMatchers.*;
 
 public class RegexMatchersTest {
-
-    @Rule
-    public final ExpectedException expectedException = ExpectedException.none();
-
     @Test
     public void testMatchesPatternSubstring() throws Exception {
         assertThat("alabala", matchesPattern("alabala"));
@@ -83,21 +79,17 @@ public class RegexMatchersTest {
     }
 
     @Test
-    public void testMatchesPatternAssertionError() throws Exception {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a string matching pattern \"ababa\"");
-        expectedException.expectMessage("     but: was \"alabala\"");
-
-        assertThat("alabala", matchesPattern("ababa"));
+    public void testMatchesPatternDescription() throws Exception {
+        Matcher<String> regexMatcher = matchesPattern("ababa");
+        assertDescription(equalTo("a string matching pattern \"ababa\""), regexMatcher);
+        assertMismatchDescription(equalTo("was \"alabala\""), "alabala", regexMatcher);
     }
 
     @Test
-    public void testContainsPatternAssertionError() throws Exception {
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: a string containing pattern \"ata\"");
-        expectedException.expectMessage("     but: was \"alabala\"");
-
-        assertThat("alabala", containsPattern("ata"));
+    public void testContainsPatternDescription() throws Exception {
+        Matcher<String> regexMatcher = containsPattern("ata");
+        assertDescription(equalTo("a string containing pattern \"ata\""), regexMatcher);
+        assertMismatchDescription(equalTo("was \"alabala\""), "alabala", regexMatcher);
     }
 
     @Test
