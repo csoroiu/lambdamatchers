@@ -8,3 +8,12 @@ jdk:
 cache:
   directories:
     - $HOME/.m2
+
+os:
+  - linux
+
+env:
+  matrix:
+    - PHASE='-Pjacoco'
+    - PHASE='-Pretrolambda'
+    - PHASE='-Pretrolambda -Pjacoco'
