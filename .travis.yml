@@ -14,7 +14,12 @@ os:
 
 env:
   matrix:
-    -
-    - MAVEN_JACOCO=true
-    - MAVEN_RETROLAMBDA=true
-    - MAVEN_JACOCO=true MAVEN_RETROLAMBDA=true
+    - PROFILES=
+    - PROFILES=-Pjacoco
+    - PROFILES=-Pretrolambda
+    - PROFILES=-Pretrolambda -Pjacoco
+
+install:
+    - mvn ${PROFILES} install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script:
+    - mvn ${PROFILES} test -B
