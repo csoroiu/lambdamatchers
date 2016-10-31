@@ -19,6 +19,12 @@ env:
     - PROFILES=-Pretrolambda
     - PROFILES=-Pretrolambda -Pjacoco
 
+matrix:
+  allow_failures:
+    - env: PROFILES=-Pretrolambda
+    - env: PROFILES=-Pretrolambda -Pjacoco
+
+
 install:
     - mvn ${PROFILES} install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:
