@@ -83,7 +83,11 @@ public final class StreamMatchers {
      * @since 0.1
      */
     public static <T> Matcher<Stream<? extends T>> toIterable(Matcher<Iterable<? super T>> matcher) {
-        return mapStream(Function.identity(), matcher);
+        return mapStream(identity(), matcher);
+    }
+
+    private static <T> Function<T, T> identity() {
+        return t -> t;
     }
 
     /**
