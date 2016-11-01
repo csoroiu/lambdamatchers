@@ -27,12 +27,14 @@ class MethodRefResolver {
 
     private static final String DISABLE_LAMBDA_METHOD_REF = "lambdamatchers.disableMethodRefNameSupport";
     private static final String LAMBDA_METHOD_PREFIX = "lambda$";
+    private static final String RETROLAMBDA_ACCESSMETHOD_PREFIX = "access$lambda$";
 
     private static Method GET_MEMBER_REF;
     private static boolean RESOLVE_MEMBER_REF = false;
 
     @Deprecated
     private static Method GET_CONSTANT_POOL;
+
     static {
         try {
             GET_CONSTANT_POOL = Class.class.getDeclaredMethod("getConstantPool");
@@ -64,7 +66,10 @@ class MethodRefResolver {
             if (member.isSynthetic()) {
                 if (member.getName().startsWith(LAMBDA_METHOD_PREFIX)) {
                     return "`" + methodToString(member) + "`";
+                } else if (member.getName().startsWith(RETROLAMBDA_ACCESSMETHOD_PREFIX)) {
+                    return "`" + methodToString(member) + "`";
                 }
+                return null;
             }
             if (member instanceof Constructor
                     || member instanceof Method) {
@@ -81,6 +86,8 @@ class MethodRefResolver {
             sb.append(" ");
         }
         if (methodRef.getName().startsWith(LAMBDA_METHOD_PREFIX)) {
+            sb.append(LAMBDA_METHOD_PREFIX);
+        } else if (methodRef.getName().startsWith(RETROLAMBDA_ACCESSMETHOD_PREFIX)) {
             sb.append(LAMBDA_METHOD_PREFIX);
         } else if (methodRef instanceof Constructor) {
             sb.append("new ");

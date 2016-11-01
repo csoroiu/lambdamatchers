@@ -58,8 +58,13 @@ public class LambdaMatchersTest {
     @Test
     public void simpleTestInstanceObjectMethodReferenceDescription() {
         Matcher<Person> mapMatcher = map(this::getPersonName, startsWith("B"));
-        assertDescription(equalTo("a Person having `String LambdaMatchersTest.getPersonName(Person)` a string starting with \"B\""), mapMatcher);
-        assertMismatchDescription(equalTo("`String LambdaMatchersTest.getPersonName(Person)` was \"Alice\""),
+        assertDescription(anyOf(
+                equalTo("a Person having `String LambdaMatchersTest.getPersonName(Person)` a string starting with \"B\""),
+                equalTo("a Person having `String lambda$(LambdaMatchersTest, Person)` a string starting with \"B\"")),
+                mapMatcher);
+        assertMismatchDescription(anyOf(
+                equalTo("`String LambdaMatchersTest.getPersonName(Person)` was \"Alice\""),
+                equalTo("`String lambda$(LambdaMatchersTest, Person)` was \"Alice\"")),
                 new Person("Alice", 21), mapMatcher);
     }
 
