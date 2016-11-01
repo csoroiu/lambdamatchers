@@ -14,9 +14,15 @@ os:
 
 env:
   matrix:
-    - PROFILES=-Pjacoco
-    - PROFILES=-Pretrolambda
-    - PROFILES=-Pretrolambda -Pjacoco
+    - PROFILES='-Pjacoco'
+    - PROFILES='-Pretrolambda'
+    - PROFILES='-Pretrolambda -Pjacoco'
+    - PROFILES='-Pretrolambda -Pjdkapicheck -DskipTests=true'
+
+matrix:
+  allow_failures:
+    - env: PROFILES='-Pretrolambda -Pjacoco'
+    - env: PROFILES='-Pretrolambda -Pjdkapicheck -DskipTests=true'
 
 install:
     - mvn ${PROFILES} install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
