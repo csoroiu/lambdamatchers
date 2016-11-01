@@ -36,8 +36,8 @@ final class FunctionMatcher<T, U> extends TypeSafeMatcher<T> {
         super(inputType);
         this.mapper = Objects.requireNonNull(mapper);
         this.subMatcher = Objects.requireNonNull(subMatcher);
-        this.featureDescription = Objects.toString(featureDescription, "").trim();
-        this.featureName = Objects.toString(featureName, "").trim();
+        this.featureDescription = Objects.requireNonNull(featureDescription);
+        this.featureName = Objects.requireNonNull(featureName);
     }
 
     @Override

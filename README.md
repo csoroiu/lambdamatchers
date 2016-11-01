@@ -14,13 +14,13 @@ This library implements some hamcrest matchers usable with Java 8 and a set of u
 <dependency>
     <groupId>ro.derbederos.hamcrest</groupId>
     <artifactId>lambdamatchers</artifactId>
-    <version>0.7</version>
+    <version>0.8</version>
     <scope>test</scope>
 </dependency>
 ```
 #### Gradle dependency
 ```
-testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.7'
+testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.8'
 ```
 
 ## Examples
@@ -74,7 +74,8 @@ Expected: every item is a Person having `int Person.getAge()` a value equal to o
 ## Features
 * The matchers have **meaningful descriptions**. The library is intended to be used inside unit test and ***help the developers to get an idea of what is wrong before looking at the source code***.
 * Lambda type detection, thanks to **[Type Tools](http://github.com/jhalterman/typetools)** library.
-* Built for Java 8. There are plans to support Java 5, 6, 7 via **[Retrolambda](https://github.com/orfjackal/retrolambda)**.
+* Built for Java 6, 7, 8 via **[Retrolambda](https://github.com/orfjackal/retrolambda)**.
+  * Matchers that use **Java 8** data types and methods will not work. 
 * Compatible with **[Hamcrest](https://github.com/hamcrest/JavaHamcrest)** versions **1.3** and **2.0**, even if it is compiled against version **1.3**.
 
 **Happy coding!**
