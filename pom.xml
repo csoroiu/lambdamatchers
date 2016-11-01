@@ -67,6 +67,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <retrolambda.target>1.5</retrolambda.target>
         <jdkapicheck.signature>java15</jdkapicheck.signature>
+        <tool.proguard.version>5.3.2</tool.proguard.version>
     </properties>
 
     <build>
@@ -233,6 +234,47 @@
                                 <version>1.0</version>
                             </signature>
                         </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>proguard</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.wvengen</groupId>
+                        <artifactId>proguard-maven-plugin</artifactId>
+                        <version>2.0.13</version>
+                        <executions>
+                            <execution>
+                                <id>proguard-obfuscate</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>proguard</goal>
+                                </goals>
+                                <configuration>
+                                    <proguardVersion>${tool.proguard.version}</proguardVersion>
+                                    <proguardInclude>${basedir}/proguard-project.txt</proguardInclude>
+                                    <obfuscate>true</obfuscate>
+                                    <attach>true</attach>
+                                    <appendClassifier>false</appendClassifier>
+                                    <addMavenDescriptor>true</addMavenDescriptor>
+                                    <injar>${project.build.finalName}.jar</injar>
+                                    <injarNotExistsSkip>true</injarNotExistsSkip>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>net.sf.proguard</groupId>
+                                <artifactId>proguard-base</artifactId>
+                                <version>${tool.proguard.version}</version>
+                            </dependency>
+                        </dependencies>
                     </plugin>
                 </plugins>
             </build>
