@@ -173,6 +173,8 @@
                             </execution>
                         </executions>
                         <configuration>
+                            <fork>true</fork>
+                            <defaultMethods>true</defaultMethods>
                             <target>${retrolambda.target}</target>
                         </configuration>
                     </plugin>
