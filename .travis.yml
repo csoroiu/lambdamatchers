@@ -25,6 +25,6 @@ matrix:
     - env: PROFILES='-Pretrolambda -Pjdkapicheck -DskipTests=true'
 
 install:
-    - mvn ${PROFILES} install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    - mvn ${PROFILES} clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:
-    - mvn ${PROFILES} test -B
+    - mvn ${PROFILES} clean test -B
