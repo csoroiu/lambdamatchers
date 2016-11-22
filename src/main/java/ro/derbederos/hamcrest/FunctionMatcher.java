@@ -16,7 +16,7 @@
 
 package ro.derbederos.hamcrest;
 
-import net.jodah.typetools.TypeResolver;
+import _shaded.net.jodah.typetools.TypeResolver;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;

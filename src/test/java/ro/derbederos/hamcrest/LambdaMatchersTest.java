@@ -17,7 +17,6 @@
 package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -73,7 +72,6 @@ public class LambdaMatchersTest {
     }
 
     @Test
-    @Ignore //ignore until constructor reference is released in typetools
     public void simpleTestConstructorReferenceDescription() {
         Matcher<String> mapMatcher = map(Integer::new, equalTo(5));
         assertDescription(equalTo("a String having `new Integer(String)` <5>"), mapMatcher);

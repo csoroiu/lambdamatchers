@@ -16,8 +16,7 @@
 
 package ro.derbederos.hamcrest;
 
-import net.jodah.typetools.TypeResolver;
-import sun.reflect.ConstantPool;
+import _shaded.net.jodah.typetools.TypeResolver;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
@@ -32,16 +31,9 @@ class MethodRefResolver {
     private static Method GET_MEMBER_REF;
     private static boolean RESOLVE_MEMBER_REF = false;
 
-    @Deprecated
-    private static Method GET_CONSTANT_POOL;
-
     static {
         try {
-            GET_CONSTANT_POOL = Class.class.getDeclaredMethod("getConstantPool");
-            GET_CONSTANT_POOL.setAccessible(true);
-
-            GET_MEMBER_REF = TypeResolver.class.getDeclaredMethod("getMethodInfo", ConstantPool.class);
-//            GET_MEMBER_REF = TypeResolver.class.getDeclaredMethod("getMemberRef", Class.class);
+            GET_MEMBER_REF = TypeResolver.class.getDeclaredMethod("getMemberRef", Class.class);
             GET_MEMBER_REF.setAccessible(true);
 
             RESOLVE_MEMBER_REF = true;
@@ -57,8 +49,7 @@ class MethodRefResolver {
         }
         Member member;
         try {
-            member = (Member) GET_MEMBER_REF.invoke(null, GET_CONSTANT_POOL.invoke(lambdaClass));
-//            member = (Member) GET_MEMBER_REF.invoke(null, lambdaClass);
+            member = (Member) GET_MEMBER_REF.invoke(null, lambdaClass);
         } catch (Exception ignore) {
             return null;
         }
