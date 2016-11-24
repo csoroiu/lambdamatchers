@@ -17,6 +17,7 @@
 package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -84,6 +85,7 @@ public class LambdaMatchersTest {
     }
 
     @Test
+    @Ignore
     public void simpleTestObjectClassMethodReferenceDescription() {
         Matcher<Object> mapMatcher = map(Object::toString, equalTo("4"));
         assertDescription(equalTo("an Object having `String Object.toString()` \"4\""), mapMatcher);
