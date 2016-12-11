@@ -25,7 +25,7 @@ import java.util.OptionalLong;
 
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
-import static ro.derbederos.hamcrest.LambdaMatchers.map;
+import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
 
 /**
  * This class provides a set of matchers for {@link Optional}, {@link OptionalInt},  {@link OptionalLong} and
@@ -46,7 +46,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static Matcher<Optional<?>> optionalIsPresent() {
-        return map(Optional::isPresent, "isPresent", equalTo(true));
+        return mappedBy(Optional::isPresent, "isPresent", equalTo(true));
     }
 
     /**
@@ -55,7 +55,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static Matcher<Optional<?>> optionalIsEmpty() {
-        return map(Optional::isPresent, "isPresent", equalTo(false));
+        return mappedBy(Optional::isPresent, "isPresent", equalTo(false));
     }
 
     /**
@@ -67,7 +67,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static <T> Matcher<Optional<T>> optionalHasValue(Matcher<? super T> matcher) {
-        return allOf(optionalIsPresent(), map(Optional::get, "value", matcher));
+        return allOf(optionalIsPresent(), mappedBy(Optional::get, "value", matcher));
     }
 
     /**
@@ -88,7 +88,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static Matcher<OptionalInt> optionalIntIsPresent() {
-        return map(OptionalInt::isPresent, "isPresent", equalTo(true));
+        return mappedBy(OptionalInt::isPresent, "isPresent", equalTo(true));
     }
 
     /**
@@ -97,7 +97,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static Matcher<OptionalInt> optionalIntIsEmpty() {
-        return map(OptionalInt::isPresent, "isPresent", equalTo(false));
+        return mappedBy(OptionalInt::isPresent, "isPresent", equalTo(false));
     }
 
     /**
@@ -108,7 +108,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static Matcher<OptionalInt> optionalIntHasValue(Matcher<Integer> matcher) {
-        return allOf(optionalIntIsPresent(), map(OptionalInt::getAsInt, "value", matcher));
+        return allOf(optionalIntIsPresent(), mappedBy(OptionalInt::getAsInt, "value", matcher));
     }
 
     /**
@@ -128,7 +128,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static Matcher<OptionalLong> optionalLongIsPresent() {
-        return map(OptionalLong::isPresent, "isPresent", equalTo(true));
+        return mappedBy(OptionalLong::isPresent, "isPresent", equalTo(true));
     }
 
     /**
@@ -137,7 +137,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static Matcher<OptionalLong> optionalLongIsEmpty() {
-        return map(OptionalLong::isPresent, "isPresent", equalTo(false));
+        return mappedBy(OptionalLong::isPresent, "isPresent", equalTo(false));
     }
 
     /**
@@ -148,7 +148,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static Matcher<OptionalLong> optionalLongHasValue(Matcher<Long> matcher) {
-        return allOf(optionalLongIsPresent(), map(OptionalLong::getAsLong, "value", matcher));
+        return allOf(optionalLongIsPresent(), mappedBy(OptionalLong::getAsLong, "value", matcher));
     }
 
     /**
@@ -168,7 +168,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static Matcher<OptionalDouble> optionalDoubleIsPresent() {
-        return map(OptionalDouble::isPresent, "isPresent", equalTo(true));
+        return mappedBy(OptionalDouble::isPresent, "isPresent", equalTo(true));
     }
 
     /**
@@ -177,7 +177,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static Matcher<OptionalDouble> optionalDoubleIsEmpty() {
-        return map(OptionalDouble::isPresent, "isPresent", equalTo(false));
+        return mappedBy(OptionalDouble::isPresent, "isPresent", equalTo(false));
     }
 
     /**
@@ -187,7 +187,7 @@ public final class OptionalMatchers {
      * @since 0.1
      */
     public static Matcher<OptionalDouble> optionalDoubleHasValue(Matcher<Double> matcher) {
-        return allOf(optionalDoubleIsPresent(), map(OptionalDouble::getAsDouble, "value", matcher));
+        return allOf(optionalDoubleIsPresent(), mappedBy(OptionalDouble::getAsDouble, "value", matcher));
     }
 
     /**

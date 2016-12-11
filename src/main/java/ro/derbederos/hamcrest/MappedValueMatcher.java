@@ -23,7 +23,7 @@ import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Objects;
 
-final class FunctionMatcher<T, U> extends TypeSafeMatcher<T> {
+final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
     private final String featureDescription;
     private final String featureName;
     private final Function<T, U> mapper;
@@ -31,7 +31,7 @@ final class FunctionMatcher<T, U> extends TypeSafeMatcher<T> {
     private T lastInput = null;
     private U lastValue = null;
 
-    private FunctionMatcher(Function<T, U> mapper, Class<?> inputType, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
+    private MappedValueMatcher(Function<T, U> mapper, Class<?> inputType, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
         super(inputType);
         this.mapper = Objects.requireNonNull(mapper);
         this.subMatcher = Objects.requireNonNull(subMatcher);
@@ -64,7 +64,7 @@ final class FunctionMatcher<T, U> extends TypeSafeMatcher<T> {
         return subMatcher.matches(lastValue);
     }
 
-    static <T, U> Matcher<T> map(Function<T, U> mapper, Matcher<? super U> matcher) {
+    static <T, U> Matcher<T> mappedBy(Function<T, U> mapper, Matcher<? super U> matcher) {
         Objects.requireNonNull(mapper);
         Class<?> featureType = TypeResolver.resolveRawArguments(Function.class, mapper.getClass())[1];
         String featureTypeName = featureType.getSimpleName();
@@ -76,10 +76,10 @@ final class FunctionMatcher<T, U> extends TypeSafeMatcher<T> {
                 featureTypeName = methodRefString;
             }
         }
-        return map(mapper, featureTypeName, matcher);
+        return mappedBy(mapper, featureTypeName, matcher);
     }
 
-    static <T, U> Matcher<T> map(Function<T, U> mapper, String featureTypeName, Matcher<? super U> matcher) {
+    static <T, U> Matcher<T> mappedBy(Function<T, U> mapper, String featureTypeName, Matcher<? super U> matcher) {
         Objects.requireNonNull(mapper);
         Class<?> inputType = TypeResolver.resolveRawArguments(Function.class, mapper.getClass())[0];
         String objectTypeName = inputType.getSimpleName();
@@ -88,7 +88,7 @@ final class FunctionMatcher<T, U> extends TypeSafeMatcher<T> {
             objectTypeName = "UnknownObjectType";
         }
         String featureDescription = buildFeatureDescription(objectTypeName, featureTypeName);
-        return new FunctionMatcher<>(mapper, inputType, featureDescription, featureTypeName, matcher);
+        return new MappedValueMatcher<>(mapper, inputType, featureDescription, featureTypeName, matcher);
     }
 
     private static String buildFeatureDescription(String objectTypeName, String featureTypeName) {

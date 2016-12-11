@@ -67,10 +67,23 @@ public final class LambdaMatchers {
      * @param matcher     The {@link Matcher} to be applied on the result of the {@code mapper} function.
      * @param <T>         The type of the input.
      * @param <U>         The type of the result of the {@code mapper} function.
-     * @since 0.7
+     * @since 0.9
      */
-    public static <T, U> Matcher<T> map(Function<T, U> mapper, String featureName, Matcher<? super U> matcher) {
-        return FunctionMatcher.map(mapper, featureName, matcher);
+    public static <T, U> Matcher<T> mappedBy(Function<T, U> mapper, String featureName, Matcher<? super U> matcher) {
+        return MappedValueMatcher.mappedBy(mapper, featureName, matcher);
+    }
+
+    /**
+     * Alias for {@link #mappedBy(Function, Matcher)}.
+     *
+     * @param mapper  The function that transforms the input.
+     * @param matcher The {@link Matcher} to be applied on the result of the {@code mapper} function.
+     * @param <T>     The type of the input.
+     * @param <U>     The type of the result of the {@code mapper} function.
+     * @since 0.1
+     */
+    public static <T, U> Matcher<T> map(Function<T, U> mapper, Matcher<? super U> matcher) {
+        return mappedBy(mapper, matcher);
     }
 
     /**
@@ -94,10 +107,11 @@ public final class LambdaMatchers {
      * @param matcher The {@link Matcher} to be applied on the result of the {@code mapper} function.
      * @param <T>     The type of the input.
      * @param <U>     The type of the result of the {@code mapper} function.
-     * @since 0.1
+     * @see #map(Function, Matcher)
+     * @since 0.9
      */
-    public static <T, U> Matcher<T> map(Function<T, U> mapper, Matcher<? super U> matcher) {
-        return FunctionMatcher.map(mapper, matcher);
+    public static <T, U> Matcher<T> mappedBy(Function<T, U> mapper, Matcher<? super U> matcher) {
+        return MappedValueMatcher.mappedBy(mapper, matcher);
     }
 
     /**
@@ -116,8 +130,8 @@ public final class LambdaMatchers {
      * @since 0.1
      */
     public static <T, U> Matcher<Iterable<? extends T>> mapIterable(Function<T, U> mapper,
-            Matcher<Iterable<? super U>> matcher) {
-        return map(iterable -> transformIterable(mapper, iterable), matcher);
+                                                                    Matcher<Iterable<? super U>> matcher) {
+        return mappedBy(iterable -> transformIterable(mapper, iterable), matcher);
     }
 
     private static <T, U> Iterable<U> transformIterable(Function<T, U> mapper, Iterable<? extends T> iterable) {
@@ -144,7 +158,7 @@ public final class LambdaMatchers {
      * @since 0.1
      */
     public static <T, U> Matcher<T[]> mapArray(Function<T, U> mapper, Matcher<Iterable<? super U>> matcher) {
-        return map(array -> transformArray(mapper, array), matcher);
+        return mappedBy(array -> transformArray(mapper, array), matcher);
     }
 
     private static <T, U> Iterable<U> transformArray(Function<T, U> mapper, T[] array) {

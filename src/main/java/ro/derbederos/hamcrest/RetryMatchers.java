@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.hamcrest.Matchers.equalTo;
-import static ro.derbederos.hamcrest.LambdaMatchers.map;
+import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
 
 /**
  * This class provides a set of matchers that retry a certain {@link Matcher} until a duration is reached.
@@ -145,7 +145,7 @@ public final class RetryMatchers {
      * @since 0.3
      */
     public static <T, U> Matcher<T> retry(long durationMillis, Function<T, U> mapper, Matcher<? super U> matcher) {
-        return retry(durationMillis, map(mapper, matcher));
+        return retry(durationMillis, mappedBy(mapper, matcher));
     }
 
     /**

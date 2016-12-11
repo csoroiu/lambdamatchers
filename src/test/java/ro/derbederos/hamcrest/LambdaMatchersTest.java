@@ -33,12 +33,12 @@ public class LambdaMatchersTest {
     @Test
     public void simpleTestObjectMethodReference() {
         Person p = new Person("Alice", 21);
-        assertThat(p, map(Person::getName, startsWith("A")));
+        assertThat(p, mappedBy(Person::getName, startsWith("A")));
     }
 
     @Test
     public void simpleTestObjectMethodReferenceDescription() {
-        Matcher<Person> mapMatcher = map(Person::getName, startsWith("B"));
+        Matcher<Person> mapMatcher = mappedBy(Person::getName, startsWith("B"));
         assertDescription(equalTo("a Person having `String Person.getName()` a string starting with \"B\""), mapMatcher);
         assertMismatchDescription(equalTo("`String Person.getName()` was \"Alice\""),
                 new Person("Alice", 21), mapMatcher);
@@ -51,12 +51,12 @@ public class LambdaMatchersTest {
     @Test
     public void simpleTestInstanceObjectMethodReference() {
         Person p = new Person("Alice", 21);
-        assertThat(p, map(this::getPersonName, startsWith("A")));
+        assertThat(p, mappedBy(this::getPersonName, startsWith("A")));
     }
 
     @Test
     public void simpleTestInstanceObjectMethodReferenceDescription() {
-        Matcher<Person> mapMatcher = map(this::getPersonName, startsWith("B"));
+        Matcher<Person> mapMatcher = mappedBy(this::getPersonName, startsWith("B"));
         assertDescription(anyOf(
                 equalTo("a Person having `String LambdaMatchersTest.getPersonName(Person)` a string starting with \"B\""),
                 equalTo("a Person having `String lambda$(LambdaMatchersTest, Person)` a string starting with \"B\"")),
@@ -69,25 +69,25 @@ public class LambdaMatchersTest {
 
     @Test
     public void simpleTestConstructorReference() {
-        assertThat("4", map(Integer::new, equalTo(4)));
+        assertThat("4", mappedBy(Integer::new, equalTo(4)));
     }
 
     @Test
     public void simpleTestConstructorReferenceDescription() {
-        Matcher<String> mapMatcher = map(Integer::new, equalTo(5));
+        Matcher<String> mapMatcher = mappedBy(Integer::new, equalTo(5));
         assertDescription(equalTo("a String having `new Integer(String)` <5>"), mapMatcher);
         assertMismatchDescription(equalTo("`new Integer(String)` was <4>"), "4", mapMatcher);
     }
 
     @Test
     public void simpleTestObjectClassMethodReference() {
-        assertThat(4d, map(Object::toString, equalTo("4.0")));
+        assertThat(4d, mappedBy(Object::toString, equalTo("4.0")));
     }
 
     @Test
     @Ignore
     public void simpleTestObjectClassMethodReferenceDescription() {
-        Matcher<Object> mapMatcher = map(Object::toString, equalTo("4"));
+        Matcher<Object> mapMatcher = mappedBy(Object::toString, equalTo("4"));
         assertDescription(equalTo("an Object having `String Object.toString()` \"4\""), mapMatcher);
         assertMismatchDescription(equalTo("`String Object.toString()` was \"4.0\""),
                 4d, mapMatcher);
@@ -102,7 +102,7 @@ public class LambdaMatchersTest {
                 return (T) (Integer) person.getAge();
             }
         };
-        Matcher<Person> mapMatcher = map(getAge, equalTo(22));
+        Matcher<Person> mapMatcher = mappedBy(getAge, equalTo(22));
         assertDescription(equalTo("a Person having UnknownFieldType <22>"), mapMatcher);
         assertMismatchDescription(equalTo("UnknownFieldType was <21>"),
                 new Person("Alice", 21), mapMatcher);
@@ -117,7 +117,7 @@ public class LambdaMatchersTest {
                 return ((Person) person).getAge();
             }
         };
-        Matcher<Person> mapMatcher = map(getAge, equalTo(22));
+        Matcher<Person> mapMatcher = mappedBy(getAge, equalTo(22));
         assertDescription(equalTo("an UnknownObjectType having Integer <22>"), mapMatcher);
         assertMismatchDescription(equalTo("Integer was <21>"),
                 new Person("Alice", 21), mapMatcher);
@@ -126,7 +126,7 @@ public class LambdaMatchersTest {
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
     public void simpleTestInvalidInputTypeDescription() {
-        Matcher mapMatcher = map(Person::getAge, equalTo(22));
+        Matcher mapMatcher = mappedBy(Person::getAge, equalTo(22));
         assertDescription(equalTo("a Person having `int Person.getAge()` <22>"), mapMatcher);
         assertMismatchDescription(equalTo("was a java.lang.String (\"22\")"),
                 "22", mapMatcher);
@@ -136,13 +136,13 @@ public class LambdaMatchersTest {
     public void simpleTestLambda() {
         Person p = new Person("Alice Bob", 21);
         Function<Person, String> mapper = a -> a.getName().split(" ")[1];
-        assertThat(p, map(mapper, equalTo("Bob")));
+        assertThat(p, mappedBy(mapper, equalTo("Bob")));
     }
 
     @Test
     public void simpleTestLambdaDescription() {
         Function<Person, String> mapper = a -> a.getName().split(" ")[1];
-        Matcher<Person> mapMatcher = map(mapper, equalTo("Pop"));
+        Matcher<Person> mapMatcher = mappedBy(mapper, equalTo("Pop"));
         assertDescription(equalTo("a Person having `String lambda$(Person)` \"Pop\""), mapMatcher);
         assertMismatchDescription(equalTo("`String lambda$(Person)` was \"Bob\""),
                 new Person("Alice Bob", 21), mapMatcher);
@@ -157,13 +157,13 @@ public class LambdaMatchersTest {
     @Test
     public void simpleNotMatcherTestLambda() {
         Person p = new Person("Alice", 21);
-        assertThat(p, not(map(Person::getName, startsWith("B"))));
+        assertThat(p, not(mappedBy(Person::getName, startsWith("B"))));
     }
 
     @Test
     public void simpleBetterNotMatcherTestLambda() {
         Person p = new Person("Alice", 21);
-        assertThat(p, map(Person::getName, not(startsWith("B"))));
+        assertThat(p, mappedBy(Person::getName, not(startsWith("B"))));
     }
 
     @Test
@@ -177,7 +177,7 @@ public class LambdaMatchersTest {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
-        assertThat(list, everyItem(map(Person::getAge, equalTo(21))));
+        assertThat(list, everyItem(mappedBy(Person::getAge, equalTo(21))));
     }
 
     @Test
@@ -186,7 +186,7 @@ public class LambdaMatchersTest {
                 new Person("Ana Bob", 21),
                 new Person("Ariana Bob", 21));
         Function<Person, String> mapper = a -> a.getName().split(" ")[1];
-        assertThat(list, everyItem(map(mapper, equalTo("Bob"))));
+        assertThat(list, everyItem(mappedBy(mapper, equalTo("Bob"))));
     }
 
     @Test
@@ -202,7 +202,7 @@ public class LambdaMatchersTest {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
-        assertThat(list, not(everyItem(map(Person::getName, startsWith("Alice")))));
+        assertThat(list, not(everyItem(mappedBy(Person::getName, startsWith("Alice")))));
     }
 
     @Test
@@ -210,7 +210,7 @@ public class LambdaMatchersTest {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
-        assertThat(list, everyItem(map(Person::getName, not(startsWith("Alices")))));
+        assertThat(list, everyItem(mappedBy(Person::getName, not(startsWith("Alices")))));
     }
 
     @Test
@@ -226,7 +226,7 @@ public class LambdaMatchersTest {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
-        assertThat(list, hasItem(map(Person::getName, startsWith("Alice"))));
+        assertThat(list, hasItem(mappedBy(Person::getName, startsWith("Alice"))));
     }
 
     @Test
@@ -236,7 +236,7 @@ public class LambdaMatchersTest {
                 new Person("Ariana G", 21));
         // in case of inlining the following line, an explicit cast is needed
         Function<Person, Integer> mapper = (person) -> person.getAge() + 1;
-        assertThat(list, hasItem(map(mapper, equalTo(22))));
+        assertThat(list, hasItem(mappedBy(mapper, equalTo(22))));
     }
 
     @Test
@@ -250,14 +250,14 @@ public class LambdaMatchersTest {
     @Test
     public void arrayHasItemMatcherTestMethodReference() {
         Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21), new Person("Ariana G", 21)};
-        assertThat(array, hasItemInArray(map(Person::getName, startsWith("Alice"))));
+        assertThat(array, hasItemInArray(mappedBy(Person::getName, startsWith("Alice"))));
     }
 
     @Test
     public void arrayHasItemMatcherTestLambda() {
         Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21), new Person("Ariana G", 21)};
         Function<Person, Integer> mapper = (person) -> person.getAge() + 1;
-        assertThat(array, hasItemInArray(map(mapper, equalTo(22))));
+        assertThat(array, hasItemInArray(mappedBy(mapper, equalTo(22))));
     }
 
     @Test

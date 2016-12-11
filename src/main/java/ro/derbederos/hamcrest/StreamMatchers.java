@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.emptyIterable;
-import static ro.derbederos.hamcrest.LambdaMatchers.map;
+import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
 
 /**
  * This class provides a set of mapping matchers for java 8 streams.
@@ -65,8 +65,8 @@ public final class StreamMatchers {
      * @since 0.1
      */
     public static <T, U> Matcher<Stream<? extends T>> mapStream(Function<T, U> mapper,
-            Matcher<Iterable<? super U>> matcher) {
-        return map(stream -> stream.map(mapper::apply).collect(Collectors.toList()), matcher);
+                                                                Matcher<Iterable<? super U>> matcher) {
+        return mappedBy(stream -> stream.map(mapper::apply).collect(Collectors.toList()), matcher);
     }
 
     /**
@@ -102,7 +102,7 @@ public final class StreamMatchers {
      * @since 0.1
      */
     public static <T, S extends BaseStream<T, S>> Matcher<BaseStream<T, S>> emptyStream() {
-        return map(StreamMatchers::baseStreamToIterable, emptyIterable());
+        return mappedBy(StreamMatchers::baseStreamToIterable, emptyIterable());
     }
 
     private static <S extends BaseStream<T, S>, T> Iterable<T> baseStreamToIterable(BaseStream<T, S> stream) {

@@ -25,7 +25,7 @@ import java.util.OptionalLong;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static ro.derbederos.hamcrest.LambdaMatchers.map;
+import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
 import static ro.derbederos.hamcrest.OptionalMatchers.*;
 
 public class OptionalMatchersTest {
@@ -46,7 +46,7 @@ public class OptionalMatchersTest {
 
     @Test
     public void testOptionalValueWithMap() throws Exception {
-        assertThat(Optional.of("abc"), map(t -> t.orElse(null), equalTo("abc")));
+        assertThat(Optional.of("abc"), mappedBy(t -> t.orElse(null), equalTo("abc")));
     }
 
     @Test
