@@ -46,7 +46,7 @@ public class OptionalMatchersTest {
 
     @Test
     public void testOptionalValueWithMap() throws Exception {
-        assertThat(Optional.of("abc"), mappedBy(t -> t.orElse(null), equalTo("abc")));
+        assertThat(Optional.of("abc"), mappedBy(Optional::get, equalTo("abc")));
     }
 
     @Test
