@@ -34,7 +34,7 @@ public final class SupplierMatcher {
      */
     public static <T> Matcher<Supplier<T>> supplierMatcher(Supplier<T> supplier, Matcher<? super T> matcher) {
         Objects.requireNonNull(supplier);
-        String featureTypeName = getFeatureTypeName(supplier.getClass(), Supplier.class, 0);
+        String featureTypeName = getFeatureTypeName(supplier, Supplier.class, 0);
         String featureDescription = "an " + featureTypeName;
         return new MappedValueMatcher<>(Supplier::get, Supplier.class, featureDescription, featureTypeName, matcher);
     }

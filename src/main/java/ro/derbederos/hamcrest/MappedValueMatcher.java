@@ -65,13 +65,13 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
     }
 
     static <T, U> Matcher<T> mappedBy(Function<T, U> mapper, Matcher<? super U> matcher) {
-        return mappedBy(Objects.requireNonNull(mapper), getFeatureTypeName(mapper.getClass(), Function.class, 1), matcher);
+        return mappedBy(Objects.requireNonNull(mapper), getFeatureTypeName(mapper, Function.class, 1), matcher);
     }
 
-    static <T> String getFeatureTypeName(Class<? extends T> mapperClass, Class<T> mapperInterface, int resultIndex) {
-        String featureTypeName = MethodRefResolver.resolveMethodRefName(mapperClass);
+    static <T> String getFeatureTypeName(T mapper, Class<T> mapperInterface, int resultIndex) {
+        String featureTypeName = MethodRefResolver.resolveMethodRefName(mapper.getClass());
         if (featureTypeName == null) {
-            Class<?> featureType = TypeResolver.resolveRawArguments(mapperInterface, mapperClass)[resultIndex];
+            Class<?> featureType = TypeResolver.resolveRawArguments(mapperInterface, mapper.getClass())[resultIndex];
             featureTypeName = featureType.getSimpleName();
             if (TypeResolver.Unknown.class.isAssignableFrom(featureType)) {
                 featureTypeName = "UnknownFieldType";
