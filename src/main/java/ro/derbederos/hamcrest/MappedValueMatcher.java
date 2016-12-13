@@ -31,7 +31,7 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
     private T lastInput = null;
     private U lastValue = null;
 
-    private MappedValueMatcher(Function<T, U> mapper, Class<?> inputType, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
+    MappedValueMatcher(Function<T, U> mapper, Class<?> inputType, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
         super(inputType);
         this.mapper = Objects.requireNonNull(mapper);
         this.subMatcher = Objects.requireNonNull(subMatcher);
@@ -65,18 +65,19 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
     }
 
     static <T, U> Matcher<T> mappedBy(Function<T, U> mapper, Matcher<? super U> matcher) {
-        Objects.requireNonNull(mapper);
-        Class<?> featureType = TypeResolver.resolveRawArguments(Function.class, mapper.getClass())[1];
-        String featureTypeName = featureType.getSimpleName();
-        if (TypeResolver.Unknown.class.isAssignableFrom(featureType)) {
-            featureTypeName = "UnknownFieldType";
-        } else {
-            String methodRefString = MethodRefResolver.resolveMethodRefName(mapper.getClass());
-            if (methodRefString != null) {
-                featureTypeName = methodRefString;
+        return mappedBy(Objects.requireNonNull(mapper), getFeatureTypeName(mapper.getClass(), Function.class, 1), matcher);
+    }
+
+    static <T> String getFeatureTypeName(Class<? extends T> mapperClass, Class<T> mapperInterface, int resultIndex) {
+        String featureTypeName = MethodRefResolver.resolveMethodRefName(mapperClass);
+        if (featureTypeName == null) {
+            Class<?> featureType = TypeResolver.resolveRawArguments(mapperInterface, mapperClass)[resultIndex];
+            featureTypeName = featureType.getSimpleName();
+            if (TypeResolver.Unknown.class.isAssignableFrom(featureType)) {
+                featureTypeName = "UnknownFieldType";
             }
         }
-        return mappedBy(mapper, featureTypeName, matcher);
+        return featureTypeName;
     }
 
     static <T, U> Matcher<T> mappedBy(Function<T, U> mapper, String featureTypeName, Matcher<? super U> matcher) {
