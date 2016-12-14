@@ -27,7 +27,7 @@ testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.9'
 The usages of the matchers can be seen in:
 * **[LambdaMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/LambdaMatchersTest.java)**. Some examples are:
 ```java
-lambdaAssert(person::getName, equalTo("Brutus));
+lambdaAssert(person::getName, equalTo("Brutus"));
 
 assertThat(list, everyItem(mappedBy(Person::getAge, greaterThanOrEqualTo(21))));
 
