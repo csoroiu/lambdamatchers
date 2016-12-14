@@ -10,7 +10,7 @@ This library implements some hamcrest matchers usable with Java 8 and a set of u
 
 ## Usage
 #### Maven dependency
-```
+```xml
 <dependency>
     <groupId>ro.derbederos.hamcrest</groupId>
     <artifactId>lambdamatchers</artifactId>
@@ -19,7 +19,7 @@ This library implements some hamcrest matchers usable with Java 8 and a set of u
 </dependency>
 ```
 #### Gradle dependency
-```
+```groovy
 testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.9'
 ```
 
@@ -67,7 +67,7 @@ Such an error message for the code:
 lambdaAssert(person::getName, equalTo("Brutus"));
 ```
 could be:
-```
+```java
 java.lang.AssertionError: 
 Expected: a `String Person.getName()` "Brutus"
      but: `String Person.getName()` was "Caesar"
@@ -78,7 +78,7 @@ And for the code:
 assertThat(list, everyItem(mappedBy(Person::getAge, greaterThanOrEqualTo(22))));
 ```
 could be:
-```
+```java
 java.lang.AssertionError: 
 Expected: every item is a Person having `int Person.getAge()` a value equal to or greater than <22>
      but: an item `int Person.getAge()` <21> was less than <22>
