@@ -5,8 +5,8 @@
 
 This library implements some hamcrest matchers usable with Java 8 and a set of utility functions built on top of them.
 
-**La pièce de résistance** is the **[LambdaMatchers](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/LambdaMatchers.java)**
-**`map`** method.
+**Les pièces de résistance** are the **[LambdaMatchers](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/LambdaMatchers.java)**
+**`mappedBy`** and **`lambdaAssert`** methods.
 
 ## Usage
 #### Maven dependency
@@ -14,22 +14,24 @@ This library implements some hamcrest matchers usable with Java 8 and a set of u
 <dependency>
     <groupId>ro.derbederos.hamcrest</groupId>
     <artifactId>lambdamatchers</artifactId>
-    <version>0.8</version>
+    <version>0.9</version>
     <scope>test</scope>
 </dependency>
 ```
 #### Gradle dependency
 ```
-testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.8'
+testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.9'
 ```
 
 ## Examples
 The usages of the matchers can be seen in:
 * **[LambdaMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/LambdaMatchersTest.java)**. Some examples are:
 ```java
-assertThat(list, everyItem(map(Person::getAge, greaterThanOrEqualTo(21))));
+lambdaAssert(person::getName, equalTo("Brutus));
 
-assertThat(list, hasItem(map(Person::getName, startsWith("Alice"))));
+assertThat(list, everyItem(mappedBy(Person::getAge, greaterThanOrEqualTo(21))));
+
+assertThat(list, hasItem(mappedBy(Person::getName, startsWith("Alice"))));
 
 assertThat(list, mapIterable(Person::getName, hasItem("Ana")));
 
@@ -62,7 +64,18 @@ This library is intended to be used in tests, and in case of failure, **meaningf
 
 Such an error message for the code:
 ```java
-assertThat(list, everyItem(map(Person::getAge, greaterThanOrEqualTo(22))));
+lambdaAssert(person::getName, equalTo("Brutus"));
+```
+could be:
+```
+java.lang.AssertionError: 
+Expected: a `String Person.getName()` "Brutus"
+     but: `String Person.getName()` was "Caesar"
+```
+
+And for the code:
+```java
+assertThat(list, everyItem(mappedBy(Person::getAge, greaterThanOrEqualTo(22))));
 ```
 could be:
 ```
@@ -73,6 +86,7 @@ Expected: every item is a Person having `int Person.getAge()` a value equal to o
 
 ## Features
 * The matchers have **meaningful descriptions**. The library is intended to be used inside unit test and ***help the developers to get an idea of what is wrong before looking at the source code***.
+* The **`lambdaAssert`** method offer a way to maintain a simple test code while improving the error messages in case of failure.
 * Lambda type detection, thanks to **[Type Tools](http://github.com/jhalterman/typetools)** library.
 * Built for Java 6, 7, 8 via **[Retrolambda](https://github.com/orfjackal/retrolambda)**.
   * Matchers that use **Java 8** data types and methods will not work. 

@@ -26,6 +26,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static ro.derbederos.hamcrest.LambdaMatchers.*;
+import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 
@@ -298,6 +299,23 @@ public class LambdaMatchersTest {
         assertDescription(equalTo("an Object[] having `Iterable lambda$(Function, Object[])` a collection containing a string starting with \"Ana1\""), mapMatcher);
         assertMismatchDescription(equalTo("`Iterable lambda$(Function, Object[])` was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
                 array, mapMatcher);
+    }
+
+    @Test
+    public void lambdaAssertSimpleTestObjectMethodReference() {
+        Person p = new Person("Brutus", 21);
+        lambdaAssert(p::getName, equalTo("Brutus"));
+    }
+
+    @Test
+    public void lambdaAssertSimpleTestObjectMethodReferenceDescription() {
+        Person p = new Person("Brutus", 21);
+        Supplier<String> supplier = p::getName;
+        Matcher<Supplier<String>> matcher = supplierMatcher(supplier, equalTo("Caesar"));
+
+        assertDescription(equalTo("a `String Person.getName()` \"Caesar\""), matcher);
+        assertMismatchDescription(equalTo("`String Person.getName()` was \"Brutus\""),
+                supplier, matcher);
     }
 
     public static class Person {

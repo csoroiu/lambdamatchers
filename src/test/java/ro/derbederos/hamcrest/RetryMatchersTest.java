@@ -100,7 +100,6 @@ public class RetryMatchersTest {
         assertDescription(equalTo("a DelayedValueBean having `int DelayedValueBean.getValue()` <9>"), retryMatcher);
         assertMismatchDescription(equalTo("after 300 millisecond(s) `int DelayedValueBean.getValue()` was <7>"),
                 bean, retryMatcher);
-
     }
 
     @Test
@@ -138,6 +137,22 @@ public class RetryMatchersTest {
         AtomicReference<String> atomicString = new AtomicReference<>("Expelliarmus");
         executeDelayed(100, () -> atomicString.set("Expecto Patronum"));
         assertThat(atomicString, retryAtomicReference(500, "Expecto Patronum"));
+    }
+
+    @Test
+    public void lambdaAssertSimpleTestObjectMethodReference() {
+        DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
+        lambdaAssert(bean::getValue, 500, equalTo(7));
+    }
+
+    @Test
+    public void lambdaAssertSimpleTestObjectMethodReferenceDescription() {
+        DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
+        Matcher<Supplier<Integer>> retryMatcher = retrySupplier(300, bean::getValue, equalTo(9));
+
+        assertDescription(equalTo("a `int DelayedValueBean.getValue()` <9>"), retryMatcher);
+        assertMismatchDescription(equalTo("after 300 millisecond(s) `int DelayedValueBean.getValue()` was <7>"),
+                bean::getValue, retryMatcher);
     }
 
     public static class DelayedValueBean {

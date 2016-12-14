@@ -44,7 +44,7 @@ final class RetryMatcher<T> extends BaseMatcher<T> {
         final long start = System.nanoTime();
         final long parkTime = Math.min(this.intervalNanos, durationNanos);
 
-        while (!subMatcher.matches(item)) {
+        while (!threadSafeMatches(item)) {
             final long elapsed = System.nanoTime() - start;
             if (elapsed >= durationNanos) {
                 return false;
@@ -52,6 +52,14 @@ final class RetryMatcher<T> extends BaseMatcher<T> {
             LockSupport.parkNanos(parkTime);
         }
         return true;
+    }
+
+    private final Object LOCK = new Object();
+
+    private boolean threadSafeMatches(Object item) {
+        synchronized (LOCK) {
+            return subMatcher.matches(item);
+        }
     }
 
     @Override

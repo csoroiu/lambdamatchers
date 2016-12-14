@@ -25,8 +25,10 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
+import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;
 
 /**
  * This class provides a set of matchers that retry a certain {@link Matcher} until a duration is reached.
@@ -129,7 +131,7 @@ public final class RetryMatchers {
      * <p>
      * It is a shortcut for:
      * <pre>
-     * retry(durationMillis, map(mapper, matcher));
+     * retry(durationMillis, mappedBy(mapper, matcher));
      * </pre>
      * <p>
      * Example:
@@ -284,5 +286,30 @@ public final class RetryMatchers {
      */
     public static <V> Matcher<AtomicReference<V>> retryAtomicReference(long durationMillis, V value) {
         return retryAtomicReference(durationMillis, equalTo(value));
+    }
+
+    static <T> Matcher<Supplier<T>> retrySupplier(long durationMillis, Supplier<T> supplier, Matcher<? super T> matcher) {
+        return retry(durationMillis, supplierMatcher(supplier, matcher));
+    }
+
+    /**
+     * This is an assert function that takes as input a supplier and a matcher for its value.
+     * It is a fancy version of {@link LambdaMatchers#lambdaAssert(Supplier, Matcher)} as it creates
+     * a retrying matcher in the back and retries to match the value against the received matcher
+     * several times.
+     * <p>
+     * Example:
+     * <pre>
+     * lambdaAssert(p::getName, 500, equalTo("Brutus));
+     * </pre>
+     *
+     * @param supplier       The supplier for the value.
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
+     * @param matcher        The {@link Matcher} to be applied on the value supplied by the {@code supplier}.
+     * @param <T>            The type of the supplied value.
+     * @since 0.9
+     */
+    public static <T> void lambdaAssert(Supplier<T> supplier, long durationMillis, Matcher<? super T> matcher) {
+        assertThat(supplier, retrySupplier(durationMillis, supplier, matcher));
     }
 }

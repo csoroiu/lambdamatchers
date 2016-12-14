@@ -20,6 +20,9 @@ import org.hamcrest.Matcher;
 
 import java.util.ArrayList;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;
+
 /**
  * This class provides a set of mapping matchers based on java 8 functional interfaces (lambdas).
  * <p>
@@ -35,15 +38,28 @@ import java.util.ArrayList;
  * <p>
  * Examples:
  * <pre>
- * assertThat(iterableOfAtomicInteger, everyItem(map(AtomicInteger::get, greaterThanOrEqualTo(21))));
+ * assertThat(iterableOfAtomicInteger, everyItem(mappedBy(AtomicInteger::get, greaterThanOrEqualTo(21))));
  *
- * assertThat(list, everyItem(map(Person::getAge, greaterThanOrEqualTo(21))));
+ * assertThat(list, everyItem(mappedBy(Person::getAge, greaterThanOrEqualTo(21))));
  *
- * assertThat(list, hasItem(map(Person::getName, startsWith("Alice"))));
+ * assertThat(list, hasItem(mappedBy(Person::getName, startsWith("Alice"))));
  *
  * assertThat(list, mapIterable(Person::getName, hasItem("Ana")));
  *
  * assertThat(array, mapArray(Person::getName, hasItem(startsWith("Ana"))));
+ * </pre>
+ * <p>
+ * Another feature is the {@code lambdaAssert()} method which offers a more detailed message on failure.
+ * This method can be used as a replacement of {@code assertThat()} method.
+ * <p>
+ * A code like:
+ * <pre>
+ * assertThat(p.getName(), equalTo("Brutus));
+ * </pre>
+ * <p>
+ * Can easily be converted to a code that is more useful in case of failure:
+ * <pre>
+ * lambdaAssert(p::getName, equalTo("Brutus));
  * </pre>
  *
  * @since 0.1
@@ -74,19 +90,6 @@ public final class LambdaMatchers {
     }
 
     /**
-     * Alias for {@link #mappedBy(Function, Matcher)}.
-     *
-     * @param mapper  The function that transforms the input.
-     * @param matcher The {@link Matcher} to be applied on the result of the {@code mapper} function.
-     * @param <T>     The type of the input.
-     * @param <U>     The type of the result of the {@code mapper} function.
-     * @since 0.1
-     */
-    public static <T, U> Matcher<T> map(Function<T, U> mapper, Matcher<? super U> matcher) {
-        return mappedBy(mapper, matcher);
-    }
-
-    /**
      * Utility method that creates a functional mapper matcher. It receives as input a {@code mapper} and
      * a {@code matcher} that will be applied on the result of the {@code mapper} function.
      * It tries to auto-magically determine the type of the input object and of the {@code mapper} function result.
@@ -96,18 +99,18 @@ public final class LambdaMatchers {
      * <p>
      * Examples:
      * <pre>
-     * assertThat(iterableOfAtomicInteger, everyItem(map(AtomicInteger::get, greaterThanOrEqualTo(21))));
+     * assertThat(iterableOfAtomicInteger, everyItem(mappedBy(AtomicInteger::get, greaterThanOrEqualTo(21))));
      *
-     * assertThat(list, everyItem(map(Person::getAge, greaterThanOrEqualTo(21))));
+     * assertThat(list, everyItem(mappedBy(Person::getAge, greaterThanOrEqualTo(21))));
      *
-     * assertThat(list, hasItem(map(Person::getName, startsWith("Alice"))));
+     * assertThat(list, hasItem(mappedBy(Person::getName, startsWith("Alice"))));
      * </pre>
      *
      * @param mapper  The function that transforms the input.
      * @param matcher The {@link Matcher} to be applied on the result of the {@code mapper} function.
      * @param <T>     The type of the input.
      * @param <U>     The type of the result of the {@code mapper} function.
-     * @see #map(Function, Matcher)
+     * @see #mappedBy(Function, Matcher)
      * @since 0.9
      */
     public static <T, U> Matcher<T> mappedBy(Function<T, U> mapper, Matcher<? super U> matcher) {
@@ -167,5 +170,31 @@ public final class LambdaMatchers {
             result.add(mapper.apply(element));
         }
         return result;
+    }
+
+    /**
+     * This is an assert function that takes as input a supplier and a matcher for its value.
+     * In case of mismatch it offers a more detailed error message than the
+     * {@link org.hamcrest.MatcherAssert#assertThat(String, boolean)} alternative.
+     * <p>
+     * This method can be used as a replacement of {@code assertThat()} method.
+     * <p>
+     * A code like:
+     * <pre>
+     * assertThat(p.getName(), equalTo("Brutus));
+     * </pre>
+     * <p>
+     * Can easily be converted to a code that is more useful in case of failure:
+     * <pre>
+     * lambdaAssert(p::getName, equalTo("Brutus));
+     * </pre>
+     *
+     * @param supplier The supplier for the value.
+     * @param matcher  The {@link Matcher} to be applied on the value supplied by the {@code supplier}.
+     * @param <T>      The type of the supplied value.
+     * @since 0.9
+     */
+    public static <T> void lambdaAssert(Supplier<T> supplier, Matcher<? super T> matcher) {
+        assertThat(supplier, supplierMatcher(supplier, matcher));
     }
 }

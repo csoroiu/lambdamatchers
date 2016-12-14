@@ -31,7 +31,7 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
     private T lastInput = null;
     private U lastValue = null;
 
-    MappedValueMatcher(Function<T, U> mapper, Class<?> inputType, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
+    private MappedValueMatcher(Function<T, U> mapper, Class<?> inputType, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
         super(inputType);
         this.mapper = Objects.requireNonNull(mapper);
         this.subMatcher = Objects.requireNonNull(subMatcher);
@@ -64,11 +64,7 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
         return subMatcher.matches(lastValue);
     }
 
-    static <T, U> Matcher<T> mappedBy(Function<T, U> mapper, Matcher<? super U> matcher) {
-        return mappedBy(Objects.requireNonNull(mapper), getFeatureTypeName(mapper, Function.class, 1), matcher);
-    }
-
-    static <T> String getFeatureTypeName(T mapper, Class<T> mapperInterface, int resultIndex) {
+    private static <T> String getFeatureTypeName(T mapper, Class<T> mapperInterface, int resultIndex) {
         String featureTypeName = MethodRefResolver.resolveMethodRefName(mapper.getClass());
         if (featureTypeName == null) {
             Class<?> featureType = TypeResolver.resolveRawArguments(mapperInterface, mapper.getClass())[resultIndex];
@@ -80,6 +76,15 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
         return featureTypeName;
     }
 
+    private static String getArticle(String objectTypeName) {
+        boolean startsWithVowel = "AaEeIiOoUu".indexOf(objectTypeName.charAt(0)) >= 0;
+        return startsWithVowel ? "an" : "a";
+    }
+
+    static <T, U> Matcher<T> mappedBy(Function<T, U> mapper, Matcher<? super U> matcher) {
+        return mappedBy(Objects.requireNonNull(mapper), getFeatureTypeName(mapper, Function.class, 1), matcher);
+    }
+
     static <T, U> Matcher<T> mappedBy(Function<T, U> mapper, String featureTypeName, Matcher<? super U> matcher) {
         Objects.requireNonNull(mapper);
         Class<?> inputType = TypeResolver.resolveRawArguments(Function.class, mapper.getClass())[0];
@@ -88,13 +93,14 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
             inputType = Object.class;
             objectTypeName = "UnknownObjectType";
         }
-        String featureDescription = buildFeatureDescription(objectTypeName, featureTypeName);
+        String featureDescription = getArticle(objectTypeName) + " " + objectTypeName + " having " + featureTypeName;
         return new MappedValueMatcher<>(mapper, inputType, featureDescription, featureTypeName, matcher);
     }
 
-    private static String buildFeatureDescription(String objectTypeName, String featureTypeName) {
-        boolean startsWithVowel = "AaEeIiOoUu".indexOf(objectTypeName.charAt(0)) >= 0;
-        String article = startsWithVowel ? "an" : "a";
-        return article + " " + objectTypeName + " having " + featureTypeName;
+    static <T> Matcher<Supplier<T>> supplierMatcher(Supplier<T> supplier, Matcher<? super T> matcher) {
+        Objects.requireNonNull(supplier);
+        String featureTypeName = getFeatureTypeName(supplier, Supplier.class, 0);
+        String featureDescription = "a " + featureTypeName;
+        return new MappedValueMatcher<>(Supplier::get, Supplier.class, featureDescription, featureTypeName, matcher);
     }
 }
