@@ -19,12 +19,10 @@ package ro.derbederos.hamcrest;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
-import org.junit.Ignore;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-@Ignore
 class MatcherDescriptionAssert {
     static void assertDescription(Matcher<String> descriptionMatcher, Matcher<?> matcher) {
         Description description = new StringDescription();
