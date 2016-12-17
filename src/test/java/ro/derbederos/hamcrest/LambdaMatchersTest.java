@@ -17,7 +17,6 @@
 package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -58,6 +57,7 @@ public class LambdaMatchersTest {
     @Test
     public void simpleTestInstanceObjectMethodReferenceDescription() {
         Matcher<Person> mapMatcher = mappedBy(this::getPersonName, startsWith("B"));
+        //retrolambda creates an access method for a private instance method reference
         assertDescription(anyOf(
                 equalTo("a Person having `String LambdaMatchersTest.getPersonName(Person)` a string starting with \"B\""),
                 equalTo("a Person having `String lambda$(LambdaMatchersTest, Person)` a string starting with \"B\"")),
@@ -86,7 +86,6 @@ public class LambdaMatchersTest {
     }
 
     @Test
-    @Ignore
     public void simpleTestObjectClassMethodReferenceDescription() {
         Matcher<Object> mapMatcher = mappedBy(Object::toString, equalTo("4"));
         assertDescription(equalTo("an Object having `String Object.toString()` \"4\""), mapMatcher);

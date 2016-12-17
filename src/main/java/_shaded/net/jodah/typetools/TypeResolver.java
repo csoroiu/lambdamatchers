@@ -27,6 +27,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -448,32 +449,69 @@ public final class TypeResolver {
   }
 
   private static Member getMemberRef(Class<?> type) {
+    Member[] constantPoolMethods = extractConstantPoolMethods(type);
+    int start = constantPoolMethods.length;
+    if (isInstrumentedByJacoco(type)) {
+      for (int i = constantPoolMethods.length - 1; i >= 0; i--) {
+        if (constantPoolMethods[i].getName().startsWith("$jacoco")) {
+          start = i;
+        }
+      }
+    }
+
+    Member result = null;
+    for (int i = start - 1; i >= 0; i--) {
+      Member member = constantPoolMethods[i];
+      // Skip SerializedLambda constructors and members of the "type" class
+      if ((member instanceof Constructor
+              && member.getDeclaringClass().getName().equals("java.lang.invoke.SerializedLambda"))
+              || member.getDeclaringClass().equals(type))
+        continue;
+
+      result = member;
+
+      // Return if not valueOf method
+      // FIXME: 06.11.2016 - verify the return type for boxing operations
+      if (!(member instanceof Method) || !isBoxingOrUnboxingMethod((Method) member))
+        break;
+    }
+
+    return result;
+  }
+
+  private static Member[] extractConstantPoolMethods(Class<?> type) {
     ConstantPool constantPool;
     try {
       constantPool = (ConstantPool) GET_CONSTANT_POOL.invoke(type);
     } catch (Exception ignore) {
-      return null;
+      return new Member[0];
     }
-
-    Member result = null;
-    for (int i = constantPool.getSize() - 1; i >= 0; i--) {
+    ArrayList<Member> methods = new ArrayList<>();
+    for (int i = 0; i < constantPool.getSize(); i++) {
       try {
-        Member member = constantPool.getMethodAt(i);
-        // Skip SerializedLambda constructors and members of the "type" class
-        if ((member instanceof Constructor
-            && member.getDeclaringClass().getName().equals("java.lang.invoke.SerializedLambda"))
-            || member.getDeclaringClass().isAssignableFrom(type))
-          continue;
-
-        result = member;
-
-        // Return if not valueOf method
-        if (!(member instanceof Method) || !isBoxingOrUnboxingMethod((Method) member))
-          break;
+        Member method = constantPool.getMethodAt(i);
+        methods.add(method);
       } catch (IllegalArgumentException ignore) {
       }
     }
+    return methods.toArray(new Member[methods.size()]);
+  }
 
+  static boolean isInstrumentedByJacoco(Class<?> type) {
+    // http://www.eclemma.org/jacoco/trunk/doc/faq.html
+    // JaCoCo [...] adds two members to the classes: A private static field $jacocoData and
+    // a private static method $jacocoInit(). Both members are marked as synthetic.
+    boolean result = false;
+    try {
+      type.getDeclaredMethod("$jacocoInit");
+      result = true;
+    } catch (NoSuchMethodException ignore) {
+    }
+    try {
+      type.getDeclaredField("$jacocoData");
+      result = true;
+    } catch (NoSuchFieldException ignore) {
+    }
     return result;
   }
 
@@ -484,7 +522,7 @@ public final class TypeResolver {
   private static boolean isBoxingMethod(Method method) {
     Class<?>[] parameters = method.getParameterTypes();
     return method.getName().equals("valueOf") && parameters.length == 1 && parameters[0].isPrimitive()
-        && wrapPrimitives(parameters[0]).equals(method.getDeclaringClass());
+            && wrapPrimitives(parameters[0]).equals(method.getDeclaringClass());
   }
 
   private static boolean isUnboxingMethod(Method method) {
@@ -493,9 +531,10 @@ public final class TypeResolver {
     Class<?>[] parameters = method.getParameterTypes();
 
     return method.getReturnType().isPrimitive() && parameters.length == 0
-        //booleanValue, byteValue, charValue, doubleValue, floatValue, intValue, longValue, shortValue
-        && methodName.startsWith(returnType) && methodName.endsWith("Value")
-        && wrapPrimitives(method.getReturnType()).equals(method.getDeclaringClass());
+            //booleanValue, byteValue, charValue, doubleValue, floatValue, intValue, longValue, shortValue
+            && methodName.startsWith(returnType) && methodName.endsWith("Value")
+            && (wrapPrimitives(method.getReturnType()).equals(method.getDeclaringClass())
+            || method.getDeclaringClass().equals(Number.class));
   }
 
   private static Class<?> wrapPrimitives(Class<?> clazz) {
