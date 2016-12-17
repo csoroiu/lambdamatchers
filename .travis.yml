@@ -21,7 +21,6 @@ env:
 
 matrix:
   allow_failures:
-    - env: PROFILES='-Pretrolambda -Pjacoco'
     - env: PROFILES='-Pretrolambda -Pjdkapicheck -DskipTests=true'
 
 install:
