@@ -17,6 +17,7 @@
 package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -91,6 +92,20 @@ public class LambdaMatchersTest {
         assertDescription(equalTo("an Object having `String Object.toString()` \"4\""), mapMatcher);
         assertMismatchDescription(equalTo("`String Object.toString()` was \"4.0\""),
                 4d, mapMatcher);
+    }
+
+    @Test
+    public void simpleTestUnboxingMethodReference() {
+        assertThat(4d, mappedBy(Double::valueOf, equalTo(4.0)));
+    }
+
+    @Test
+    @Ignore
+    public void simpleTestUnboxingMethodReferenceDescription() {
+        Matcher<Double> mapMatcher = mappedBy(Double::valueOf, equalTo(4.0));
+        assertDescription(equalTo("a Double having `double Double.valueOf()` <4.0>"), mapMatcher);
+        assertMismatchDescription(equalTo("`double Double.valueOf()` was <5.0>"),
+                5d, mapMatcher);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

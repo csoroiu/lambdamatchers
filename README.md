@@ -96,7 +96,7 @@ Expected: every item is a Person having `int Person.getAge()` a value equal to o
 
 ## Limitations
 * Does **not** work on **Android** and **Java 9** because of the dependencies. ***This might be improved if required.***
-* Matcher descriptions might not work ok for `Object` class method references such as `Object::toString`.
+* Matcher descriptions might not work ok for method references to *unboxing methods*,`Double::doubleValue`.
 * When using agents that instrument the java byte code the type detection might malfunction. 
 ***In this unfortunate case I encourage you to fill in an issue about the problem you encountered.***
 
