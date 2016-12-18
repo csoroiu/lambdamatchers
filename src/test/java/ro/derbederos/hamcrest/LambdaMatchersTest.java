@@ -96,15 +96,15 @@ public class LambdaMatchersTest {
 
     @Test
     public void simpleTestUnboxingMethodReference() {
-        assertThat(4d, mappedBy(Double::valueOf, equalTo(4.0)));
+        assertThat(4d, mappedBy(Double::doubleValue, equalTo(4.0)));
     }
 
     @Test
     @Ignore
     public void simpleTestUnboxingMethodReferenceDescription() {
-        Matcher<Double> mapMatcher = mappedBy(Double::valueOf, equalTo(4.0));
-        assertDescription(equalTo("a Double having `double Double.valueOf()` <4.0>"), mapMatcher);
-        assertMismatchDescription(equalTo("`double Double.valueOf()` was <5.0>"),
+        Matcher<Double> mapMatcher = mappedBy(Double::doubleValue, equalTo(4.0));
+        assertDescription(equalTo("a Double having `double Double.doubleValue()` <4.0>"), mapMatcher);
+        assertMismatchDescription(equalTo("`double Double.doubleValue()` was <5.0>"),
                 5d, mapMatcher);
     }
 
