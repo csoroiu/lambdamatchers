@@ -21,7 +21,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 class MatcherDescriptionAssert {
     static void assertDescription(Matcher<String> descriptionMatcher, Matcher<?> matcher) {

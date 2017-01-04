@@ -21,8 +21,8 @@ import org.hamcrest.Matcher;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.anyOf;
 
 /**
  * Set regular expression matchers for strings.

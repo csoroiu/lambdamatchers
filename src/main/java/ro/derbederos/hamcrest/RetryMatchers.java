@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
 import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;
 

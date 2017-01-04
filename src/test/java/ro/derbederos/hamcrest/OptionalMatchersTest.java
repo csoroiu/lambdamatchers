@@ -24,7 +24,7 @@ import java.util.OptionalInt;
 import java.util.OptionalLong;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
 import static ro.derbederos.hamcrest.OptionalMatchers.*;
 
