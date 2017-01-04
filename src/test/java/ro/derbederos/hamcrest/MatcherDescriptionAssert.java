@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Claudiu Soroiu
+ * Copyright (c) 2016-2017 Claudiu Soroiu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 class MatcherDescriptionAssert {
     static void assertDescription(Matcher<String> descriptionMatcher, Matcher<?> matcher) {

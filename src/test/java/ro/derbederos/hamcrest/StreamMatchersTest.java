@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Claudiu Soroiu
+ * Copyright (c) 2016-2017 Claudiu Soroiu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import ro.derbederos.hamcrest.LambdaMatchersTest.Person;
 
 import java.util.stream.Stream;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 import static ro.derbederos.hamcrest.StreamMatchers.*;
