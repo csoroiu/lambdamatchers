@@ -116,8 +116,8 @@ class ConstantPoolMethodRefResolver implements MethodRefResolver {
             Member member = constantPoolMethods[i];
             // Skip SerializedLambda constructors and members of the "type" class
             if ((member instanceof Constructor
-                 && member.getDeclaringClass().getName().equals("java.lang.invoke.SerializedLambda"))
-                || member.getDeclaringClass().equals(type)) {
+                    && member.getDeclaringClass().getName().equals("java.lang.invoke.SerializedLambda"))
+                    || member.getDeclaringClass().equals(type)) {
                 continue;
             }
 

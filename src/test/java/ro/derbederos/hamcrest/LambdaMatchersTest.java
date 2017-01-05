@@ -19,7 +19,6 @@ package ro.derbederos.hamcrest;
 import java8.util.function.Function;
 import java8.util.function.Supplier;
 import org.hamcrest.Matcher;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigInteger;
@@ -108,7 +107,6 @@ public class LambdaMatchersTest {
     }
 
     @Test
-    @Ignore
     public void simpleTestUnboxingMethodReferenceDescription() {
         Matcher<Double> mapMatcher = mappedBy(Double::doubleValue, equalTo(4.0));
         assertDescription(equalTo("a Double having `Double::doubleValue` <4.0>"), mapMatcher);

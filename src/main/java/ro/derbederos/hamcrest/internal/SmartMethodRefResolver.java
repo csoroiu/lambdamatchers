@@ -22,11 +22,11 @@ import java.util.List;
 
 import static ro.derbederos.hamcrest.internal.Utils.JAVA_VERSION;
 
-public class SmartMethodRefResolver implements MethodRefResolver {
+class SmartMethodRefResolver implements MethodRefResolver {
 
     private final List<MethodRefResolver> resolvers = new ArrayList<>();
 
-    public SmartMethodRefResolver() {
+    SmartMethodRefResolver() {
         resolvers.add(new ClassLoaderMethodRefResolver());
         if (JAVA_VERSION >= 1.8) {
             resolvers.add(new DumpedLambdaByteCodeMethodRefResolver());

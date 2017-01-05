@@ -18,10 +18,8 @@ package _shaded.net.jodah.typetools;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -29,16 +27,11 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.security.AccessController;
-import java.security.PrivilegedExceptionAction;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
-
-import sun.misc.Unsafe;
 
 /**
  * Enhanced type resolution utilities.
@@ -52,51 +45,13 @@ public final class TypeResolver {
       .synchronizedMap(new WeakHashMap<Class<?>, Reference<Map<TypeVariable<?>, Type>>>());
   private static volatile boolean CACHE_ENABLED = true;
   private static boolean RESOLVES_LAMBDAS;
-  private static Method GET_CONSTANT_POOL;
-  private static Method GET_CONSTANT_POOL_SIZE;
-  private static Method GET_CONSTANT_POOL_METHOD_AT;
+  private static MethodRefResolver lambdaResolver;
   private static final Map<String, Method> OBJECT_METHODS = new HashMap<String, Method>();
   private static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPERS;
   private static final Double JAVA_VERSION;
 
   static {
     JAVA_VERSION = Double.parseDouble(System.getProperty("java.specification.version", "0"));
-
-    try {
-      Unsafe unsafe = AccessController.doPrivileged(new PrivilegedExceptionAction<Unsafe>() {
-        @Override
-        public Unsafe run() throws Exception {
-          final Field f = Unsafe.class.getDeclaredField("theUnsafe");
-          f.setAccessible(true);
-
-          return (Unsafe) f.get(null);
-        }
-      });
-
-      GET_CONSTANT_POOL = Class.class.getDeclaredMethod("getConstantPool");
-      String constantPoolName = JAVA_VERSION < 9 ? "sun.reflect.ConstantPool" : "jdk.internal.reflect.ConstantPool";
-      Class<?> constantPoolClass = Class.forName(constantPoolName);
-      GET_CONSTANT_POOL_SIZE = constantPoolClass.getDeclaredMethod("getSize");
-      GET_CONSTANT_POOL_METHOD_AT = constantPoolClass.getDeclaredMethod("getMethodAt", int.class);
-
-      // setting the methods as accessible
-      Field overrideField = AccessibleObject.class.getDeclaredField("override");
-      long overrideFieldOffset = unsafe.objectFieldOffset(overrideField);
-      unsafe.putBoolean(GET_CONSTANT_POOL, overrideFieldOffset, true);
-      unsafe.putBoolean(GET_CONSTANT_POOL_SIZE, overrideFieldOffset, true);
-      unsafe.putBoolean(GET_CONSTANT_POOL_METHOD_AT, overrideFieldOffset, true);
-
-      // additional checks - make sure we get a result when invoking the Class::getConstantPool and
-      // ConstantPool::getSize on a class
-      Object constantPool = GET_CONSTANT_POOL.invoke(Object.class);
-      GET_CONSTANT_POOL_SIZE.invoke(constantPool);
-
-      for (Method method : Object.class.getDeclaredMethods())
-        OBJECT_METHODS.put(method.getName(), method);
-
-      RESOLVES_LAMBDAS = true;
-    } catch (Exception ignore) {
-    }
 
     Map<Class<?>, Class<?>> types = new HashMap<Class<?>, Class<?>>();
     types.put(boolean.class, Boolean.class);
@@ -118,6 +73,11 @@ public final class TypeResolver {
   }
 
   private TypeResolver() {
+  }
+
+  public static void setLambdaResolver(MethodRefResolver methodRefResolver) {
+    lambdaResolver = methodRefResolver;
+    RESOLVES_LAMBDAS = lambdaResolver != null && lambdaResolver.isAvailable();
   }
 
   /**
@@ -433,7 +393,7 @@ public final class TypeResolver {
           Type returnTypeVar = m.getGenericReturnType();
           Type[] paramTypeVars = m.getGenericParameterTypes();
 
-          Member member = getMemberRef(lambdaType);
+          Member member = lambdaResolver.resolveMethodReference(functionalInterface, lambdaType);
           if (member == null)
             return;
 
@@ -481,109 +441,7 @@ public final class TypeResolver {
             Modifier.PUBLIC) && m.getDeclaringClass().isInterface();
   }
 
-  private static Member getMemberRef(Class<?> type) {
-    Member[] constantPoolMethods = extractConstantPoolMethods(type);
-    int start = constantPoolMethods.length;
-    if (isInstrumentedByJacoco(type)) {
-      for (int i = constantPoolMethods.length - 1; i >= 0; i--) {
-        if (constantPoolMethods[i].getName().startsWith("$jacoco")) {
-          start = i;
-        }
-      }
-    }
-
-    Member result = null;
-    for (int i = start - 1; i >= 0; i--) {
-      Member member = constantPoolMethods[i];
-      // Skip SerializedLambda constructors and members of the "type" class
-      if ((member instanceof Constructor
-              && member.getDeclaringClass().getName().equals("java.lang.invoke.SerializedLambda"))
-              || member.getDeclaringClass().equals(type))
-        continue;
-
-      result = member;
-
-      // Return if not valueOf method
-      if (!(member instanceof Method) || !isBoxingOrUnboxingMethod((Method) member))
-        break;
-    }
-
-    return result;
-  }
-
-  private static Member[] extractConstantPoolMethods(Class<?> type) {
-    Object constantPool;
-    try {
-      constantPool = GET_CONSTANT_POOL.invoke(type);
-    } catch (Exception ignore) {
-      return new Member[0];
-    }
-    ArrayList<Member> methods = new ArrayList<>();
-    for (int i = 0; i < getConstantPoolSize(constantPool); i++) {
-      Member method = getConstantPoolMethodAt(constantPool, i);
-      if (method != null)
-        methods.add(method);
-    }
-    return methods.toArray(new Member[methods.size()]);
-  }
-
-  static boolean isInstrumentedByJacoco(Class<?> type) {
-    // http://www.eclemma.org/jacoco/trunk/doc/faq.html
-    // JaCoCo [...] adds two members to the classes: A private static field $jacocoData and
-    // a private static method $jacocoInit(). Both members are marked as synthetic.
-    boolean result = false;
-    try {
-      type.getDeclaredMethod("$jacocoInit");
-      result = true;
-    } catch (NoSuchMethodException ignore) {
-    }
-    try {
-      type.getDeclaredField("$jacocoData");
-      result = true;
-    } catch (NoSuchFieldException ignore) {
-    }
-    return result;
-  }
-
-  private static boolean isBoxingOrUnboxingMethod(Method method) {
-    return isBoxingMethod(method) || isUnboxingMethod(method);
-  }
-
-  private static boolean isBoxingMethod(Method method) {
-    Class<?>[] parameters = method.getParameterTypes();
-    return method.getName().equals("valueOf") && parameters.length == 1 && parameters[0].isPrimitive()
-            && wrapPrimitives(parameters[0]).equals(method.getDeclaringClass());
-  }
-
-  private static boolean isUnboxingMethod(Method method) {
-    String methodName = method.getName();
-    String returnType = method.getReturnType().getSimpleName();
-    Class<?>[] parameters = method.getParameterTypes();
-
-    return method.getReturnType().isPrimitive() && parameters.length == 0
-            // booleanValue, byteValue, charValue, doubleValue, floatValue, intValue, longValue, shortValue
-            && methodName.startsWith(returnType) && methodName.endsWith("Value")
-            && (wrapPrimitives(method.getReturnType()).equals(method.getDeclaringClass())
-            || method.getDeclaringClass().equals(Number.class));
-  }
-
   private static Class<?> wrapPrimitives(Class<?> clazz) {
     return clazz.isPrimitive() ? PRIMITIVE_WRAPPERS.get(clazz) : clazz;
-  }
-
-  private static int getConstantPoolSize(Object constantPool) {
-    try {
-      return (Integer) GET_CONSTANT_POOL_SIZE.invoke(constantPool);
-    } catch (Exception ignore) {
-      return 0;
-    }
-  }
-
-  private static Member getConstantPoolMethodAt(Object constantPool, int i) {
-    try {
-      return (Member) GET_CONSTANT_POOL_METHOD_AT.invoke(constantPool, i);
-    } catch (Exception ignore) {
-      return null;
-    }
   }
 }
