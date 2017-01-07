@@ -108,9 +108,10 @@ public class LambdaMatchersTest {
                 5d, mapMatcher);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked", "Convert2Lambda"})
     @Test
     public <T> void simpleTestAnonymousClassDescriptionUnknownFieldType() {
+        @SuppressWarnings("Convert2Lambda")
         Function getAge = new Function<Person, T>() {
             @Override
             public T apply(Person person) {
@@ -123,7 +124,7 @@ public class LambdaMatchersTest {
                 new Person("Alice", 21), mapMatcher);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked", "Convert2Lambda"})
     @Test
     public <T> void simpleTestAnonymousClassDescriptionUnknownObjectType() {
         Function getAge = new Function<T, Integer>() {
@@ -332,6 +333,7 @@ public class LambdaMatchersTest {
                 supplier, matcher);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class Person {
         private final String name;
         private final int age;
