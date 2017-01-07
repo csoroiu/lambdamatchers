@@ -14,13 +14,13 @@ This library implements some hamcrest matchers usable with Java 8 and a set of u
 <dependency>
     <groupId>ro.derbederos.hamcrest</groupId>
     <artifactId>lambdamatchers</artifactId>
-    <version>0.9</version>
+    <version>0.10</version>
     <scope>test</scope>
 </dependency>
 ```
 #### Gradle dependency
 ```groovy
-testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.9'
+testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.10'
 ```
 
 ## Examples
