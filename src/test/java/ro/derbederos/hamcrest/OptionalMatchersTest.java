@@ -16,6 +16,7 @@
 
 package ro.derbederos.hamcrest;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -25,10 +26,19 @@ import java.util.OptionalLong;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.Assume.assumeThat;
 import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
 import static ro.derbederos.hamcrest.OptionalMatchers.*;
 
 public class OptionalMatchersTest {
+
+    @Before
+    public void before() throws Exception {
+        Double JAVA_VERSION = Double.parseDouble(System.getProperty("java.specification.version", "0"));
+        assumeThat("Java version", JAVA_VERSION, greaterThanOrEqualTo(1.8d));
+    }
+
     @Test
     public void testOptionalPresent() throws Exception {
         assertThat(Optional.of("abc"), optionalIsPresent());

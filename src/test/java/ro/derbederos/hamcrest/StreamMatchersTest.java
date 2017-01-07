@@ -17,6 +17,7 @@
 package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.Test;
 import ro.derbederos.hamcrest.LambdaMatchersTest.Person;
 
@@ -24,11 +25,20 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.Assume.assumeThat;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 import static ro.derbederos.hamcrest.StreamMatchers.*;
 
 public class StreamMatchersTest {
+
+    @Before
+    public void before() throws Exception {
+        Double JAVA_VERSION = Double.parseDouble(System.getProperty("java.specification.version", "0"));
+        assumeThat("Java version", JAVA_VERSION, greaterThanOrEqualTo(1.8d));
+    }
+
     @Test
     public void streamIsEmpty() {
         assertThat(Stream.empty(), emptyStream());

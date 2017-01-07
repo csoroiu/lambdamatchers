@@ -41,7 +41,7 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
 
     @Override
     public void describeTo(Description description) {
-        if (!featureDescription.isEmpty()) {
+        if (featureDescription.length() > 0) {
             description.appendText(featureDescription).appendText(" ");
         }
         description.appendDescriptionOf(subMatcher);
@@ -49,7 +49,7 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
 
     @Override
     protected void describeMismatchSafely(T actual, Description mismatch) {
-        if (!featureName.isEmpty()) {
+        if (featureName.length() > 0) {
             mismatch.appendText(featureName).appendText(" ");
         }
         U value = actual == lastInput ? lastValue : mapper.apply(actual);
