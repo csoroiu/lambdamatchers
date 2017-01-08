@@ -146,7 +146,7 @@ public final class RetryMatchers {
      * @param <U>            The type of the result of the {@code mapper} function.
      * @since 0.3
      */
-    public static <T, U> Matcher<T> retry(long durationMillis, Function<T, U> mapper, Matcher<? super U> matcher) {
+    public static <T, U> Matcher<T> retry(long durationMillis, Function<? super T, ? extends U> mapper, Matcher<? super U> matcher) {
         return retry(durationMillis, mappedBy(mapper, matcher));
     }
 

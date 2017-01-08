@@ -64,8 +64,9 @@ public final class StreamMatchers {
      * @param <U>     The type of the result of the {@code mapper} function.
      * @since 0.1
      */
-    public static <T, U> Matcher<Stream<? extends T>> mapStream(Function<T, U> mapper,
-                                                                Matcher<Iterable<? super U>> matcher) {
+    public static <T, U> Matcher<Stream<T>> mapStream(Function<? super T, ? extends U> mapper,
+                                                      Matcher<Iterable<? super U>> matcher) {
+        // FIXME: should be composable as asIterable(mapIterable(mapper, matcher)) - generics issue
         return mappedBy(stream -> stream.map(mapper::apply).collect(Collectors.toList()), matcher);
     }
 
@@ -81,12 +82,8 @@ public final class StreamMatchers {
      * @param <T>     The type of the elements in the input stream.
      * @since 0.1
      */
-    public static <T> Matcher<Stream<? extends T>> toIterable(Matcher<Iterable<? super T>> matcher) {
-        return mapStream(identity(), matcher);
-    }
-
-    private static <T> Function<T, T> identity() {
-        return t -> t;
+    public static <T> Matcher<Stream<T>> asIterable(Matcher<Iterable<? super T>> matcher) {
+        return mappedBy(stream -> stream.collect(Collectors.toList()), matcher);
     }
 
     /**
@@ -105,7 +102,7 @@ public final class StreamMatchers {
         return mappedBy(StreamMatchers::baseStreamToIterable, emptyIterable());
     }
 
-    private static <S extends BaseStream<T, S>, T> Iterable<T> baseStreamToIterable(BaseStream<T, S> stream) {
+    private static <T, S extends BaseStream<T, S>> Iterable<T> baseStreamToIterable(BaseStream<T, S> stream) {
         List<T> target = new ArrayList<>();
         stream.iterator().forEachRemaining(target::add);
         return target;

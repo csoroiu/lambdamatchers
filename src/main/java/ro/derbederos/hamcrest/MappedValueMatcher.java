@@ -26,12 +26,13 @@ import java.util.Objects;
 final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
     private final String featureDescription;
     private final String featureName;
-    private final Function<T, U> mapper;
+    private final Function<? super T, ? extends U> mapper;
     private final Matcher<? super U> subMatcher;
     private T lastInput = null;
     private U lastValue = null;
 
-    private MappedValueMatcher(Function<T, U> mapper, Class<?> inputType, String featureDescription, String featureName, Matcher<? super U> subMatcher) {
+    private MappedValueMatcher(Function<? super T, ? extends U> mapper, Class<?> inputType,
+                               String featureDescription, String featureName, Matcher<? super U> subMatcher) {
         super(inputType);
         this.mapper = Objects.requireNonNull(mapper);
         this.subMatcher = Objects.requireNonNull(subMatcher);
@@ -58,7 +59,7 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
 
     @Override
     protected final boolean matchesSafely(T actual) {
-        //hack - cache the description, or else it won't work with streams correctly.
+        // hack - cache the description, or else it won't work with streams correctly.
         lastValue = mapper.apply(actual);
         lastInput = actual;
         return subMatcher.matches(lastValue);
@@ -81,11 +82,11 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
         return startsWithVowel ? "an" : "a";
     }
 
-    static <T, U> Matcher<T> mappedBy(Function<T, U> mapper, Matcher<? super U> matcher) {
+    static <T, U> Matcher<T> mappedBy(Function<? super T, ? extends U> mapper, Matcher<? super U> matcher) {
         return mappedBy(Objects.requireNonNull(mapper), getFeatureTypeName(mapper, Function.class, 1), matcher);
     }
 
-    static <T, U> Matcher<T> mappedBy(Function<T, U> mapper, String featureTypeName, Matcher<? super U> matcher) {
+    static <T, U> Matcher<T> mappedBy(Function<? super T, ? extends U> mapper, String featureTypeName, Matcher<? super U> matcher) {
         Objects.requireNonNull(mapper);
         Class<?> inputType = TypeResolver.resolveRawArguments(Function.class, mapper.getClass())[0];
         String objectTypeName = inputType.getSimpleName();

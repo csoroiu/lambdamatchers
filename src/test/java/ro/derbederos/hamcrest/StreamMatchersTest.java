@@ -64,7 +64,7 @@ public class StreamMatchersTest {
         Stream<Person> stream = Stream.of(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
-        Matcher<Stream<? extends Person>> streamMatcher = mapStream(Person::getName, hasItem("Ana Pop1"));
+        Matcher<Stream<Person>> streamMatcher = mapStream(Person::getName, hasItem("Ana Pop1"));
         assertDescription(endsWith("a collection containing \"Ana Pop1\""), streamMatcher);
         assertMismatchDescription(containsString("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
                 stream, streamMatcher);
@@ -73,13 +73,13 @@ public class StreamMatchersTest {
     @Test
     public void streamHasItemMatcherTestToIterable() {
         Stream<String> stream = Stream.of("Alice Bob", "Ana Pop", "Ariana G");
-        assertThat(stream, toIterable(hasItem("Ana Pop")));
+        assertThat(stream, asIterable(hasItem("Ana Pop")));
     }
 
     @Test
     public void streamHasItemMatcherTestToIterableDescription() {
         Stream<String> stream = Stream.of("Alice Bob", "Ana Pop", "Ariana G");
-        Matcher<Stream<? extends String>> streamMatcher = toIterable(hasItem("Ana Pop1"));
+        Matcher<Stream<String>> streamMatcher = asIterable(hasItem("Ana Pop1"));
         assertDescription(endsWith("a collection containing \"Ana Pop1\""), streamMatcher);
         assertMismatchDescription(containsString("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
                 stream, streamMatcher);

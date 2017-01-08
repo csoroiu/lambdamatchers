@@ -503,7 +503,6 @@ public final class TypeResolver {
       result = member;
 
       // Return if not valueOf method
-      // FIXME: 06.11.2016 - verify the return type for boxing operations
       if (!(member instanceof Method) || !isBoxingOrUnboxingMethod((Method) member))
         break;
     }
@@ -561,7 +560,7 @@ public final class TypeResolver {
     Class<?>[] parameters = method.getParameterTypes();
 
     return method.getReturnType().isPrimitive() && parameters.length == 0
-            //booleanValue, byteValue, charValue, doubleValue, floatValue, intValue, longValue, shortValue
+            // booleanValue, byteValue, charValue, doubleValue, floatValue, intValue, longValue, shortValue
             && methodName.startsWith(returnType) && methodName.endsWith("Value")
             && (wrapPrimitives(method.getReturnType()).equals(method.getDeclaringClass())
             || method.getDeclaringClass().equals(Number.class));

@@ -85,7 +85,7 @@ public final class LambdaMatchers {
      * @param <U>         The type of the result of the {@code mapper} function.
      * @since 0.9
      */
-    public static <T, U> Matcher<T> mappedBy(Function<T, U> mapper, String featureName, Matcher<? super U> matcher) {
+    public static <T, U> Matcher<T> mappedBy(Function<? super T, ? extends U> mapper, String featureName, Matcher<? super U> matcher) {
         return MappedValueMatcher.mappedBy(mapper, featureName, matcher);
     }
 
@@ -113,7 +113,7 @@ public final class LambdaMatchers {
      * @see #mappedBy(Function, Matcher)
      * @since 0.9
      */
-    public static <T, U> Matcher<T> mappedBy(Function<T, U> mapper, Matcher<? super U> matcher) {
+    public static <T, U> Matcher<T> mappedBy(Function<? super T, ? extends U> mapper, Matcher<? super U> matcher) {
         return MappedValueMatcher.mappedBy(mapper, matcher);
     }
 
@@ -132,12 +132,12 @@ public final class LambdaMatchers {
      * @param <U>     The type of the result of the {@code mapper} function.
      * @since 0.1
      */
-    public static <T, U> Matcher<Iterable<? extends T>> mapIterable(Function<T, U> mapper,
+    public static <T, U> Matcher<Iterable<T>> mapIterable(Function<? super T, ? extends U> mapper,
                                                                     Matcher<Iterable<? super U>> matcher) {
         return mappedBy(iterable -> transformIterable(mapper, iterable), matcher);
     }
 
-    private static <T, U> Iterable<U> transformIterable(Function<T, U> mapper, Iterable<? extends T> iterable) {
+    private static <T, U> Iterable<U> transformIterable(Function<? super T, ? extends U> mapper, Iterable<? extends T> iterable) {
         ArrayList<U> result = new ArrayList<>();
         for (T element : iterable) {
             result.add(mapper.apply(element));
@@ -160,11 +160,11 @@ public final class LambdaMatchers {
      * @param <U>     The type of the result of the {@code mapper} function.
      * @since 0.1
      */
-    public static <T, U> Matcher<T[]> mapArray(Function<T, U> mapper, Matcher<Iterable<? super U>> matcher) {
+    public static <T, U> Matcher<T[]> mapArray(Function<? super T, ? extends U> mapper, Matcher<Iterable<? super U>> matcher) {
         return mappedBy(array -> transformArray(mapper, array), matcher);
     }
 
-    private static <T, U> Iterable<U> transformArray(Function<T, U> mapper, T[] array) {
+    private static <T, U> Iterable<U> transformArray(Function<? super T, ? extends U> mapper, T[] array) {
         ArrayList<U> result = new ArrayList<>(array.length);
         for (T element : array) {
             result.add(mapper.apply(element));

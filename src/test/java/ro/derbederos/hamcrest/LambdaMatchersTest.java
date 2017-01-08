@@ -58,7 +58,7 @@ public class LambdaMatchersTest {
     @Test
     public void simpleTestInstanceObjectMethodReferenceDescription() {
         Matcher<Person> mapMatcher = mappedBy(this::getPersonName, startsWith("B"));
-        //retrolambda creates an access method for a private instance method reference
+        // retrolambda creates an access method for a private instance method reference
         assertDescription(anyOf(
                 equalTo("a Person having `String LambdaMatchersTest.getPersonName(Person)` a string starting with \"B\""),
                 equalTo("a Person having `String lambda$(LambdaMatchersTest, Person)` a string starting with \"B\"")),
@@ -295,7 +295,7 @@ public class LambdaMatchersTest {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
-        Matcher<Iterable<? extends Person>> mapMatcher = mapIterable(Person::getName, hasItem("Ana Pop1"));
+        Matcher<Iterable<Person>> mapMatcher = mapIterable(Person::getName, hasItem("Ana Pop1"));
         assertDescription(equalTo("an Iterable having `Iterable lambda$(Function, Iterable)` a collection containing \"Ana Pop1\""), mapMatcher);
         assertMismatchDescription(equalTo("`Iterable lambda$(Function, Iterable)` was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
                 list, mapMatcher);
