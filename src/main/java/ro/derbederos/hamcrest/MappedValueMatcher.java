@@ -17,10 +17,10 @@
 package ro.derbederos.hamcrest;
 
 import _shaded.net.jodah.typetools.TypeResolver;
+import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 
 import java.util.Objects;
 

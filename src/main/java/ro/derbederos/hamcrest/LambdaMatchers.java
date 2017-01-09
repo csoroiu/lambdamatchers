@@ -133,7 +133,7 @@ public final class LambdaMatchers {
      * @since 0.1
      */
     public static <T, U> Matcher<Iterable<T>> mapIterable(Function<? super T, ? extends U> mapper,
-                                                                    Matcher<Iterable<? super U>> matcher) {
+                                                          Matcher<Iterable<? super U>> matcher) {
         return mappedBy(iterable -> transformIterable(mapper, iterable), matcher);
     }
 

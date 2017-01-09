@@ -16,8 +16,8 @@
 
 package ro.derbederos.hamcrest;
 
-import org.hamcrest.Matcher;
 import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
+import org.hamcrest.Matcher;
 
 import java.util.ArrayList;
 import java.util.List;
