@@ -20,7 +20,7 @@ import _shaded.net.jodah.typetools.TypeResolver;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import ro.derbederos.hamcrest.internal.IgnoreJRERequirement;
+import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 
 import java.util.Objects;
 

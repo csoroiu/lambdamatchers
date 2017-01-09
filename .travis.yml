@@ -17,6 +17,10 @@ cache:
 os:
   - linux
 
+branches:
+  except:
+  - scala
+
 env:
   matrix:
     - PROFILES='-Pjacoco -Pjdkapicheck'

@@ -38,7 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import ro.derbederos.hamcrest.internal.IgnoreJRERequirement;
+import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 import sun.misc.Unsafe;
 
 /**
