@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import ro.derbederos.hamcrest.internal.IgnoreJRERequirement;
 import sun.misc.Unsafe;
 
 /**
@@ -46,6 +47,7 @@ import sun.misc.Unsafe;
  * @author Jonathan Halterman
  */
 @SuppressWarnings("restriction")
+@IgnoreJRERequirement
 public final class TypeResolver {
   /** Cache of type variable/argument pairs */
   private static final Map<Class<?>, Reference<Map<TypeVariable<?>, Type>>> TYPE_VARIABLE_CACHE = Collections

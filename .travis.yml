@@ -22,10 +22,12 @@ env:
     - PROFILES='-Pjacoco'
     - PROFILES='-Pretrolambda'
     - PROFILES='-Pretrolambda -Pjacoco'
+    - PROFILES='-Pjdkapicheck -DskipTests=true'
     - PROFILES='-Pretrolambda -Pjdkapicheck -DskipTests=true'
 
 matrix:
   allow_failures:
+    - env: PROFILES='-Pjdkapicheck -DskipTests=true'
     - env: PROFILES='-Pretrolambda -Pjdkapicheck -DskipTests=true'
 
 install:

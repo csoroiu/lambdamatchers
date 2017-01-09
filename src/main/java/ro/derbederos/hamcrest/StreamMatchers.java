@@ -17,6 +17,7 @@
 package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
+import ro.derbederos.hamcrest.internal.IgnoreJRERequirement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
  * <p>
  * Examples:
  * <pre>
- * assertThat(stream, mapStream(Person::getName, hasItem(startsWith("Ana"))));
+ * assertThat(stream, tmapStream(Person::getName, hasItem(startsWith("Ana"))));
  *
  * assertThat(stream, toIterable(hasItem("Ana Pop"));
  *
@@ -43,6 +44,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
  *
  * @since 0.6
  */
+@IgnoreJRERequirement
 public final class StreamMatchers {
 
     private StreamMatchers() {

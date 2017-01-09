@@ -17,6 +17,7 @@
 package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
+import ro.derbederos.hamcrest.internal.IgnoreJRERequirement;
 
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -34,6 +35,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
  *
  * @since 0.1
  */
+@IgnoreJRERequirement
 public final class OptionalMatchers {
 
     private OptionalMatchers() {

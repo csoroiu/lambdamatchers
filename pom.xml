@@ -206,6 +206,9 @@
                             </execution>
                         </executions>
                         <configuration>
+                            <annotations>
+                                <annotation>ro.derbederos.hamcrest.internal.IgnoreJRERequirement</annotation>
+                            </annotations>
                             <signature>
                                 <groupId>org.codehaus.mojo.signature</groupId>
                                 <artifactId>${jdkapicheck.signature}</artifactId>
