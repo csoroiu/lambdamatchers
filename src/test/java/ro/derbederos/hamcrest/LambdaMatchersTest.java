@@ -23,8 +23,10 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasItemInArray;
+import static org.hamcrest.Matchers.hasProperty;
 import static ro.derbederos.hamcrest.LambdaMatchers.*;
 import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;

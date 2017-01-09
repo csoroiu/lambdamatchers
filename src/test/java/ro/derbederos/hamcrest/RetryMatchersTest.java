@@ -31,8 +31,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasProperty;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 import static ro.derbederos.hamcrest.RetryMatchers.*;
@@ -155,6 +157,7 @@ public class RetryMatchersTest {
                 bean::getValue, retryMatcher);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class DelayedValueBean {
         private final long start = System.nanoTime();
         private final long delayNanos;
