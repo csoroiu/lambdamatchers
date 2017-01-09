@@ -19,10 +19,7 @@ package ro.derbederos.hamcrest;
 import org.hamcrest.Matcher;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.*;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -286,6 +283,74 @@ public final class RetryMatchers {
      */
     public static <V> Matcher<AtomicReference<V>> retryAtomicReference(long durationMillis, V value) {
         return retryAtomicReference(durationMillis, equalTo(value));
+    }
+
+    /**
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link LongAccumulator}
+     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
+     * <p>
+     * Example:
+     * <pre>
+     * assertThat(accumulator, retryLongAccumulator(300, greaterThan(10L)));
+     * </pre>
+     *
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
+     * @param matcher        The {@link Matcher} to be applied on the value of the {@link LongAccumulator}.
+     * @since 0.11
+     */
+    public static Matcher<LongAccumulator> retryLongAccumulator(long durationMillis, Matcher<Long> matcher) {
+        return retry(durationMillis, LongAccumulator::longValue, matcher);
+    }
+
+    /**
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link LongAdder}
+     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
+     * <p>
+     * Example:
+     * <pre>
+     * assertThat(adder, retryLongAdder(300, greaterThan(10L)));
+     * </pre>
+     *
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
+     * @param matcher        The {@link Matcher} to be applied on the value of the {@link LongAdder}.
+     * @since 0.11
+     */
+    public static Matcher<LongAdder> retryLongAdder(long durationMillis, Matcher<Long> matcher) {
+        return retry(durationMillis, LongAdder::longValue, matcher);
+    }
+
+    /**
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link DoubleAccumulator}
+     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
+     * <p>
+     * Example:
+     * <pre>
+     * assertThat(accumulator, retryDoubleAccumulator(300, greaterThan(10.0)));
+     * </pre>
+     *
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
+     * @param matcher        The {@link Matcher} to be applied on the value of the {@link DoubleAccumulator}.
+     * @since 0.11
+     */
+    public static Matcher<DoubleAccumulator> retryDoubleAccumulator(long durationMillis, Matcher<Double> matcher) {
+        return retry(durationMillis, DoubleAccumulator::doubleValue, matcher);
+    }
+
+    /**
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link DoubleAdder}
+     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
+     * <p>
+     * Example:
+     * <pre>
+     * assertThat(adder, retryDoubleAdder(300, greaterThan(10.0)));
+     * </pre>
+     *
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
+     * @param matcher        The {@link Matcher} to be applied on the value of the {@link DoubleAdder}.
+     * @since 0.11
+     */
+    public static Matcher<DoubleAdder> retryDoubleAdder(long durationMillis, Matcher<Double> matcher) {
+        return retry(durationMillis, DoubleAdder::doubleValue, matcher);
     }
 
     static <T> Matcher<Supplier<T>> retrySupplier(long durationMillis, Supplier<T> supplier, Matcher<? super T> matcher) {

@@ -26,10 +26,7 @@ import org.junit.rules.Timeout;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -139,6 +136,45 @@ public class RetryMatchersTest {
         AtomicReference<String> atomicString = new AtomicReference<>("Expelliarmus");
         executeDelayed(100, () -> atomicString.set("Expecto Patronum"));
         assertThat(atomicString, retryAtomicReference(500, "Expecto Patronum"));
+    }
+
+    @Test
+    public void testRetryLongAccumulator() throws Exception {
+        LongAccumulator accumulator = new LongAccumulator((a, b) -> a * b, 3);
+        executeDelayed(100, () -> accumulator.accumulate(7));
+        assertThat(accumulator, retryLongAccumulator(500, greaterThan(20L)));
+    }
+
+    @Test
+    public void testRetryLongAccumulatorDescription() throws Exception {
+        LongAccumulator accumulator = new LongAccumulator((a, b) -> a * b, 3);
+        executeDelayed(100, () -> accumulator.accumulate(7));
+        Matcher<LongAccumulator> retryMatcher = retryLongAccumulator(300, greaterThan(30L));
+        assertDescription(equalTo("a LongAccumulator having `long LongAccumulator.longValue()` a value greater than <30L>"),
+                retryMatcher);
+        assertMismatchDescription(equalTo("after 300 millisecond(s) `long LongAccumulator.longValue()` <21L> was less than <30L>"),
+                accumulator, retryMatcher);
+    }
+
+    @Test
+    public void testRetryLongAdder() throws Exception {
+        LongAdder adder = new LongAdder();
+        executeDelayed(100, () -> adder.add(7));
+        assertThat(adder, retryLongAdder(500, equalTo(7L)));
+    }
+
+    @Test
+    public void testRetryDoubleAccumulator() throws Exception {
+        DoubleAccumulator accumulator = new DoubleAccumulator((a, b) -> a * b, 3);
+        executeDelayed(100, () -> accumulator.accumulate(7));
+        assertThat(accumulator, retryDoubleAccumulator(500, greaterThan(20.0)));
+    }
+
+    @Test
+    public void testRetryDoubleAdder() throws Exception {
+        DoubleAdder adder = new DoubleAdder();
+        executeDelayed(100, () -> adder.add(7));
+        assertThat(adder, retryDoubleAdder(500, equalTo(7.0)));
     }
 
     @Test
