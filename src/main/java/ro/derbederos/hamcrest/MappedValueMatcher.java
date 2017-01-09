@@ -20,9 +20,11 @@ import _shaded.net.jodah.typetools.TypeResolver;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import ro.derbederos.hamcrest.internal.IgnoreJRERequirement;
 
 import java.util.Objects;
 
+@IgnoreJRERequirement
 final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
     private final String featureDescription;
     private final String featureName;
