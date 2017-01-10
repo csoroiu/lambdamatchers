@@ -16,48 +16,35 @@
 
 package ro.derbederos.hamcrest;
 
+import java8.util.stream.RefStreams;
+import java8.util.stream.Stream;
 import org.hamcrest.Matcher;
-import org.junit.Before;
 import org.junit.Test;
 import ro.derbederos.hamcrest.LambdaMatchersTest.Person;
 
-import java.util.stream.Stream;
-
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.junit.Assume.assumeThat;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
-import static ro.derbederos.hamcrest.StreamMatchers.*;
+import static ro.derbederos.hamcrest.StreamSupportMatchers.*;
 
-public class StreamMatchersTest {
-
-    @Before
-    public void before() throws Exception {
-        assumeJava8();
-    }
-
-    private static void assumeJava8() throws Exception {
-        Double JAVA_VERSION = Double.parseDouble(System.getProperty("java.specification.version", "0"));
-        assumeThat("Java version", JAVA_VERSION, greaterThanOrEqualTo(1.8d));
-    }
+public class StreamSupportMatchersTest {
 
     @Test
     public void streamIsEmpty() {
-        assertThat(Stream.empty(), emptyStream());
+        assertThat(RefStreams.empty(), emptyStream());
     }
 
     @Test
     public void streamIsEmptyDescription() {
         assertDescription(endsWith("an empty iterable"), emptyStream());
         assertMismatchDescription(endsWith("[\"alabala\",\"trilulilu\"]"),
-                Stream.of("alabala", "trilulilu"), emptyStream());
+                RefStreams.of("alabala", "trilulilu"), emptyStream());
     }
 
     @Test
     public void streamHasItemMatcherTestMapStream() {
-        Stream<Person> stream = Stream.of(new Person("Alice Bob", 21),
+        Stream<Person> stream = RefStreams.of(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
         assertThat(stream, mapStream(Person::getName, hasItem("Ana Pop")));
@@ -65,7 +52,7 @@ public class StreamMatchersTest {
 
     @Test
     public void streamHasItemMatcherTestMapStreamDescription() {
-        Stream<Person> stream = Stream.of(new Person("Alice Bob", 21),
+        Stream<Person> stream = RefStreams.of(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
         Matcher<Stream<Person>> streamMatcher = mapStream(Person::getName, hasItem("Ana Pop1"));
@@ -76,13 +63,13 @@ public class StreamMatchersTest {
 
     @Test
     public void streamHasItemMatcherTestToIterable() {
-        Stream<String> stream = Stream.of("Alice Bob", "Ana Pop", "Ariana G");
+        Stream<String> stream = RefStreams.of("Alice Bob", "Ana Pop", "Ariana G");
         assertThat(stream, asIterable(hasItem("Ana Pop")));
     }
 
     @Test
     public void streamHasItemMatcherTestToIterableDescription() {
-        Stream<String> stream = Stream.of("Alice Bob", "Ana Pop", "Ariana G");
+        Stream<String> stream = RefStreams.of("Alice Bob", "Ana Pop", "Ariana G");
         Matcher<Stream<String>> streamMatcher = asIterable(hasItem("Ana Pop1"));
         assertDescription(endsWith("a collection containing \"Ana Pop1\""), streamMatcher);
         assertMismatchDescription(containsString("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),

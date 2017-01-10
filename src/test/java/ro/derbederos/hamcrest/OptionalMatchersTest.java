@@ -35,6 +35,10 @@ public class OptionalMatchersTest {
 
     @Before
     public void before() throws Exception {
+        assumeJava8();
+    }
+
+    private static void assumeJava8() throws Exception {
         Double JAVA_VERSION = Double.parseDouble(System.getProperty("java.specification.version", "0"));
         assumeThat("Java version", JAVA_VERSION, greaterThanOrEqualTo(1.8d));
     }

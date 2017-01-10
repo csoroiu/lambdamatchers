@@ -16,6 +16,8 @@
 
 package ro.derbederos.hamcrest;
 
+import java8.util.function.Function;
+import java8.util.function.Supplier;
 import org.hamcrest.Matcher;
 
 import java.util.ArrayList;

@@ -96,6 +96,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <excludePackageNames>_shaded.*</excludePackageNames>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -106,6 +109,12 @@
             <artifactId>animal-sniffer-annotations</artifactId>
             <version>1.15</version>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sourceforge.streamsupport</groupId>
+            <artifactId>streamsupport</artifactId>
+            <version>1.5.3</version>
         </dependency>
 
         <dependency>
@@ -215,6 +224,9 @@
                             </execution>
                         </executions>
                         <configuration>
+                            <ignores>
+                                <ignore>sun.misc.Unsafe</ignore>
+                            </ignores>
                             <signature>
                                 <groupId>org.codehaus.mojo.signature</groupId>
                                 <artifactId>${jdkapicheck.signature}</artifactId>

@@ -38,7 +38,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 import sun.misc.Unsafe;
 
 /**
@@ -47,7 +46,6 @@ import sun.misc.Unsafe;
  * @author Jonathan Halterman
  */
 @SuppressWarnings("restriction")
-@IgnoreJRERequirement
 public final class TypeResolver {
   /** Cache of type variable/argument pairs */
   private static final Map<Class<?>, Reference<Map<TypeVariable<?>, Type>>> TYPE_VARIABLE_CACHE = Collections
@@ -479,7 +477,8 @@ public final class TypeResolver {
   }
 
   private static boolean isDefaultMethod(Method m) {
-    return JAVA_VERSION >= 1.8 && m.isDefault();
+    return JAVA_VERSION >= 1.8 && ((m.getModifiers() & (Modifier.ABSTRACT | Modifier.PUBLIC | Modifier.STATIC)) ==
+            Modifier.PUBLIC) && m.getDeclaringClass().isInterface();
   }
 
   private static Member getMemberRef(Class<?> type) {

@@ -16,6 +16,7 @@
 
 package ro.derbederos.hamcrest;
 
+import java8.util.function.Supplier;
 import org.hamcrest.Matcher;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -30,8 +31,8 @@ import java.util.concurrent.atomic.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assume.assumeThat;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 import static ro.derbederos.hamcrest.RetryMatchers.*;
@@ -55,6 +56,11 @@ public class RetryMatchersTest {
 
     private static void executeDelayed(long delayMillis, Runnable runnable) {
         executorService.schedule(runnable, delayMillis, TimeUnit.MILLISECONDS);
+    }
+
+    private static void assumeJava8() throws Exception {
+        Double JAVA_VERSION = Double.parseDouble(System.getProperty("java.specification.version", "0"));
+        assumeThat("Java version", JAVA_VERSION, greaterThanOrEqualTo(1.8d));
     }
 
     @Test
@@ -139,45 +145,6 @@ public class RetryMatchersTest {
     }
 
     @Test
-    public void testRetryLongAccumulator() throws Exception {
-        LongAccumulator accumulator = new LongAccumulator((a, b) -> a * b, 3);
-        executeDelayed(100, () -> accumulator.accumulate(7));
-        assertThat(accumulator, retryLongAccumulator(500, greaterThan(20L)));
-    }
-
-    @Test
-    public void testRetryLongAccumulatorDescription() throws Exception {
-        LongAccumulator accumulator = new LongAccumulator((a, b) -> a * b, 3);
-        executeDelayed(100, () -> accumulator.accumulate(7));
-        Matcher<LongAccumulator> retryMatcher = retryLongAccumulator(300, greaterThan(30L));
-        assertDescription(equalTo("a LongAccumulator having `long LongAccumulator.longValue()` a value greater than <30L>"),
-                retryMatcher);
-        assertMismatchDescription(equalTo("after 300 millisecond(s) `long LongAccumulator.longValue()` <21L> was less than <30L>"),
-                accumulator, retryMatcher);
-    }
-
-    @Test
-    public void testRetryLongAdder() throws Exception {
-        LongAdder adder = new LongAdder();
-        executeDelayed(100, () -> adder.add(7));
-        assertThat(adder, retryLongAdder(500, equalTo(7L)));
-    }
-
-    @Test
-    public void testRetryDoubleAccumulator() throws Exception {
-        DoubleAccumulator accumulator = new DoubleAccumulator((a, b) -> a * b, 3);
-        executeDelayed(100, () -> accumulator.accumulate(7));
-        assertThat(accumulator, retryDoubleAccumulator(500, greaterThan(20.0)));
-    }
-
-    @Test
-    public void testRetryDoubleAdder() throws Exception {
-        DoubleAdder adder = new DoubleAdder();
-        executeDelayed(100, () -> adder.add(7));
-        assertThat(adder, retryDoubleAdder(500, equalTo(7.0)));
-    }
-
-    @Test
     public void lambdaAssertSimpleTestObjectMethodReference() {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         lambdaAssert(bean::getValue, 500, equalTo(7));
@@ -191,6 +158,85 @@ public class RetryMatchersTest {
         assertDescription(equalTo("a `int DelayedValueBean.getValue()` <9>"), retryMatcher);
         assertMismatchDescription(equalTo("after 300 millisecond(s) `int DelayedValueBean.getValue()` was <7>"),
                 bean::getValue, retryMatcher);
+    }
+
+    @Test
+    public void testRetryLongAccumulator() throws Exception {
+        assumeJava8();
+        LongAccumulator accumulator = new LongAccumulator((a, b) -> a * b, 3);
+        @SuppressWarnings("Convert2Lambda")
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                accumulator.accumulate(7);
+            }
+        };
+        executeDelayed(100, runnable);
+        assertThat(accumulator, retryLongAccumulator(500, greaterThan(20L)));
+    }
+
+    @Test
+    public void testRetryLongAccumulatorDescription() throws Exception {
+        assumeJava8();
+        LongAccumulator accumulator = new LongAccumulator((a, b) -> a * b, 3);
+        @SuppressWarnings("Convert2Lambda")
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                accumulator.accumulate(7);
+            }
+        };
+        executeDelayed(100, runnable);
+        Matcher<LongAccumulator> retryMatcher = retryLongAccumulator(300, greaterThan(30L));
+        assertDescription(equalTo("a LongAccumulator having `long LongAccumulator.longValue()` a value greater than <30L>"),
+                retryMatcher);
+        assertMismatchDescription(equalTo("after 300 millisecond(s) `long LongAccumulator.longValue()` <21L> was less than <30L>"),
+                accumulator, retryMatcher);
+    }
+
+    @Test
+    public void testRetryLongAdder() throws Exception {
+        assumeJava8();
+        LongAdder adder = new LongAdder();
+        @SuppressWarnings("Convert2Lambda")
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                adder.add(7);
+            }
+        };
+        executeDelayed(100, runnable);
+        assertThat(adder, retryLongAdder(500, equalTo(7L)));
+    }
+
+    @Test
+    public void testRetryDoubleAccumulator() throws Exception {
+        assumeJava8();
+        DoubleAccumulator accumulator = new DoubleAccumulator((a, b) -> a * b, 3);
+        @SuppressWarnings("Convert2Lambda")
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                accumulator.accumulate(7);
+            }
+        };
+        executeDelayed(100, runnable);
+        assertThat(accumulator, retryDoubleAccumulator(500, greaterThan(20.0)));
+    }
+
+    @Test
+    public void testRetryDoubleAdder() throws Exception {
+        assumeJava8();
+        DoubleAdder adder = new DoubleAdder();
+        @SuppressWarnings("Convert2Lambda")
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                adder.add(7);
+            }
+        };
+        executeDelayed(100, runnable);
+        assertThat(adder, retryDoubleAdder(500, equalTo(7.0)));
     }
 
     @SuppressWarnings("WeakerAccess")

@@ -17,6 +17,8 @@
 package ro.derbederos.hamcrest;
 
 import _shaded.net.jodah.typetools.TypeResolver;
+import java8.util.function.Function;
+import java8.util.function.Supplier;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -64,6 +66,7 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
     }
 
     private static <T> String getFeatureTypeName(T mapper, Class<T> mapperInterface, int resultIndex) {
+        mapper = requireNonNull(mapper);
         String featureTypeName = MethodRefResolver.resolveMethodRefName(mapper.getClass());
         if (featureTypeName == null) {
             Class<?> featureType = TypeResolver.resolveRawArguments(mapperInterface, mapper.getClass())[resultIndex];
@@ -81,12 +84,13 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
     }
 
     static <T, U> Matcher<T> mappedBy(Function<? super T, ? extends U> mapper, Matcher<? super U> matcher) {
-        return mappedBy(requireNonNull(mapper), getFeatureTypeName(mapper, Function.class, 1), matcher);
+        return mappedBy(mapper, getFeatureTypeName(mapper, Function.class, 1), matcher);
     }
 
     static <T, U> Matcher<T> mappedBy(Function<? super T, ? extends U> mapper, String featureTypeName, Matcher<? super U> matcher) {
         mapper = requireNonNull(mapper);
         matcher = requireNonNull(matcher);
+        featureTypeName = requireNonNull(featureTypeName);
         Class<?> inputType = TypeResolver.resolveRawArguments(Function.class, mapper.getClass())[0];
         String objectTypeName = inputType.getSimpleName();
         if (TypeResolver.Unknown.class.isAssignableFrom(inputType)) {

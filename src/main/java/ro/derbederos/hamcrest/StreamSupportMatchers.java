@@ -16,21 +16,21 @@
 
 package ro.derbederos.hamcrest;
 
+import java8.util.Iterators;
 import java8.util.function.Function;
-import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
+import java8.util.stream.BaseStream;
+import java8.util.stream.Collectors;
+import java8.util.stream.Stream;
 import org.hamcrest.Matcher;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.BaseStream;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.emptyIterable;
 import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
 
 /**
- * This class provides a set of mapping matchers for java 8 streams.
+ * This class provides a set of mapping matchers for streamsupport streams.
  * Basically it contains matchers that convert streams to {@link Iterable} and allow {@link Iterable}
  * matchers to be used.
  * <p>
@@ -43,13 +43,11 @@ import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
  * assertThat(Stream.empty(), emptyStream());
  * </pre>
  *
- * @since 0.6
+ * @since 0.11
  */
-@IgnoreJRERequirement
-@SuppressWarnings("Since15")
-public final class StreamMatchers {
+public final class StreamSupportMatchers {
 
-    private StreamMatchers() {
+    private StreamSupportMatchers() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
@@ -66,7 +64,7 @@ public final class StreamMatchers {
      * @param matcher The matcher to be applied on the resulting iterable.
      * @param <T>     The type of the elements in the input stream.
      * @param <U>     The type of the result of the {@code mapper} function.
-     * @since 0.1
+     * @since 0.11
      */
     public static <T, U> Matcher<Stream<T>> mapStream(Function<? super T, ? extends U> mapper,
                                                       Matcher<Iterable<? super U>> matcher) {
@@ -84,7 +82,7 @@ public final class StreamMatchers {
      *
      * @param matcher The matcher to be applied on the resulting iterable.
      * @param <T>     The type of the elements in the input stream.
-     * @since 0.1
+     * @since 0.11
      */
     public static <T> Matcher<Stream<T>> asIterable(Matcher<Iterable<? super T>> matcher) {
         return mappedBy(stream -> stream.collect(Collectors.toList()), matcher);
@@ -100,15 +98,15 @@ public final class StreamMatchers {
      *
      * @param <T> The type of the stream elements.
      * @param <S> The type of the stream implementing {@code BaseStream}.
-     * @since 0.1
+     * @since 0.11
      */
     public static <T, S extends BaseStream<T, S>> Matcher<BaseStream<T, S>> emptyStream() {
-        return mappedBy(StreamMatchers::baseStreamToIterable, emptyIterable());
+        return mappedBy(StreamSupportMatchers::baseStreamToIterable, emptyIterable());
     }
 
     private static <T, S extends BaseStream<T, S>> Iterable<T> baseStreamToIterable(BaseStream<T, S> stream) {
         List<T> target = new ArrayList<>();
-        stream.iterator().forEachRemaining(target::add);
+        Iterators.forEachRemaining(stream.iterator(), target::add);
         return target;
     }
 }
