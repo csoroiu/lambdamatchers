@@ -17,14 +17,10 @@
 package ro.derbederos.hamcrest;
 
 import _shaded.net.jodah.typetools.TypeResolver;
-import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-import java.util.Objects;
-
-@IgnoreJRERequirement
 final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
     private final String featureDescription;
     private final String featureName;
@@ -35,11 +31,11 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
 
     private MappedValueMatcher(Function<? super T, ? extends U> mapper, Class<?> inputType,
                                String featureDescription, String featureName, Matcher<? super U> subMatcher) {
-        super(inputType);
-        this.mapper = Objects.requireNonNull(mapper);
-        this.subMatcher = Objects.requireNonNull(subMatcher);
-        this.featureDescription = Objects.requireNonNull(featureDescription);
-        this.featureName = Objects.requireNonNull(featureName);
+        super(requireNonNull(inputType));
+        this.mapper = requireNonNull(mapper);
+        this.subMatcher = requireNonNull(subMatcher);
+        this.featureDescription = requireNonNull(featureDescription);
+        this.featureName = requireNonNull(featureName);
     }
 
     @Override
@@ -85,11 +81,12 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
     }
 
     static <T, U> Matcher<T> mappedBy(Function<? super T, ? extends U> mapper, Matcher<? super U> matcher) {
-        return mappedBy(Objects.requireNonNull(mapper), getFeatureTypeName(mapper, Function.class, 1), matcher);
+        return mappedBy(requireNonNull(mapper), getFeatureTypeName(mapper, Function.class, 1), matcher);
     }
 
     static <T, U> Matcher<T> mappedBy(Function<? super T, ? extends U> mapper, String featureTypeName, Matcher<? super U> matcher) {
-        Objects.requireNonNull(mapper);
+        mapper = requireNonNull(mapper);
+        matcher = requireNonNull(matcher);
         Class<?> inputType = TypeResolver.resolveRawArguments(Function.class, mapper.getClass())[0];
         String objectTypeName = inputType.getSimpleName();
         if (TypeResolver.Unknown.class.isAssignableFrom(inputType)) {
@@ -101,9 +98,16 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
     }
 
     static <T> Matcher<Supplier<T>> supplierMatcher(Supplier<T> supplier, Matcher<? super T> matcher) {
-        Objects.requireNonNull(supplier);
+        supplier = requireNonNull(supplier);
+        matcher = requireNonNull(matcher);
         String featureTypeName = getFeatureTypeName(supplier, Supplier.class, 0);
         String featureDescription = "a " + featureTypeName;
         return new MappedValueMatcher<>(Supplier::get, Supplier.class, featureDescription, featureTypeName, matcher);
+    }
+
+    private static <T> T requireNonNull(T obj) {
+        if (obj == null)
+            throw new NullPointerException();
+        return obj;
     }
 }
