@@ -16,6 +16,7 @@
 
 package ro.derbederos.hamcrest;
 
+import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 import org.hamcrest.Matcher;
 
 import java.util.concurrent.TimeUnit;
@@ -216,6 +217,82 @@ public final class RetryMatchers {
     }
 
     /**
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link LongAccumulator}
+     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
+     * <p>
+     * Example:
+     * <pre>
+     * assertThat(accumulator, retryLongAccumulator(300, greaterThan(10L)));
+     * </pre>
+     *
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
+     * @param matcher        The {@link Matcher} to be applied on the value of the {@link LongAccumulator}.
+     * @since 0.11
+     */
+    @SuppressWarnings("Since15")
+    @IgnoreJRERequirement
+    public static Matcher<LongAccumulator> retryLongAccumulator(long durationMillis, Matcher<Long> matcher) {
+        return retry(durationMillis, LongAccumulator::longValue, matcher);
+    }
+
+    /**
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link LongAdder}
+     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
+     * <p>
+     * Example:
+     * <pre>
+     * assertThat(adder, retryLongAdder(300, greaterThan(10L)));
+     * </pre>
+     *
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
+     * @param matcher        The {@link Matcher} to be applied on the value of the {@link LongAdder}.
+     * @since 0.11
+     */
+    @SuppressWarnings("Since15")
+    @IgnoreJRERequirement
+    public static Matcher<LongAdder> retryLongAdder(long durationMillis, Matcher<Long> matcher) {
+        return retry(durationMillis, LongAdder::longValue, matcher);
+    }
+
+    /**
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link DoubleAccumulator}
+     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
+     * <p>
+     * Example:
+     * <pre>
+     * assertThat(accumulator, retryDoubleAccumulator(300, greaterThan(10.0)));
+     * </pre>
+     *
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
+     * @param matcher        The {@link Matcher} to be applied on the value of the {@link DoubleAccumulator}.
+     * @since 0.11
+     */
+    @SuppressWarnings("Since15")
+    @IgnoreJRERequirement
+    public static Matcher<DoubleAccumulator> retryDoubleAccumulator(long durationMillis, Matcher<Double> matcher) {
+        return retry(durationMillis, DoubleAccumulator::doubleValue, matcher);
+    }
+
+    /**
+     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link DoubleAdder}
+     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
+     * <p>
+     * Example:
+     * <pre>
+     * assertThat(adder, retryDoubleAdder(300, greaterThan(10.0)));
+     * </pre>
+     *
+     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
+     * @param matcher        The {@link Matcher} to be applied on the value of the {@link DoubleAdder}.
+     * @since 0.11
+     */
+    @SuppressWarnings("Since15")
+    @IgnoreJRERequirement
+    public static Matcher<DoubleAdder> retryDoubleAdder(long durationMillis, Matcher<Double> matcher) {
+        return retry(durationMillis, DoubleAdder::doubleValue, matcher);
+    }
+
+    /**
      * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link AtomicBoolean}
      * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
      * <p>
@@ -286,78 +363,6 @@ public final class RetryMatchers {
     }
 
     /**
-     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link LongAccumulator}
-     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(accumulator, retryLongAccumulator(300, greaterThan(10L)));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
-     * @param matcher        The {@link Matcher} to be applied on the value of the {@link LongAccumulator}.
-     * @since 0.11
-     */
-    public static Matcher<LongAccumulator> retryLongAccumulator(long durationMillis, Matcher<Long> matcher) {
-        return retry(durationMillis, LongAccumulator::longValue, matcher);
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link LongAdder}
-     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(adder, retryLongAdder(300, greaterThan(10L)));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
-     * @param matcher        The {@link Matcher} to be applied on the value of the {@link LongAdder}.
-     * @since 0.11
-     */
-    public static Matcher<LongAdder> retryLongAdder(long durationMillis, Matcher<Long> matcher) {
-        return retry(durationMillis, LongAdder::longValue, matcher);
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link DoubleAccumulator}
-     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(accumulator, retryDoubleAccumulator(300, greaterThan(10.0)));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
-     * @param matcher        The {@link Matcher} to be applied on the value of the {@link DoubleAccumulator}.
-     * @since 0.11
-     */
-    public static Matcher<DoubleAccumulator> retryDoubleAccumulator(long durationMillis, Matcher<Double> matcher) {
-        return retry(durationMillis, DoubleAccumulator::doubleValue, matcher);
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link DoubleAdder}
-     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(adder, retryDoubleAdder(300, greaterThan(10.0)));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
-     * @param matcher        The {@link Matcher} to be applied on the value of the {@link DoubleAdder}.
-     * @since 0.11
-     */
-    public static Matcher<DoubleAdder> retryDoubleAdder(long durationMillis, Matcher<Double> matcher) {
-        return retry(durationMillis, DoubleAdder::doubleValue, matcher);
-    }
-
-    static <T> Matcher<Supplier<T>> retrySupplier(long durationMillis, Supplier<T> supplier, Matcher<? super T> matcher) {
-        return retry(durationMillis, supplierMatcher(supplier, matcher));
-    }
-
-    /**
      * This is an assert function that takes as input a supplier and a matcher for its value.
      * It is a fancy version of {@link LambdaMatchers#lambdaAssert(Supplier, Matcher)} as it creates
      * a retrying matcher in the back and retries to match the value against the received matcher
@@ -376,5 +381,9 @@ public final class RetryMatchers {
      */
     public static <T> void lambdaAssert(Supplier<T> supplier, long durationMillis, Matcher<? super T> matcher) {
         assertThat(supplier, retrySupplier(durationMillis, supplier, matcher));
+    }
+
+    static <T> Matcher<Supplier<T>> retrySupplier(long durationMillis, Supplier<T> supplier, Matcher<? super T> matcher) {
+        return retry(durationMillis, supplierMatcher(supplier, matcher));
     }
 }

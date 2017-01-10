@@ -36,6 +36,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
  * @since 0.1
  */
 @IgnoreJRERequirement
+@SuppressWarnings("Since15")
 public final class OptionalMatchers {
 
     private OptionalMatchers() {

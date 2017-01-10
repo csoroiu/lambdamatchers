@@ -45,6 +45,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
  * @since 0.6
  */
 @IgnoreJRERequirement
+@SuppressWarnings("Since15")
 public final class StreamMatchers {
 
     private StreamMatchers() {
