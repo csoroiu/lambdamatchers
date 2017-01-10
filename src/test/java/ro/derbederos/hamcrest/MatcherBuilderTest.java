@@ -30,7 +30,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 
-public class FuncTypeSafeMatcherTest {
+public class MatcherBuilderTest {
 
     @Test
     public void customEqualsMatcher() {
@@ -62,12 +62,13 @@ public class FuncTypeSafeMatcherTest {
     }
 
     public Matcher<Person> eqMatcherPredicate(Person expected) {
-        return MatcherBuilder.<Person>create(value -> myCustomEquals(expected, value))
+        return MatcherBuilder.of(Person.class)
+                .matches(value -> myCustomEquals(expected, value))
                 .description(expected::getName).describeMismatch(actual -> "was " + actual.getName()).build();
     }
 
     public Matcher<Person> eqMatcherBiPredicate(Person expected) {
-        return MatcherBuilder.create(expected, FuncTypeSafeMatcherTest::myCustomEquals)
+        return MatcherBuilder.of(Person.class).matches(expected, MatcherBuilderTest::myCustomEquals)
                 .description(expected::getName).describeMismatch(actual -> "was " + actual.getName()).build();
     }
 

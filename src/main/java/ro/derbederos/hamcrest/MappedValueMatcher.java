@@ -23,6 +23,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import static java8.util.Objects.requireNonNull;
+
 final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
     private final String featureDescription;
     private final String featureName;
@@ -107,11 +109,5 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
         String featureTypeName = getFeatureTypeName(supplier, Supplier.class, 0);
         String featureDescription = "a " + featureTypeName;
         return new MappedValueMatcher<>(Supplier::get, Supplier.class, featureDescription, featureTypeName, matcher);
-    }
-
-    private static <T> T requireNonNull(T obj) {
-        if (obj == null)
-            throw new NullPointerException();
-        return obj;
     }
 }

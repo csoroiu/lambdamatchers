@@ -14,13 +14,13 @@ This library implements some hamcrest matchers usable with Java 8 and a set of u
 <dependency>
     <groupId>ro.derbederos.hamcrest</groupId>
     <artifactId>lambdamatchers</artifactId>
-    <version>0.10</version>
+    <version>0.11</version>
     <scope>test</scope>
 </dependency>
 ```
 #### Gradle dependency
 ```groovy
-testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.10'
+testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.11'
 ```
 
 ## Examples
@@ -89,8 +89,9 @@ Expected: every item is a Person having `int Person.getAge()` a value equal to o
 * The **`lambdaAssert`** method offers a way to maintain a simple test code while improving the error messages in case of failure.
 * Lambda type detection, thanks to **[Type Tools](http://github.com/jhalterman/typetools)** library.
 * Works with Java 6+ via **[Retrolambda](https://github.com/orfjackal/retrolambda)**.
-  * Matchers that use **Java 8** data types and methods will not work under Java 6 and 7. 
-* Compatible with **[Hamcrest](https://github.com/hamcrest/JavaHamcrest)** versions **1.3** and **2.0**, even if it is compiled against version **1.3**.
+  * Matchers that use **Java 8** data types and methods will not work under Java 6 and 7.
+* Based on **[streamsupport](https://sourceforge.net/projects/streamsupport)**
+* Compatible with **[Hamcrest](https://github.com/hamcrest/JavaHamcrest)** versions **1.3** and **2.0**.
 
 **Happy coding, and most important, happy testing!**
 
