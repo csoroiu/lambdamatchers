@@ -17,13 +17,13 @@ that enables one to easily create a new custom matcher.
 <dependency>
     <groupId>ro.derbederos.hamcrest</groupId>
     <artifactId>lambdamatchers</artifactId>
-    <version>0.11</version>
+    <version>0.12</version>
     <scope>test</scope>
 </dependency>
 ```
 #### Gradle dependency
 ```groovy
-testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.11'
+testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.12'
 ```
 
 ## Examples
@@ -106,7 +106,7 @@ public Matcher<Person> myCustomMatcher(Person expected) {
 * Works with Java 6+ via **[Retrolambda](https://github.com/orfjackal/retrolambda)**.
   * Matchers that use **Java 8** data types and methods will not work under Java 6 and 7.
 * Based on **[streamsupport](https://sourceforge.net/projects/streamsupport)**.
-* Compatible with **[Hamcrest](https://github.com/hamcrest/JavaHamcrest)** versions **1.3** and **2.0**.
+* Compatible with **[Hamcrest](https://github.com/hamcrest/JavaHamcrest)** versions **1.3** and **2.0.0.0**.
 
 **Happy coding, and most important, happy testing!**
 
