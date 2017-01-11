@@ -26,7 +26,6 @@ import org.hamcrest.Matcher;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.emptyIterable;
 import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
 
 /**
@@ -102,6 +101,14 @@ public final class StreamSupportMatchers {
      */
     public static <T, S extends BaseStream<T, S>> Matcher<BaseStream<T, S>> emptyStream() {
         return mappedBy(StreamSupportMatchers::baseStreamToIterable, emptyIterable());
+    }
+
+    static <E> org.hamcrest.Matcher<java.lang.Iterable<? extends E>> emptyIterable() {
+        return MatcherBuilder.<Iterable<? extends E>>of(Iterable.class)
+                .matches(it -> !it.iterator().hasNext())
+                .description("an empty iterable")
+                .describeMismatch((it, d) -> d.appendValueList("[", ",", "]", it))
+                .build();
     }
 
     private static <T, S extends BaseStream<T, S>> Iterable<T> baseStreamToIterable(BaseStream<T, S> stream) {

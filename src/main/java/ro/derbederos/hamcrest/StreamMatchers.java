@@ -26,7 +26,6 @@ import java.util.stream.BaseStream;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.hamcrest.Matchers.emptyIterable;
 import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
 
 /**
@@ -103,7 +102,7 @@ public final class StreamMatchers {
      * @since 0.1
      */
     public static <T, S extends BaseStream<T, S>> Matcher<BaseStream<T, S>> emptyStream() {
-        return mappedBy(StreamMatchers::baseStreamToIterable, emptyIterable());
+        return mappedBy(StreamMatchers::baseStreamToIterable, StreamSupportMatchers.emptyIterable());
     }
 
     private static <T, S extends BaseStream<T, S>> Iterable<T> baseStreamToIterable(BaseStream<T, S> stream) {

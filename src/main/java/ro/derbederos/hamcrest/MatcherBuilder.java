@@ -39,12 +39,12 @@ import static java8.util.Objects.requireNonNull;
  * @since 0.11
  */
 public final class MatcherBuilder<T> {
-    private final Class<T> inputType;
+    private final Class<? super T> inputType;
     private Predicate<T> matchesSafely;
     private Consumer<Description> describeTo;
     private BiConsumer<T, Description> describeMismatchSafely;
 
-    private MatcherBuilder(Class<T> inputType) {
+    private MatcherBuilder(Class<? super T> inputType) {
         this.inputType = inputType;
     }
 
@@ -57,7 +57,7 @@ public final class MatcherBuilder<T> {
      * @return The newly created {@link MatcherBuilder}.
      * @since 0.11
      */
-    public static <T> MatcherBuilder<T> of(Class<T> type) {
+    public static <T> MatcherBuilder<T> of(Class<? super T> type) {
         return new MatcherBuilder<>(requireNonNull(type));
     }
 

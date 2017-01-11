@@ -29,7 +29,7 @@ final class FuncTypeSafeMatcher<T> extends TypeSafeMatcher<T> {
     private final BiConsumer<T, Description> describeMismatchSafely;
     private final Consumer<Description> describeTo;
 
-    FuncTypeSafeMatcher(Class<?> inputType, Predicate<T> matchesSafely,
+    FuncTypeSafeMatcher(Class<? super T> inputType, Predicate<T> matchesSafely,
                         Consumer<Description> describeTo,
                         BiConsumer<T, Description> describeMismatchSafely) {
         super(inputType);
