@@ -17,7 +17,6 @@
 package ro.derbederos.hamcrest;
 
 import java8.util.function.Function;
-import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 import org.hamcrest.Matcher;
 
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
  *
  * @since 0.6
  */
-@IgnoreJRERequirement
+@Java8API
 @SuppressWarnings("Since15")
 public final class StreamMatchers {
 
@@ -86,7 +85,7 @@ public final class StreamMatchers {
      * @since 0.1
      */
     public static <T> Matcher<Stream<T>> asIterable(Matcher<Iterable<? super T>> matcher) {
-        return mappedBy(stream -> stream.collect(Collectors.toList()), matcher);
+        return mappedBy(StreamMatchers::streamToIterable, matcher);
     }
 
     /**
@@ -103,6 +102,10 @@ public final class StreamMatchers {
      */
     public static <T, S extends BaseStream<T, S>> Matcher<BaseStream<T, S>> emptyStream() {
         return mappedBy(StreamMatchers::baseStreamToIterable, StreamSupportMatchers.emptyIterable());
+    }
+
+    private static <T> Iterable<T> streamToIterable(Stream<T> stream) {
+        return baseStreamToIterable(stream);
     }
 
     private static <T, S extends BaseStream<T, S>> Iterable<T> baseStreamToIterable(BaseStream<T, S> stream) {

@@ -84,7 +84,7 @@ public final class StreamSupportMatchers {
      * @since 0.11
      */
     public static <T> Matcher<Stream<T>> asIterable(Matcher<Iterable<? super T>> matcher) {
-        return mappedBy(stream -> stream.collect(Collectors.toList()), matcher);
+        return mappedBy(StreamSupportMatchers::streamToIterable, matcher);
     }
 
     /**
@@ -103,17 +103,21 @@ public final class StreamSupportMatchers {
         return mappedBy(StreamSupportMatchers::baseStreamToIterable, emptyIterable());
     }
 
-    static <E> org.hamcrest.Matcher<java.lang.Iterable<? extends E>> emptyIterable() {
-        return MatcherBuilder.<Iterable<? extends E>>of(Iterable.class)
-                .matches(it -> !it.iterator().hasNext())
-                .description("an empty iterable")
-                .describeMismatch((it, d) -> d.appendValueList("[", ",", "]", it))
-                .build();
+    private static <T> Iterable<T> streamToIterable(Stream<T> stream) {
+        return baseStreamToIterable(stream);
     }
 
     private static <T, S extends BaseStream<T, S>> Iterable<T> baseStreamToIterable(BaseStream<T, S> stream) {
         List<T> target = new ArrayList<>();
         Iterators.forEachRemaining(stream.iterator(), target::add);
         return target;
+    }
+
+    static <E> org.hamcrest.Matcher<java.lang.Iterable<? extends E>> emptyIterable() {
+        return MatcherBuilder.<Iterable<? extends E>>of(Iterable.class)
+                .matches(it -> !it.iterator().hasNext())
+                .description("an empty iterable")
+                .describeMismatch((it, d) -> d.appendValueList("[", ",", "]", it))
+                .build();
     }
 }

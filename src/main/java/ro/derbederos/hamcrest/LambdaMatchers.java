@@ -30,7 +30,7 @@ import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;
  * <p>
  * They are useful in plenty of places where you are required to make assertions on different properties of objects.
  * <p>
- * It can replace {@link org.hamcrest.Matchers#hasProperty(String, Matcher)} in many places.
+ * It can replace {@link org.hamcrest.Matchers#hasProperty(java.lang.String, org.hamcrest.Matcher)} in many places.
  * <p>
  * Also it can be used in places where the property to be read is not a JavaBean compliant property like AtomicXXX.get()
  * methods, non public getters or methods having different names (these are places where the aforementioned matcher
@@ -56,12 +56,12 @@ import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;
  * <p>
  * A code like:
  * <pre>
- * assertThat(p.getName(), equalTo("Brutus));
+ * assertThat(p.getName(), equalTo("Brutus"));
  * </pre>
  * <p>
  * Can easily be converted to a code that is more useful in case of failure:
  * <pre>
- * lambdaAssert(p::getName, equalTo("Brutus));
+ * lambdaAssert(p::getName, equalTo("Brutus"));
  * </pre>
  *
  * @since 0.1
@@ -97,7 +97,7 @@ public final class LambdaMatchers {
      * It tries to auto-magically determine the type of the input object and of the {@code mapper} function result.
      * <p>
      * This method is useful ca used to extract properties of objects, or call other functions.
-     * It can be used to replace {@link org.hamcrest.Matchers#hasProperty(String, Matcher)}.
+     * It can be used to replace {@link org.hamcrest.Matchers#hasProperty(java.lang.String, org.hamcrest.Matcher)}.
      * <p>
      * Examples:
      * <pre>
@@ -183,12 +183,12 @@ public final class LambdaMatchers {
      * <p>
      * A code like:
      * <pre>
-     * assertThat(p.getName(), equalTo("Brutus));
+     * assertThat(p.getName(), equalTo("Brutus"));
      * </pre>
      * <p>
      * Can easily be converted to a code that is more useful in case of failure:
      * <pre>
-     * lambdaAssert(p::getName, equalTo("Brutus));
+     * lambdaAssert(p::getName, equalTo("Brutus"));
      * </pre>
      *
      * @param supplier The supplier for the value.

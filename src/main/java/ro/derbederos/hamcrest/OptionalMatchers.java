@@ -16,7 +16,6 @@
 
 package ro.derbederos.hamcrest;
 
-import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 import org.hamcrest.Matcher;
 
 import java.util.Optional;
@@ -35,7 +34,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
  *
  * @since 0.1
  */
-@IgnoreJRERequirement
+@Java8API
 @SuppressWarnings("Since15")
 public final class OptionalMatchers {
 

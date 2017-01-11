@@ -18,7 +18,6 @@ package ro.derbederos.hamcrest;
 
 import java8.util.function.Function;
 import java8.util.function.Supplier;
-import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 import org.hamcrest.Matcher;
 
 import java.util.concurrent.TimeUnit;
@@ -232,7 +231,7 @@ public final class RetryMatchers {
      * @since 0.11
      */
     @SuppressWarnings("Since15")
-    @IgnoreJRERequirement
+    @Java8API
     public static Matcher<LongAccumulator> retryLongAccumulator(long durationMillis, Matcher<Long> matcher) {
         return retry(durationMillis, LongAccumulator::longValue, matcher);
     }
@@ -251,7 +250,7 @@ public final class RetryMatchers {
      * @since 0.11
      */
     @SuppressWarnings("Since15")
-    @IgnoreJRERequirement
+    @Java8API
     public static Matcher<LongAdder> retryLongAdder(long durationMillis, Matcher<Long> matcher) {
         return retry(durationMillis, LongAdder::longValue, matcher);
     }
@@ -270,7 +269,7 @@ public final class RetryMatchers {
      * @since 0.11
      */
     @SuppressWarnings("Since15")
-    @IgnoreJRERequirement
+    @Java8API
     public static Matcher<DoubleAccumulator> retryDoubleAccumulator(long durationMillis, Matcher<Double> matcher) {
         return retry(durationMillis, DoubleAccumulator::doubleValue, matcher);
     }
@@ -289,7 +288,7 @@ public final class RetryMatchers {
      * @since 0.11
      */
     @SuppressWarnings("Since15")
-    @IgnoreJRERequirement
+    @Java8API
     public static Matcher<DoubleAdder> retryDoubleAdder(long durationMillis, Matcher<Double> matcher) {
         return retry(durationMillis, DoubleAdder::doubleValue, matcher);
     }
@@ -372,7 +371,7 @@ public final class RetryMatchers {
      * <p>
      * Example:
      * <pre>
-     * lambdaAssert(p::getName, 500, equalTo("Brutus));
+     * lambdaAssert(p::getName, 500, equalTo("Brutus"));
      * </pre>
      *
      * @param supplier       The supplier for the value.

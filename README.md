@@ -1,6 +1,7 @@
 # lambdamatchers
-[![Build Status][build-status-svg]][build-status-link]
 [![Maven Central][maven-tasks-svg]][maven-tasks-link]
+[![Javadoc][javadoc-svg]][javadoc-link]
+[![Build Status][build-status-svg]][build-status-link]
 [![License][license-svg]][license-link]
 
 This library implements some hamcrest matchers usable with Java 8 and a set of utility functions built on top of them.
@@ -104,7 +105,7 @@ public Matcher<Person> myCustomMatcher(Person expected) {
 * Lambda type detection, thanks to **[Type Tools](http://github.com/jhalterman/typetools)** library.
 * Works with Java 6+ via **[Retrolambda](https://github.com/orfjackal/retrolambda)**.
   * Matchers that use **Java 8** data types and methods will not work under Java 6 and 7.
-* Based on **[streamsupport](https://sourceforge.net/projects/streamsupport)**
+* Based on **[streamsupport](https://sourceforge.net/projects/streamsupport)**.
 * Compatible with **[Hamcrest](https://github.com/hamcrest/JavaHamcrest)** versions **1.3** and **2.0**.
 
 **Happy coding, and most important, happy testing!**
@@ -118,6 +119,8 @@ public Matcher<Person> myCustomMatcher(Person expected) {
 
 [build-status-svg]: https://travis-ci.org/csoroiu/lambdamatchers.svg?branch=master
 [build-status-link]: https://travis-ci.org/csoroiu/lambdamatchers
+[javadoc-svg]: http://javadoc.io/badge/ro.derbederos.hamcrest/lambdamatchers.svg?color=red
+[javadoc-link]: http://javadoc.io/doc/ro.derbederos.hamcrest/lambdamatchers
 [license-svg]: https://img.shields.io/badge/license-Apache2-blue.svg
 [license-link]: https://raw.githubusercontent.com/csoroiu/lambdamatchers/master/LICENSE
 [maven-tasks-svg]: https://img.shields.io/maven-central/v/ro.derbederos.hamcrest/lambdamatchers.svg
