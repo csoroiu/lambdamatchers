@@ -8,6 +8,8 @@ This library implements some hamcrest matchers usable with Java 8 and a set of u
 **Les pièces de résistance** are the **[LambdaMatchers](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/LambdaMatchers.java)**
 **`mappedBy`** and **`lambdaAssert`** methods.
 
+Starting with v0.11, the library is featuring a **[MatcherBuilder](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/MatcherBuilder.java)**
+that enables one to easily create a new custom matcher.
 ## Usage
 #### Maven dependency
 ```xml
@@ -82,6 +84,18 @@ could be:
 java.lang.AssertionError: 
 Expected: every item is a Person having `int Person.getAge()` a value equal to or greater than <22>
      but: an item `int Person.getAge()` <21> was less than <22>
+```
+
+An example a custom matcher creation:
+```java
+public Matcher<Person> myCustomMatcher(Person expected) {
+    return MatcherBuilder
+            .of(Person.class)
+            .matches(expected, TestClass::myCustomEquals)
+            .description(expected::getName)
+            .describeMismatch(actual -> "was " + actual.getName())
+            .build();
+}
 ```
 
 ## Features
