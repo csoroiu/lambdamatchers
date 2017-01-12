@@ -70,7 +70,8 @@ public final class StreamMatchers {
     public static <T, U> Matcher<Stream<T>> mapStream(Function<? super T, ? extends U> mapper,
                                                       Matcher<Iterable<? super U>> matcher) {
         // FIXME: should be composable as asIterable(mapIterable(mapper, matcher)) - generics issue
-        return mappedBy(stream -> stream.map(mapper::apply).collect(Collectors.toList()), matcher);
+        // work around to in jdk 8 that was fixed in b40 - http://bugs.java.com/view_bug.do?bug_id=8051402
+        return mappedBy(stream -> stream.map(mapper::apply).collect(Collectors.<U>toList()), matcher);
     }
 
     /**
