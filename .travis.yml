@@ -3,6 +3,7 @@ sudo: false
 language: java
 
 jdk:
+  - oraclejdk7
   - oraclejdk8
 
 cache:
@@ -23,7 +24,11 @@ env:
     - PROFILES='-Pretrolambda -Pjacoco'
 
 install:
+    - jdk_switcher use oraclejdk8
+    - javac -version
     - mvn ${PROFILES} package -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    - jdk_switcher use default
+    - javac -version
 
 script:
-    - mvn ${PROFILES} -P!retrolambda test -B
+    - mvn ${PROFILES} -P!retrolambda test -Dmaven.main.skip=true -B
