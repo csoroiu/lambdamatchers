@@ -26,13 +26,9 @@ env:
     - PROFILES='-Pjacoco -Pjdkapicheck'
     - PROFILES='-Pretrolambda'
     - PROFILES='-Pretrolambda -Pjacoco'
-    - PROFILES='-Pretrolambda -Pjdkapicheck -DskipTests=true'
-
-matrix:
-  allow_failures:
-    - env: PROFILES='-Pretrolambda -Pjdkapicheck -DskipTests=true'
 
 install:
-    - mvn ${PROFILES} clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    - mvn ${PROFILES} package -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+
 script:
-    - mvn ${PROFILES} clean test -B
+    - mvn ${PROFILES} -P!retrolambda test -B

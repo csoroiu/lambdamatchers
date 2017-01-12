@@ -34,8 +34,8 @@ import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
  *
  * @since 0.1
  */
-@Java8API
 @SuppressWarnings("Since15")
+@Java8API
 public final class OptionalMatchers {
 
     private OptionalMatchers() {
@@ -47,6 +47,7 @@ public final class OptionalMatchers {
      *
      * @since 0.1
      */
+    @Java8API
     public static Matcher<Optional<?>> optionalIsPresent() {
         return mappedBy(Optional::isPresent, "isPresent", equalTo(true));
     }
@@ -56,6 +57,7 @@ public final class OptionalMatchers {
      *
      * @since 0.1
      */
+    @Java8API
     public static Matcher<Optional<?>> optionalIsEmpty() {
         return mappedBy(Optional::isPresent, "isPresent", equalTo(false));
     }
@@ -68,6 +70,7 @@ public final class OptionalMatchers {
      * @param <T>     The type of the {@link Optional}'s content.
      * @since 0.1
      */
+    @Java8API
     public static <T> Matcher<Optional<T>> optionalHasValue(Matcher<? super T> matcher) {
         return allOf(optionalIsPresent(), mappedBy(Optional::get, "value", matcher));
     }
@@ -80,6 +83,7 @@ public final class OptionalMatchers {
      * @param <T>   The type of the {@link Optional}'s content.
      * @since 0.1
      */
+    @Java8API
     public static <T> Matcher<Optional<T>> optionalHasValue(T value) {
         return optionalHasValue(equalTo(value));
     }
@@ -89,6 +93,7 @@ public final class OptionalMatchers {
      *
      * @since 0.1
      */
+    @Java8API
     public static Matcher<OptionalInt> optionalIntIsPresent() {
         return mappedBy(OptionalInt::isPresent, "isPresent", equalTo(true));
     }
@@ -98,6 +103,7 @@ public final class OptionalMatchers {
      *
      * @since 0.1
      */
+    @Java8API
     public static Matcher<OptionalInt> optionalIntIsEmpty() {
         return mappedBy(OptionalInt::isPresent, "isPresent", equalTo(false));
     }
@@ -109,6 +115,7 @@ public final class OptionalMatchers {
      * @param matcher the {@link Matcher} to apply to {@link OptionalInt}'s content.
      * @since 0.1
      */
+    @Java8API
     public static Matcher<OptionalInt> optionalIntHasValue(Matcher<Integer> matcher) {
         return allOf(optionalIntIsPresent(), mappedBy(OptionalInt::getAsInt, "value", matcher));
     }
@@ -120,6 +127,7 @@ public final class OptionalMatchers {
      * @param value The expected content of the {@link OptionalInt}.
      * @since 0.1
      */
+    @Java8API
     public static Matcher<OptionalInt> optionalIntHasValue(int value) {
         return optionalIntHasValue(equalTo(value));
     }
@@ -129,6 +137,7 @@ public final class OptionalMatchers {
      *
      * @since 0.1
      */
+    @Java8API
     public static Matcher<OptionalLong> optionalLongIsPresent() {
         return mappedBy(OptionalLong::isPresent, "isPresent", equalTo(true));
     }
@@ -138,6 +147,7 @@ public final class OptionalMatchers {
      *
      * @since 0.1
      */
+    @Java8API
     public static Matcher<OptionalLong> optionalLongIsEmpty() {
         return mappedBy(OptionalLong::isPresent, "isPresent", equalTo(false));
     }
@@ -149,6 +159,7 @@ public final class OptionalMatchers {
      * @param matcher the {@link Matcher} to apply to {@link OptionalLong}'s content.
      * @since 0.1
      */
+    @Java8API
     public static Matcher<OptionalLong> optionalLongHasValue(Matcher<Long> matcher) {
         return allOf(optionalLongIsPresent(), mappedBy(OptionalLong::getAsLong, "value", matcher));
     }
@@ -160,6 +171,7 @@ public final class OptionalMatchers {
      * @param value The expected content of the {@link OptionalLong}.
      * @since 0.1
      */
+    @Java8API
     public static Matcher<OptionalLong> optionalLongHasValue(long value) {
         return optionalLongHasValue(equalTo(value));
     }
@@ -169,6 +181,7 @@ public final class OptionalMatchers {
      *
      * @since 0.1
      */
+    @Java8API
     public static Matcher<OptionalDouble> optionalDoubleIsPresent() {
         return mappedBy(OptionalDouble::isPresent, "isPresent", equalTo(true));
     }
@@ -178,6 +191,7 @@ public final class OptionalMatchers {
      *
      * @since 0.1
      */
+    @Java8API
     public static Matcher<OptionalDouble> optionalDoubleIsEmpty() {
         return mappedBy(OptionalDouble::isPresent, "isPresent", equalTo(false));
     }
@@ -188,6 +202,7 @@ public final class OptionalMatchers {
      * @param matcher the {@link Matcher} to apply to {@link OptionalDouble}'s content.
      * @since 0.1
      */
+    @Java8API
     public static Matcher<OptionalDouble> optionalDoubleHasValue(Matcher<Double> matcher) {
         return allOf(optionalDoubleIsPresent(), mappedBy(OptionalDouble::getAsDouble, "value", matcher));
     }
@@ -198,6 +213,7 @@ public final class OptionalMatchers {
      * @param value The expected content of the {@link OptionalDouble}.
      * @since 0.1
      */
+    @Java8API
     public static Matcher<OptionalDouble> optionalDoubleHasValue(double value) {
         return optionalDoubleHasValue(equalTo(value));
     }

@@ -43,8 +43,8 @@ import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
  *
  * @since 0.6
  */
-@Java8API
 @SuppressWarnings("Since15")
+@Java8API
 public final class StreamMatchers {
 
     private StreamMatchers() {
@@ -66,6 +66,7 @@ public final class StreamMatchers {
      * @param <U>     The type of the result of the {@code mapper} function.
      * @since 0.1
      */
+    @Java8API
     public static <T, U> Matcher<Stream<T>> mapStream(Function<? super T, ? extends U> mapper,
                                                       Matcher<Iterable<? super U>> matcher) {
         // FIXME: should be composable as asIterable(mapIterable(mapper, matcher)) - generics issue
@@ -84,6 +85,7 @@ public final class StreamMatchers {
      * @param <T>     The type of the elements in the input stream.
      * @since 0.1
      */
+    @Java8API
     public static <T> Matcher<Stream<T>> asIterable(Matcher<Iterable<? super T>> matcher) {
         return mappedBy(StreamMatchers::streamToIterable, matcher);
     }
@@ -100,14 +102,17 @@ public final class StreamMatchers {
      * @param <S> The type of the stream implementing {@code BaseStream}.
      * @since 0.1
      */
+    @Java8API
     public static <T, S extends BaseStream<T, S>> Matcher<BaseStream<T, S>> emptyStream() {
         return mappedBy(StreamMatchers::baseStreamToIterable, StreamSupportMatchers.emptyIterable());
     }
 
+    @Java8API
     private static <T> Iterable<T> streamToIterable(Stream<T> stream) {
         return baseStreamToIterable(stream);
     }
 
+    @Java8API
     private static <T, S extends BaseStream<T, S>> Iterable<T> baseStreamToIterable(BaseStream<T, S> stream) {
         List<T> target = new ArrayList<>();
         stream.iterator().forEachRemaining(target::add);
