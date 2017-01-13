@@ -72,8 +72,8 @@ lambdaAssert(person::getName, equalTo("Brutus"));
 could be:
 ```java
 java.lang.AssertionError: 
-Expected: a `String Person.getName()` "Brutus"
-     but: `String Person.getName()` was "Caesar"
+Expected: a `Person::getName` "Brutus"
+     but: `Person::getName` was "Caesar"
 ```
 
 And for the code:
@@ -83,8 +83,8 @@ assertThat(list, everyItem(mappedBy(Person::getAge, greaterThanOrEqualTo(22))));
 could be:
 ```java
 java.lang.AssertionError: 
-Expected: every item is a Person having `int Person.getAge()` a value equal to or greater than <22>
-     but: an item `int Person.getAge()` <21> was less than <22>
+Expected: every item is a Person having `Person::getAge` a value equal to or greater than <22>
+     but: an item `Person::getAge` <21> was less than <22>
 ```
 
 An example a custom matcher creation:

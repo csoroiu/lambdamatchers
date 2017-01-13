@@ -72,38 +72,20 @@ class MethodRefResolver {
 
     private static String methodToString(Member methodRef) {
         StringBuilder sb = new StringBuilder();
-        if (methodRef instanceof Method) {
+        if (methodRef.getName().startsWith(LAMBDA_METHOD_PREFIX)
+                || methodRef.getName().startsWith(RETROLAMBDA_ACCESSMETHOD_PREFIX)) {
+            sb.append("(");
             sb.append(((Method) methodRef).getReturnType().getSimpleName());
-            sb.append(" ");
+            sb.append(")");
         }
-        if (methodRef.getName().startsWith(LAMBDA_METHOD_PREFIX)) {
-            sb.append(LAMBDA_METHOD_PREFIX);
-        } else if (methodRef.getName().startsWith(RETROLAMBDA_ACCESSMETHOD_PREFIX)) {
-            sb.append(LAMBDA_METHOD_PREFIX);
-        } else if (methodRef instanceof Constructor) {
-            sb.append("new ");
-            sb.append(methodRef.getDeclaringClass().getSimpleName());
+
+        sb.append(methodRef.getDeclaringClass().getSimpleName());
+        sb.append("::");
+        if (methodRef instanceof Constructor) {
+            sb.append("new");
         } else {
-            sb.append(methodRef.getDeclaringClass().getSimpleName());
-            sb.append(".");
             sb.append(methodRef.getName());
         }
-        sb.append("(");
-        Class<?>[] parameterTypes;
-        if (methodRef instanceof Constructor) {
-            parameterTypes = ((Constructor<?>) methodRef).getParameterTypes();
-        } else if (methodRef instanceof Method) {
-            parameterTypes = ((Method) methodRef).getParameterTypes();
-        } else {
-            parameterTypes = new Class[0];
-        }
-        for (int i = 0; i < parameterTypes.length; i++) {
-            if (i > 0) {
-                sb.append(", ");
-            }
-            sb.append(parameterTypes[i].getSimpleName());
-        }
-        sb.append(")");
         return sb.toString();
     }
 }

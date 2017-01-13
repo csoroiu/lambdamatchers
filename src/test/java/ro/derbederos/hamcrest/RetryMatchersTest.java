@@ -102,8 +102,8 @@ public class RetryMatchersTest {
     public void testRetryLambdaDescription() throws Exception {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         Matcher<DelayedValueBean> retryMatcher = retry(300, DelayedValueBean::getValue, equalTo(9));
-        assertDescription(equalTo("a DelayedValueBean having `int DelayedValueBean.getValue()` <9>"), retryMatcher);
-        assertMismatchDescription(equalTo("after 300 millisecond(s) `int DelayedValueBean.getValue()` was <7>"),
+        assertDescription(equalTo("a DelayedValueBean having `DelayedValueBean::getValue` <9>"), retryMatcher);
+        assertMismatchDescription(equalTo("after 300 millisecond(s) `DelayedValueBean::getValue` was <7>"),
                 bean, retryMatcher);
     }
 
@@ -118,8 +118,8 @@ public class RetryMatchersTest {
     public void testRetryAtomicIntegerDescription() throws Exception {
         AtomicInteger atomicInteger = new AtomicInteger(7);
         Matcher<AtomicInteger> retryMatcher = retryAtomicInteger(300, 9);
-        assertDescription(equalTo("an AtomicInteger having `int AtomicInteger.intValue()` <9>"), retryMatcher);
-        assertMismatchDescription(equalTo("after 300 millisecond(s) `int AtomicInteger.intValue()` was <7>"),
+        assertDescription(equalTo("an AtomicInteger having `AtomicInteger::intValue` <9>"), retryMatcher);
+        assertMismatchDescription(equalTo("after 300 millisecond(s) `AtomicInteger::intValue` was <7>"),
                 atomicInteger, retryMatcher);
     }
 
@@ -155,8 +155,8 @@ public class RetryMatchersTest {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         Matcher<Supplier<Integer>> retryMatcher = retrySupplier(300, bean::getValue, equalTo(9));
 
-        assertDescription(equalTo("a `int DelayedValueBean.getValue()` <9>"), retryMatcher);
-        assertMismatchDescription(equalTo("after 300 millisecond(s) `int DelayedValueBean.getValue()` was <7>"),
+        assertDescription(equalTo("a `DelayedValueBean::getValue` <9>"), retryMatcher);
+        assertMismatchDescription(equalTo("after 300 millisecond(s) `DelayedValueBean::getValue` was <7>"),
                 bean::getValue, retryMatcher);
     }
 
@@ -188,9 +188,9 @@ public class RetryMatchersTest {
         };
         executeDelayed(100, runnable);
         Matcher<LongAccumulator> retryMatcher = retryLongAccumulator(300, greaterThan(30L));
-        assertDescription(equalTo("a LongAccumulator having `long LongAccumulator.longValue()` a value greater than <30L>"),
+        assertDescription(equalTo("a LongAccumulator having `LongAccumulator::longValue` a value greater than <30L>"),
                 retryMatcher);
-        assertMismatchDescription(equalTo("after 300 millisecond(s) `long LongAccumulator.longValue()` <21L> was less than <30L>"),
+        assertMismatchDescription(equalTo("after 300 millisecond(s) `LongAccumulator::longValue` <21L> was less than <30L>"),
                 accumulator, retryMatcher);
     }
 
