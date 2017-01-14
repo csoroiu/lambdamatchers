@@ -31,7 +31,8 @@ import java.util.concurrent.atomic.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.junit.Assume.assumeThat;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
@@ -79,7 +80,7 @@ public class RetryMatchersTest {
     public void testRetryLambda() throws Exception {
         DelayedValueBean bean = new DelayedValueBean(144, 2, 7);
         assertThat(bean, retry(500, DelayedValueBean::getValue, equalTo(7)));
-        assertThat(bean.getValueCallCount.intValue(), greaterThan(2));
+        assertThat(bean.getValueCallCount.intValue(), greaterThanOrEqualTo(2));
     }
 
     @Test
@@ -172,7 +173,7 @@ public class RetryMatchersTest {
             }
         };
         executeDelayed(100, runnable);
-        assertThat(accumulator, retryLongAccumulator(500, greaterThan(20L)));
+        assertThat(accumulator, retryLongAccumulator(500, greaterThanOrEqualTo(20L)));
     }
 
     @Test
@@ -187,8 +188,8 @@ public class RetryMatchersTest {
             }
         };
         executeDelayed(100, runnable);
-        Matcher<LongAccumulator> retryMatcher = retryLongAccumulator(300, greaterThan(30L));
-        assertDescription(equalTo("a LongAccumulator having `LongAccumulator::longValue` a value greater than <30L>"),
+        Matcher<LongAccumulator> retryMatcher = retryLongAccumulator(300, greaterThanOrEqualTo(30L));
+        assertDescription(equalTo("a LongAccumulator having `LongAccumulator::longValue` a value equal to or greater than <30L>"),
                 retryMatcher);
         assertMismatchDescription(equalTo("after 300 millisecond(s) `LongAccumulator::longValue` <21L> was less than <30L>"),
                 accumulator, retryMatcher);
@@ -221,7 +222,7 @@ public class RetryMatchersTest {
             }
         };
         executeDelayed(100, runnable);
-        assertThat(accumulator, retryDoubleAccumulator(500, greaterThan(20.0)));
+        assertThat(accumulator, retryDoubleAccumulator(500, greaterThanOrEqualTo(20.0)));
     }
 
     @Test

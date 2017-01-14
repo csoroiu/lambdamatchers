@@ -33,6 +33,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.*;
 import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
+import static ro.derbederos.hamcrest.RegexMatchers.matchesPattern;
 
 public class LambdaMatchersTest {
     @Test
@@ -165,8 +166,8 @@ public class LambdaMatchersTest {
     public void simpleTestLambdaDescription() {
         Function<Person, String> mapper = a -> a.getName().split(" ")[1];
         Matcher<Person> mapMatcher = mappedBy(mapper, equalTo("Pop"));
-        assertDescription(equalTo("a Person having `(String)LambdaMatchersTest::lambda$simpleTestLambdaDescription$1` \"Pop\""), mapMatcher);
-        assertMismatchDescription(equalTo("`(String)LambdaMatchersTest::lambda$simpleTestLambdaDescription$1` was \"Bob\""),
+        assertDescription(matchesPattern("a Person having `\\(String\\)LambdaMatchersTest::lambda\\$simpleTestLambdaDescription\\$\\d+` \"Pop\""), mapMatcher);
+        assertMismatchDescription(matchesPattern("`\\(String\\)LambdaMatchersTest::lambda\\$simpleTestLambdaDescription\\$\\d+` was \"Bob\""),
                 new Person("Alice Bob", 21), mapMatcher);
     }
 
@@ -302,8 +303,8 @@ public class LambdaMatchersTest {
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
         Matcher<Iterable<Person>> mapMatcher = mapIterable(Person::getName, hasItem("Ana Pop1"));
-        assertDescription(equalTo("an Iterable having `(Iterable)LambdaMatchers::lambda$mapIterable$0` a collection containing \"Ana Pop1\""), mapMatcher);
-        assertMismatchDescription(equalTo("`(Iterable)LambdaMatchers::lambda$mapIterable$0` was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
+        assertDescription(matchesPattern("an Iterable having `\\(Iterable\\)LambdaMatchers::lambda\\$mapIterable\\$\\d+` a collection containing \"Ana Pop1\""), mapMatcher);
+        assertMismatchDescription(matchesPattern("`\\(Iterable\\)LambdaMatchers::lambda\\$mapIterable\\$\\d+` was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
                 list, mapMatcher);
     }
 
@@ -317,8 +318,8 @@ public class LambdaMatchersTest {
     public void arrayHasItemMatcherTestMapArrayDescription() {
         Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21), new Person("Ariana G", 21)};
         Matcher<Person[]> mapMatcher = mapArray(Person::getName, hasItem(startsWith("Ana1")));
-        assertDescription(equalTo("an Object[] having `(Iterable)LambdaMatchers::lambda$mapArray$1` a collection containing a string starting with \"Ana1\""), mapMatcher);
-        assertMismatchDescription(equalTo("`(Iterable)LambdaMatchers::lambda$mapArray$1` was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
+        assertDescription(matchesPattern("an Object\\[\\] having `\\(Iterable\\)LambdaMatchers::lambda\\$mapArray\\$\\d+` a collection containing a string starting with \"Ana1\""), mapMatcher);
+        assertMismatchDescription(matchesPattern("`\\(Iterable\\)LambdaMatchers::lambda\\$mapArray\\$\\d+` was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
                 array, mapMatcher);
     }
 

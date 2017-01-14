@@ -23,10 +23,8 @@ import ro.derbederos.hamcrest.LambdaMatchersTest.Person;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 
@@ -40,7 +38,7 @@ public class MatcherBuilderTest {
         Person p1 = new Person("Alice Bob", 0);
         Person p2 = new Person("Ana Pop", 0);
         Person p3 = new Person("Ariana G", 0);
-        assertThat(list, containsInAnyOrder(eqMatcherPredicate(p1), eqMatcherPredicate(p2), eqMatcherPredicate(p3)));
+        assertThat(list, hasItems(eqMatcherPredicate(p1), eqMatcherPredicate(p2), eqMatcherPredicate(p3)));
     }
 
     @Test
