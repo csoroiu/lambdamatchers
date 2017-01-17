@@ -75,8 +75,6 @@ public final class LambdaMatchers {
     /**
      * Creates a {@link Matcher} for an object having a feature with {@code featureName} name.
      * The {@code matcher} argument will be applied on the result of the {@code mapper} function.
-     * This method is useful to be used by other utility methods that use functions to convert the input like
-     * {@link OptionalMatchers}.
      * <p>
      * <b>This method can be used to easily create feature matchers.</b>
      *

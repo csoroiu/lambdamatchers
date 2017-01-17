@@ -18,7 +18,6 @@
  * LambdaMatchers - https://github.com/csoroiu/lambdamatchers
  * <p>
  * A set of tools that enables creating custom hamcrest matchers more easy.
- * All the classes, except for {@link ro.derbederos.hamcrest.StreamMatchers} and {@link ro.derbederos.hamcrest.OptionalMatchers}
- * can be used with Java 6+.
+ * All the classes, except for {@link ro.derbederos.hamcrest.StreamMatchers} can be used with Java 6+.
  */
 package ro.derbederos.hamcrest;

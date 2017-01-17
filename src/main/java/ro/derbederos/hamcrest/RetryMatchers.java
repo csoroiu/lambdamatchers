@@ -21,10 +21,8 @@ import java8.util.function.Supplier;
 import org.hamcrest.Matcher;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.*;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
 import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;
@@ -35,15 +33,15 @@ import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;
  * <p>
  * Examples:
  * <pre>
- * assertThat(mutableObject, retry(500, a -&gt; a.getValue(), equalTo(7)));
+ * assertThat(mutableObject, retry(500, MutableObjectClass::getValue, equalTo(7)));
  *
  * assertThat(bean, retry(300, hasProperty("value", equalTo(9))));
  *
- * assertThat(atomicReferenceSpell, retryAtomicReference(500, powerfulThan("Expecto Patronum")));
+ * assertThat(atomicReferenceSpell, retry(500, AtomicReference::get, powerfulThan("Expecto Patronum")));
  *
- * assertThat(atomicInteger, retryAtomicInteger(300, 9));
+ * assertThat(atomicInteger, retry(300, AtomicInteger::intValue, equalTo(9)));
  *
- * assertThat(atomicLong, retryAtomicLong(300, greaterThan(10L)));
+ * assertThat(atomicLong, retry(300, AtomicLong::longValue, greaterThan(10L)));
  * </pre>
  * <p>
  * <i>These matchers are not compatible with streams, if received directly as an input.
@@ -135,7 +133,7 @@ public final class RetryMatchers {
      * <p>
      * Example:
      * <pre>
-     * assertThat(bean, retry(500, b -&gt; b.getValue(), equalTo(7)));
+     * assertThat(bean, retry(500, BeanClass::getValue, equalTo(7)));
      * </pre>
      *
      * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
@@ -147,220 +145,6 @@ public final class RetryMatchers {
      */
     public static <T, U> Matcher<T> retry(long durationMillis, Function<? super T, ? extends U> mapper, Matcher<? super U> matcher) {
         return retry(durationMillis, mappedBy(mapper, matcher));
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link AtomicInteger}
-     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(atomicInteger, retryAtomicInteger(300, greaterThan(10)));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
-     * @param matcher        The {@link Matcher} to be applied on the value of the {@link AtomicInteger}.
-     * @since 0.2
-     */
-    public static Matcher<AtomicInteger> retryAtomicInteger(long durationMillis, Matcher<Integer> matcher) {
-        return retry(durationMillis, AtomicInteger::intValue, matcher);
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the value of the {@link AtomicInteger} is equal to the received
-     * {@code value}. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(atomicInteger, retryAtomicInteger(300, 9));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if value does not match.
-     * @param value          The value to match against.
-     * @since 0.2
-     */
-    public static Matcher<AtomicInteger> retryAtomicInteger(long durationMillis, int value) {
-        return retryAtomicInteger(durationMillis, equalTo(value));
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link AtomicLong}
-     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(atomicLong, retryAtomicLong(300, greaterThan(10)));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
-     * @param matcher        The {@link Matcher} to be applied on the value of the {@link AtomicLong}.
-     * @since 0.2
-     */
-    public static Matcher<AtomicLong> retryAtomicLong(long durationMillis, Matcher<Long> matcher) {
-        return retry(durationMillis, AtomicLong::longValue, matcher);
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the value of the {@link AtomicLong} is equal to the received
-     * {@code value}. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(atomicLong, retryAtomicLong(300, 9));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if value does not match.
-     * @param value          The value to match against.
-     * @since 0.2
-     */
-    public static Matcher<AtomicLong> retryAtomicLong(long durationMillis, long value) {
-        return retryAtomicLong(durationMillis, equalTo(value));
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link LongAccumulator}
-     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(accumulator, retryLongAccumulator(300, greaterThan(10L)));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
-     * @param matcher        The {@link Matcher} to be applied on the value of the {@link LongAccumulator}.
-     * @since 0.11
-     */
-    @SuppressWarnings("Since15")
-    @Java8API
-    public static Matcher<LongAccumulator> retryLongAccumulator(long durationMillis, Matcher<Long> matcher) {
-        return retry(durationMillis, LongAccumulator::longValue, matcher);
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link LongAdder}
-     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(adder, retryLongAdder(300, greaterThan(10L)));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
-     * @param matcher        The {@link Matcher} to be applied on the value of the {@link LongAdder}.
-     * @since 0.11
-     */
-    @SuppressWarnings("Since15")
-    @Java8API
-    public static Matcher<LongAdder> retryLongAdder(long durationMillis, Matcher<Long> matcher) {
-        return retry(durationMillis, LongAdder::longValue, matcher);
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link DoubleAccumulator}
-     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(accumulator, retryDoubleAccumulator(300, greaterThan(10.0)));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
-     * @param matcher        The {@link Matcher} to be applied on the value of the {@link DoubleAccumulator}.
-     * @since 0.11
-     */
-    @SuppressWarnings("Since15")
-    @Java8API
-    public static Matcher<DoubleAccumulator> retryDoubleAccumulator(long durationMillis, Matcher<Double> matcher) {
-        return retry(durationMillis, DoubleAccumulator::doubleValue, matcher);
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link DoubleAdder}
-     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(adder, retryDoubleAdder(300, greaterThan(10.0)));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
-     * @param matcher        The {@link Matcher} to be applied on the value of the {@link DoubleAdder}.
-     * @since 0.11
-     */
-    @SuppressWarnings("Since15")
-    @Java8API
-    public static Matcher<DoubleAdder> retryDoubleAdder(long durationMillis, Matcher<Double> matcher) {
-        return retry(durationMillis, DoubleAdder::doubleValue, matcher);
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link AtomicBoolean}
-     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(atomicBoolean, retryAtomicBoolean(300, equalTo(false)));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
-     * @param matcher        The {@link Matcher} to be applied on the value of the {@link AtomicBoolean}.
-     * @since 0.2
-     */
-    public static Matcher<AtomicBoolean> retryAtomicBoolean(long durationMillis, Matcher<Boolean> matcher) {
-        return retry(durationMillis, AtomicBoolean::get, matcher);
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the value of the {@link AtomicBoolean} is equal to the received
-     * {@code value}. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(atomicBoolean, retryAtomicBoolean(300, true));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if value does not match.
-     * @param value          The value to match against.
-     * @since 0.2
-     */
-    public static Matcher<AtomicBoolean> retryAtomicBoolean(long durationMillis, boolean value) {
-        return retryAtomicBoolean(durationMillis, equalTo(value));
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the value of the {@link AtomicReference}
-     * received as input. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(atomicReferenceSpell, retryAtomicReference(500, powerfulThan("Expecto Patronum")));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
-     * @param matcher        The {@link Matcher} to be applied on the value of the {@link AtomicReference}.
-     * @param <V>            The type of the {@link AtomicReference} value.
-     * @since 0.2
-     */
-    public static <V> Matcher<AtomicReference<V>> retryAtomicReference(long durationMillis, Matcher<? super V> matcher) {
-        return retry(durationMillis, AtomicReference::get, matcher);
-    }
-
-    /**
-     * Creates a {@link Matcher} that checks if the value of the {@link AtomicReference} is equal to the received
-     * {@code value}. It retries every {@code 50 ms}, until {@code durationMillis} is reached.
-     * <p>
-     * Example:
-     * <pre>
-     * assertThat(atomicReferenceSpell, retryAtomicReference(500, "Expecto Patronum"));
-     * </pre>
-     *
-     * @param durationMillis The duration of the retry. Will fail afterwards if value does not match.
-     * @param value          The value to match against.
-     * @param <V>            The type of the {@link AtomicReference} value.
-     * @since 0.2
-     */
-    public static <V> Matcher<AtomicReference<V>> retryAtomicReference(long durationMillis, V value) {
-        return retryAtomicReference(durationMillis, equalTo(value));
     }
 
     /**

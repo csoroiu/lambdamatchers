@@ -27,7 +27,9 @@ import org.junit.rules.Timeout;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.LongAccumulator;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -55,6 +57,7 @@ public class RetryMatchersTest {
         executorService.awaitTermination(100, TimeUnit.MILLISECONDS);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static void executeDelayed(long delayMillis, Runnable runnable) {
         executorService.schedule(runnable, delayMillis, TimeUnit.MILLISECONDS);
     }
@@ -109,40 +112,19 @@ public class RetryMatchersTest {
     }
 
     @Test
-    public void testRetryAtomicInteger() throws Exception {
-        AtomicInteger atomicInteger = new AtomicInteger(2);
-        executeDelayed(100, () -> atomicInteger.set(7));
-        assertThat(atomicInteger, retryAtomicInteger(500, 7));
-    }
-
-    @Test
-    public void testRetryAtomicIntegerDescription() throws Exception {
-        AtomicInteger atomicInteger = new AtomicInteger(7);
-        Matcher<AtomicInteger> retryMatcher = retryAtomicInteger(300, 9);
-        assertDescription(equalTo("an AtomicInteger having `AtomicInteger::intValue` <9>"), retryMatcher);
-        assertMismatchDescription(equalTo("after 300 millisecond(s) `AtomicInteger::intValue` was <7>"),
-                atomicInteger, retryMatcher);
-    }
-
-    @Test
     public void testRetryAtomicLong() throws Exception {
         AtomicLong atomicLong = new AtomicLong(2);
         executeDelayed(100, () -> atomicLong.set(7));
-        assertThat(atomicLong, retryAtomicLong(500, 7L));
+        assertThat(atomicLong, retry(500, AtomicLong::longValue, equalTo(7L)));
     }
 
     @Test
-    public void testRetryAtomicDouble() throws Exception {
-        AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-        executeDelayed(100, () -> atomicBoolean.set(true));
-        assertThat(atomicBoolean, retryAtomicBoolean(500, true));
-    }
-
-    @Test
-    public void testRetryAtomicReference() throws Exception {
-        AtomicReference<String> atomicString = new AtomicReference<>("Expelliarmus");
-        executeDelayed(100, () -> atomicString.set("Expecto Patronum"));
-        assertThat(atomicString, retryAtomicReference(500, "Expecto Patronum"));
+    public void testRetryAtomicLongDescription() throws Exception {
+        AtomicLong atomicInteger = new AtomicLong(7);
+        Matcher<AtomicLong> retryMatcher = retry(300, AtomicLong::longValue, equalTo(9L));
+        assertDescription(equalTo("an AtomicLong having `AtomicLong::longValue` <9L>"), retryMatcher);
+        assertMismatchDescription(equalTo("after 300 millisecond(s) `AtomicLong::longValue` was <7L>"),
+                atomicInteger, retryMatcher);
     }
 
     @Test
@@ -154,7 +136,7 @@ public class RetryMatchersTest {
     @Test
     public void lambdaAssertSimpleTestObjectMethodReferenceDescription() {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
-        Matcher<Supplier<Integer>> retryMatcher = retrySupplier(300, bean::getValue, equalTo(9));
+        Matcher<Supplier<Integer>> retryMatcher = RetryMatchers.retrySupplier(300, bean::getValue, equalTo(9));
 
         assertDescription(equalTo("a `DelayedValueBean::getValue` <9>"), retryMatcher);
         assertMismatchDescription(equalTo("after 300 millisecond(s) `DelayedValueBean::getValue` was <7>"),
@@ -173,7 +155,7 @@ public class RetryMatchersTest {
             }
         };
         executeDelayed(100, runnable);
-        assertThat(accumulator, retryLongAccumulator(500, greaterThanOrEqualTo(20L)));
+        assertThat(accumulator, retry(500, LongAccumulator::longValue, equalTo(21L)));
     }
 
     @Test
@@ -188,56 +170,11 @@ public class RetryMatchersTest {
             }
         };
         executeDelayed(100, runnable);
-        Matcher<LongAccumulator> retryMatcher = retryLongAccumulator(300, greaterThanOrEqualTo(30L));
-        assertDescription(equalTo("a LongAccumulator having `LongAccumulator::longValue` a value equal to or greater than <30L>"),
+        Matcher<LongAccumulator> retryMatcher = retry(300, LongAccumulator::longValue, equalTo(30L));
+        assertDescription(equalTo("a LongAccumulator having `LongAccumulator::longValue` <30L>"),
                 retryMatcher);
-        assertMismatchDescription(equalTo("after 300 millisecond(s) `LongAccumulator::longValue` <21L> was less than <30L>"),
+        assertMismatchDescription(equalTo("after 300 millisecond(s) `LongAccumulator::longValue` was <21L>"),
                 accumulator, retryMatcher);
-    }
-
-    @Test
-    public void testRetryLongAdder() throws Exception {
-        assumeJava8();
-        LongAdder adder = new LongAdder();
-        @SuppressWarnings("Convert2Lambda")
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                adder.add(7);
-            }
-        };
-        executeDelayed(100, runnable);
-        assertThat(adder, retryLongAdder(500, equalTo(7L)));
-    }
-
-    @Test
-    public void testRetryDoubleAccumulator() throws Exception {
-        assumeJava8();
-        DoubleAccumulator accumulator = new DoubleAccumulator((a, b) -> a * b, 3);
-        @SuppressWarnings("Convert2Lambda")
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                accumulator.accumulate(7);
-            }
-        };
-        executeDelayed(100, runnable);
-        assertThat(accumulator, retryDoubleAccumulator(500, greaterThanOrEqualTo(20.0)));
-    }
-
-    @Test
-    public void testRetryDoubleAdder() throws Exception {
-        assumeJava8();
-        DoubleAdder adder = new DoubleAdder();
-        @SuppressWarnings("Convert2Lambda")
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                adder.add(7);
-            }
-        };
-        executeDelayed(100, runnable);
-        assertThat(adder, retryDoubleAdder(500, equalTo(7.0)));
     }
 
     @SuppressWarnings("WeakerAccess")

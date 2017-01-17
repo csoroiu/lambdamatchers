@@ -48,19 +48,18 @@ assertThat(stream, toIterable(hasItem("Ana Pop"));
 
 assertThat(Stream.empty(), emptyStream());
 ```
-* **[OptionalMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/OptionalMatchersTest.java)**
 * **[RegexMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/RegexMatchersTest.java)**
 * **[RetryMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/RetryMatchersTest.java)**. Some examples are:
 ```java
-assertThat(mutableObject, retry(500, a -> a.getValue(), equalTo(7)));
+assertThat(mutableObject, retry(500, MutableObjectClass::getValue, equalTo(7)));
 
 assertThat(bean, retry(300, hasProperty("value", equalTo(9))));
 
-assertThat(atomicReferenceSpell, retryAtomicReference(500, powerfulThan("Expecto Patronum")));
+assertThat(atomicReferenceSpell, retry(500, AtomicReference::get, powerfulThan("Expecto Patronum")));
 
-assertThat(atomicInteger, retryAtomicInteger(300, 9));
+assertThat(atomicInteger, retry(300, AtomicInteger::intValue, equalTo(9)));
 
-assertThat(atomicLong, retryAtomicLong(300, greaterThan(10L)));
+assertThat(atomicLong, retry(300, AtomicLong::longValue, greaterThan(10L)));
 ```
 
 This library is intended to be used in tests, and in case of failure, **meaningful descriptions** are shown in order to ***help the developers to get an idea of what is wrong before looking at the source code***.
