@@ -36,6 +36,9 @@ public class J8Agent {
             instrumentation.addTransformer(savingAgent);
             savingAgentLoaded = true;
         }
+        if (JAVA_VERSION >= 1.8) {
+            instrumentation.addTransformer(new InvokeDynamicVisitorTransformer());
+        }
     }
 
     public static void agentmain(String arg, Instrumentation instrumentation) {
