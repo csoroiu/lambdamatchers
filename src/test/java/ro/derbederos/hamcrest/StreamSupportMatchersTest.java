@@ -19,6 +19,7 @@ package ro.derbederos.hamcrest;
 import java8.util.stream.RefStreams;
 import java8.util.stream.Stream;
 import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.Test;
 import ro.derbederos.hamcrest.LambdaMatchersTest.Person;
 
@@ -27,8 +28,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 import static ro.derbederos.hamcrest.StreamSupportMatchers.*;
+import static ro.derbederos.hamcrest.TestUtil.assumeJavaVersion;
 
 public class StreamSupportMatchersTest {
+
+    @Before
+    public void before() throws Exception {
+        assumeJavaVersion(1.6);
+    }
 
     @Test
     public void streamIsEmpty() {

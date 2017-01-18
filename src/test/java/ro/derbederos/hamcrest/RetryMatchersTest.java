@@ -35,10 +35,11 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasProperty;
-import static org.junit.Assume.assumeThat;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
-import static ro.derbederos.hamcrest.RetryMatchers.*;
+import static ro.derbederos.hamcrest.RetryMatchers.lambdaAssert;
+import static ro.derbederos.hamcrest.RetryMatchers.retry;
+import static ro.derbederos.hamcrest.TestUtil.assumeJavaVersion;
 
 public class RetryMatchersTest {
     @Rule
@@ -60,11 +61,6 @@ public class RetryMatchersTest {
     @SuppressWarnings("SameParameterValue")
     private static void executeDelayed(long delayMillis, Runnable runnable) {
         executorService.schedule(runnable, delayMillis, TimeUnit.MILLISECONDS);
-    }
-
-    private static void assumeJava8() throws Exception {
-        Double JAVA_VERSION = Double.parseDouble(System.getProperty("java.specification.version", "0"));
-        assumeThat("Java version", JAVA_VERSION, greaterThanOrEqualTo(1.8d));
     }
 
     @Test
@@ -145,7 +141,7 @@ public class RetryMatchersTest {
 
     @Test
     public void testRetryLongAccumulator() throws Exception {
-        assumeJava8();
+        assumeJavaVersion(1.8);
         LongAccumulator accumulator = new LongAccumulator((a, b) -> a * b, 3);
         @SuppressWarnings("Convert2Lambda")
         Runnable runnable = new Runnable() {
@@ -160,7 +156,7 @@ public class RetryMatchersTest {
 
     @Test
     public void testRetryLongAccumulatorDescription() throws Exception {
-        assumeJava8();
+        assumeJavaVersion(1.8);
         LongAccumulator accumulator = new LongAccumulator((a, b) -> a * b, 3);
         @SuppressWarnings("Convert2Lambda")
         Runnable runnable = new Runnable() {
