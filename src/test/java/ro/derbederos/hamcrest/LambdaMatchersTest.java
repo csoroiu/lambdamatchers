@@ -22,6 +22,7 @@ import org.hamcrest.Matcher;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
@@ -78,14 +79,14 @@ public class LambdaMatchersTest {
 
     @Test
     public void simpleTestConstructorReference() {
-        assertThat("4", mappedBy(Integer::new, equalTo(4)));
+        assertThat("4", mappedBy(BigInteger::new, equalTo(BigInteger.valueOf(4L))));
     }
 
     @Test
     public void simpleTestConstructorReferenceDescription() {
-        Matcher<String> mapMatcher = mappedBy(Integer::new, equalTo(5));
-        assertDescription(equalTo("a String having `Integer::new` <5>"), mapMatcher);
-        assertMismatchDescription(equalTo("`Integer::new` was <4>"), "4", mapMatcher);
+        Matcher<String> mapMatcher = mappedBy(BigInteger::new, equalTo(BigInteger.valueOf(5L)));
+        assertDescription(equalTo("a String having `BigInteger::new` <5>"), mapMatcher);
+        assertMismatchDescription(equalTo("`BigInteger::new` was <4>"), "4", mapMatcher);
     }
 
     @Test

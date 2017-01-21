@@ -17,6 +17,7 @@
 package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import ro.derbederos.hamcrest.LambdaMatchersTest.Person;
 
@@ -39,6 +40,11 @@ public class MatcherBuilderTest {
         Person p2 = new Person("Ana Pop", 0);
         Person p3 = new Person("Ariana G", 0);
         assertThat(list, hasItems(eqMatcherPredicate(p1), eqMatcherPredicate(p2), eqMatcherPredicate(p3)));
+    }
+
+    @SafeVarargs //delegate method call using @SafeVarargs to fix the compilation warning
+    private static <T> Matcher<Iterable<T>> hasItems(Matcher<? super T>... itemMatchers) {
+        return Matchers.hasItems(itemMatchers);
     }
 
     @Test

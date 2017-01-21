@@ -28,6 +28,8 @@ testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.13'
 
 ## Examples
 The usages of the matchers can be seen in:
+* **[RetryAtomic.java](https://gist.github.com/csoroiu/d982344e94b999d08f919737072fde5e)**
+* **[OptionalMatchers.java](https://gist.github.com/csoroiu/098e51c01f57ecf7b599e7d1fd1b1d96)**
 * **[LambdaMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/LambdaMatchersTest.java)**. Some examples are:
 ```java
 lambdaAssert(person::getName, equalTo("Brutus"));
