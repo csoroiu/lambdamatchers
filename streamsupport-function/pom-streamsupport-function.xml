@@ -1,0 +1,96 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ro.derbederos.hamcrest</groupId>
+    <artifactId>streamsupport-function</artifactId>
+    <version>${version}</version>
+    <packaging>jar</packaging>
+
+    <name>streamsupport-function</name>
+    <description>java8.util.function package from streamsupport</description>
+    <url>https://github.com/csoroiu/lambdamatchers</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License (GPL), Version 2.0</name>
+            <url>https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/csoroiu/lambdamatchers</url>
+        <connection>scm:git:https://github.com/csoroiu/lambdamatchers.git</connection>
+        <developerConnection>scm:git:https://github.com/csoroiu/lambdamatchers.git</developerConnection>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/csoroiu/lambdamatchers/issues</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>Travis CI</system>
+        <url>https://travis-ci.org/csoroiu/lambdamatchers</url>
+        <notifiers/>
+    </ciManagement>
+
+    <developers>
+        <developer>
+            <name>Claudiu Soroiu</name>
+            <url>https://github.com/csoroiu/</url>
+            <organization>Derbederos</organization>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
+        <maven.compiler.source>1.5</maven.compiler.source>
+        <maven.compiler.target>1.5</maven.compiler.target>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <excludes>
+                        <exclude>module-info.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies/>
+</project>
