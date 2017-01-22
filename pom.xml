@@ -91,6 +91,7 @@
                     <compilerArgs>
                         <compilerArg>-Xlint:all</compilerArg>
                     </compilerArgs>
+                    <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
             <plugin>

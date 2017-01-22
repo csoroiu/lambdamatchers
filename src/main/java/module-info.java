@@ -3,6 +3,6 @@ module ro.derbederos.hamcrest {
 
     requires java.base;
     requires jdk.unsupported;
-    requires hamcrest.all;
+    requires transitive hamcrest.all;
     requires streamsupport;
 }

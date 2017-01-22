@@ -17,7 +17,6 @@
 package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import ro.derbederos.hamcrest.LambdaMatchersTest.Person;
 
@@ -32,6 +31,7 @@ import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDesc
 public class MatcherBuilderTest {
 
     @Test
+    @SuppressWarnings("unchecked")
     public void customEqualsMatcher() {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
@@ -42,13 +42,8 @@ public class MatcherBuilderTest {
         assertThat(list, hasItems(eqMatcherPredicate(p1), eqMatcherPredicate(p2), eqMatcherPredicate(p3)));
     }
 
-    @SafeVarargs //delegate method call using @SafeVarargs to fix the compilation warning
-    private static <T> Matcher<Iterable<T>> hasItems(Matcher<? super T>... itemMatchers) {
-        return Matchers.hasItems(itemMatchers);
-    }
-
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public void testWrongType() {
         Person expected = new Person("Alice Bob", 21);
         Matcher matcher = eqMatcherBiPredicate(expected);
@@ -56,7 +51,7 @@ public class MatcherBuilderTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public void testWrongTypeDescription() {
         Person expected = new Person("Alice Bob", 21);
         Matcher matcher = eqMatcherBiPredicate(expected);
@@ -65,13 +60,13 @@ public class MatcherBuilderTest {
                 "alabala", matcher);
     }
 
-    public Matcher<Person> eqMatcherPredicate(Person expected) {
+    private Matcher<Person> eqMatcherPredicate(Person expected) {
         return MatcherBuilder.of(Person.class)
                 .matches(value -> myCustomEquals(expected, value))
                 .description(expected::getName).describeMismatch(actual -> "was " + actual.getName()).build();
     }
 
-    public Matcher<Person> eqMatcherBiPredicate(Person expected) {
+    private Matcher<Person> eqMatcherBiPredicate(Person expected) {
         return MatcherBuilder.of(Person.class).matches(expected, MatcherBuilderTest::myCustomEquals)
                 .description(expected::getName).describeMismatch(actual -> "was " + actual.getName()).build();
     }
