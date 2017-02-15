@@ -71,7 +71,7 @@
 
         <streamsupport.version>1.5.3</streamsupport.version>
         <hamcrest.version>1.3</hamcrest.version>
-        <retrolambda.version>2.4.0</retrolambda.version>
+        <retrolambda.version>2.5.0</retrolambda.version>
         <junit.version>4.12</junit.version>
         <jacoco.version>0.7.8</jacoco.version>
         <animal-sniffer.version>1.15</animal-sniffer.version>
