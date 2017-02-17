@@ -28,6 +28,9 @@ class SmartMethodRefResolver implements MethodRefResolver {
 
     SmartMethodRefResolver() {
         resolvers.add(new ClassLoaderMethodRefResolver());
+        if (JAVA_VERSION == 1.8) {
+            resolvers.add(new J8AgentByteCodeMethodRefResolver());
+        }
         if (JAVA_VERSION >= 1.8) {
             resolvers.add(new DumpedLambdaByteCodeMethodRefResolver());
             resolvers.add(new SerializableMethodRefResolver());
