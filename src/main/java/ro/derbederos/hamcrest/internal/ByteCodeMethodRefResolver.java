@@ -48,14 +48,14 @@ abstract class ByteCodeMethodRefResolver implements MethodRefResolver {
                 return null;
             }
             // http://stackoverflow.com/questions/23861619/how-to-read-lambda-expression-bytecode-using-asm
-            return extractMethodReference(sam, lambdaClass, bytecode);
+            return extractMethodDelegate(bytecode, lambdaClass, sam);
         } catch (IOException | IllegalStateException | VerifyError ignore) {
         }
         return null;
     }
 
-    private static Member extractMethodReference(Method functionMethod, Class<?> lambdaClass, byte[] bytecode) {
-        MethodNode methodNode = getFunctionMethodNode(functionMethod, bytecode);
+    private static Member extractMethodDelegate(byte[] bytecode, Class<?> lambdaClass, Method functionMethod) {
+        MethodNode methodNode = getFunctionMethodNode(bytecode, functionMethod);
         if (methodNode == null) {
             return null;
         }
@@ -94,7 +94,7 @@ abstract class ByteCodeMethodRefResolver implements MethodRefResolver {
 
     private static Class<?>[] getParameterTypes(String methodDesc, ClassLoader lambdaClassLoader) throws ClassNotFoundException, IllegalArgumentException {
         Type[] argumentTypes = Type.getArgumentTypes(methodDesc);
-        Class<?>[] result = new Class[argumentTypes.length];
+        Class<?>[] result = new Class<?>[argumentTypes.length];
         for (int i = 0; i < argumentTypes.length; i++) {
             result[i] = convertTypeToClass(argumentTypes[i], lambdaClassLoader);
         }
@@ -132,17 +132,18 @@ abstract class ByteCodeMethodRefResolver implements MethodRefResolver {
         throw new IllegalArgumentException("Bad argument type");
     }
 
-    private static MethodNode getFunctionMethodNode(Method functionMethod, byte[] bytecode) {
+    private static MethodNode getFunctionMethodNode(byte[] bytecode, Method method) {
+        return getFunctionMethodNode(bytecode, method.getName(), Type.getMethodDescriptor(method));
+    }
+
+    private static MethodNode getFunctionMethodNode(byte[] bytecode, String methodName, String methodDesc) {
         ClassReader classReader = new ClassReader(bytecode);
         ClassNode classNode = new ClassNode();
         classReader.accept(classNode, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
-        @SuppressWarnings("unchecked")
-        final List<MethodNode> methods = classNode.methods;
-        final String name = functionMethod.getName();
-        final String fDesc = Type.getMethodDescriptor(functionMethod);
+        @SuppressWarnings("unchecked") final List<MethodNode> methods = classNode.methods;
         for (MethodNode m : methods) {
-            if (name.equals(m.name)) {
-                if (fDesc.equals(m.desc)) {
+            if (methodName.equals(m.name)) {
+                if (methodDesc.equals(m.desc)) {
                     return m;
                 }
             }

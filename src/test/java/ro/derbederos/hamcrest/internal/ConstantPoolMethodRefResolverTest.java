@@ -17,7 +17,6 @@
 package ro.derbederos.hamcrest.internal;
 
 import java8.util.function.Function;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Member;
@@ -26,15 +25,13 @@ import java.lang.reflect.Method;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.theInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.junit.Assume.assumeThat;
 
 public class ConstantPoolMethodRefResolverTest {
     private ConstantPoolMethodRefResolver resolver = new ConstantPoolMethodRefResolver();
 
     @Test
     public void simple() {
-        Function function = a -> a;
+        Function<?, ?> function = a -> a;
         Member actual = resolver.resolveMethodReference(Function.class, function.getClass());
         assertThat(actual, instanceOf(Method.class));
         Method method = (Method) actual;

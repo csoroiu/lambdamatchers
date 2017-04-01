@@ -31,6 +31,10 @@ class ASMUtils {
         throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
+    static Method getMethodDelegate(byte[] classByteCode, Method method) {
+        return getMethodDelegate(classByteCode, method.getName(), Type.getMethodDescriptor(method));
+    }
+
     /**
      * This method returns the method which the {@code methodName} delegates to.
      * In case a delegate cannot be detected, it returns null.
@@ -132,9 +136,5 @@ class ASMUtils {
 
     private static String boxedType(String primitiveType) {
         return PRIMITIVE_WRAPPERS.get(primitiveType);
-    }
-
-    static int readBytecodeVersion(ClassReader classReader) {
-        return classReader.readShort(classReader.getItem(1) - 5);
     }
 }
