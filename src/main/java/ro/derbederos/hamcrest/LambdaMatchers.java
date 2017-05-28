@@ -16,11 +16,11 @@
 
 package ro.derbederos.hamcrest;
 
-import java8.util.function.Function;
-import java8.util.function.Supplier;
 import org.hamcrest.Matcher;
 
 import java.util.ArrayList;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;

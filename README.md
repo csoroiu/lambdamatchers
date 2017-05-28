@@ -104,9 +104,7 @@ public Matcher<Person> myCustomMatcher(Person expected) {
 * The matchers have **meaningful descriptions**. The library is intended to be used inside unit test and ***help the developers to get an idea of what is wrong before looking at the source code***.
 * The **`lambdaAssert`** method offers a way to maintain a simple test code while improving the error messages in case of failure.
 * Lambda type detection, thanks to **[Type Tools](http://github.com/jhalterman/typetools)** library.
-* Works with Java 6+ via **[Retrolambda](https://github.com/orfjackal/retrolambda)**.
-  * Matchers that use **Java 8** data types and methods will not work under Java 6 and 7.
-* Based on **[streamsupport](https://sourceforge.net/projects/streamsupport)**.
+* Works with Java 8 and 9.
 * Compatible with **[Hamcrest](https://github.com/hamcrest/JavaHamcrest)** versions **1.3** and **2.0.0.0**.
 
 **Happy coding, and most important, happy testing!**

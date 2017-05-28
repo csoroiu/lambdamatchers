@@ -18,12 +18,10 @@ branches:
 
 env:
   matrix:
-    - PROFILES='-Pjacoco -Pjdkapicheck'
-    - PROFILES='-Pretrolambda'
-    - PROFILES='-Pretrolambda -Pjacoco'
+    - PROFILES='-Pjacoco'
 
 install:
     - mvn ${PROFILES} package -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
 script:
-    - mvn ${PROFILES} -P!retrolambda test -B
+    - mvn ${PROFILES} test -B

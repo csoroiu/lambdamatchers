@@ -16,11 +16,12 @@
 
 package ro.derbederos.hamcrest;
 
-import java8.util.function.*;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-import static java8.util.Objects.requireNonNull;
+import java.util.function.*;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Class used to easily create a custom matcher. Inspired from https://gist.github.com/tadams/10680655.

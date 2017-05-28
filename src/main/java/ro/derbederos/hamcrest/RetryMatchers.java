@@ -16,11 +16,11 @@
 
 package ro.derbederos.hamcrest;
 
-import java8.util.function.Function;
-import java8.util.function.Supplier;
 import org.hamcrest.Matcher;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;

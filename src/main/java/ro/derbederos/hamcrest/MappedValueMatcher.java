@@ -17,13 +17,14 @@
 package ro.derbederos.hamcrest;
 
 import _shaded.net.jodah.typetools.TypeResolver;
-import java8.util.function.Function;
-import java8.util.function.Supplier;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-import static java8.util.Objects.requireNonNull;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import static java.util.Objects.requireNonNull;
 
 final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
     private final String featureDescription;

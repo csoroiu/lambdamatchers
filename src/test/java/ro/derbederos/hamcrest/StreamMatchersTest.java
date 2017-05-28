@@ -23,11 +23,15 @@ import ro.derbederos.hamcrest.LambdaMatchersTest.Person;
 
 import java.util.stream.Stream;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
-import static ro.derbederos.hamcrest.StreamMatchers.*;
+import static ro.derbederos.hamcrest.StreamMatchers.asIterable;
+import static ro.derbederos.hamcrest.StreamMatchers.emptyStream;
+import static ro.derbederos.hamcrest.StreamMatchers.mapStream;
 import static ro.derbederos.hamcrest.TestUtil.assumeJavaVersion;
 
 public class StreamMatchersTest {

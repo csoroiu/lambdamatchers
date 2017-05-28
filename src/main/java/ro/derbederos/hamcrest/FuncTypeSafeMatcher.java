@@ -16,11 +16,12 @@
 
 package ro.derbederos.hamcrest;
 
-import java8.util.function.BiConsumer;
-import java8.util.function.Consumer;
-import java8.util.function.Predicate;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
+
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 // https://gist.github.com/tadams/10680655
 final class FuncTypeSafeMatcher<T> extends TypeSafeMatcher<T> {

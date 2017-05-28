@@ -21,7 +21,9 @@ import org.junit.Test;
 
 import java.util.regex.Pattern;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;

@@ -16,8 +16,6 @@
 
 package ro.derbederos.hamcrest;
 
-import java8.util.function.Function;
-import java8.util.function.Supplier;
 import org.hamcrest.Matcher;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -25,12 +23,17 @@ import org.junit.Test;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.hasProperty;
-import static ro.derbederos.hamcrest.LambdaMatchers.*;
+import static ro.derbederos.hamcrest.LambdaMatchers.lambdaAssert;
+import static ro.derbederos.hamcrest.LambdaMatchers.mapArray;
+import static ro.derbederos.hamcrest.LambdaMatchers.mapIterable;
+import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
 import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;

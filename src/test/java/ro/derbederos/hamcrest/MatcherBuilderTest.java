@@ -23,7 +23,9 @@ import ro.derbederos.hamcrest.LambdaMatchersTest.Person;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;

@@ -16,7 +16,6 @@
 
 package ro.derbederos.hamcrest;
 
-import java8.util.function.Supplier;
 import org.hamcrest.Matcher;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -30,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.LongAccumulator;
+import java.util.function.Supplier;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -39,6 +39,7 @@ import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 import static ro.derbederos.hamcrest.RetryMatchers.lambdaAssert;
 import static ro.derbederos.hamcrest.RetryMatchers.retry;
+import static ro.derbederos.hamcrest.RetryMatchers.retrySupplier;
 import static ro.derbederos.hamcrest.TestUtil.assumeJavaVersion;
 
 public class RetryMatchersTest {
@@ -132,7 +133,7 @@ public class RetryMatchersTest {
     @Test
     public void lambdaAssertSimpleTestObjectMethodReferenceDescription() {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
-        Matcher<Supplier<Integer>> retryMatcher = RetryMatchers.retrySupplier(300, bean::getValue, equalTo(9));
+        Matcher<Supplier<Integer>> retryMatcher = retrySupplier(300, bean::getValue, equalTo(9));
 
         assertDescription(equalTo("a `DelayedValueBean::getValue` <9>"), retryMatcher);
         assertMismatchDescription(equalTo("after 300 millisecond(s) `DelayedValueBean::getValue` was <7>"),
