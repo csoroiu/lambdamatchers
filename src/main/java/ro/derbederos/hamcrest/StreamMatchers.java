@@ -22,13 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.BaseStream;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
 
 /**
- * This class provides a set of mapping matchers for java 8 streams.
+ * This class provides a set of mapping matchers for Java 8+ streams.
  * Basically it contains matchers that convert streams to {@link Iterable} and allow {@link Iterable}
  * matchers to be used.
  * <p>
@@ -66,9 +65,7 @@ public final class StreamMatchers {
      */
     public static <T, U> Matcher<Stream<T>> mapStream(Function<? super T, ? extends U> mapper,
                                                       Matcher<Iterable<? super U>> matcher) {
-        // FIXME: should be composable as asIterable(mapIterable(mapper, matcher)) - generics issue
-        // work around to in jdk 8 that was fixed in b40 - http://bugs.java.com/view_bug.do?bug_id=8051402
-        return mappedBy(stream -> stream.map(mapper::apply).collect(Collectors.<U>toList()), matcher);
+        return mappedBy(stream -> baseStreamToIterable(stream.map(mapper::apply)), matcher);
     }
 
     /**
@@ -84,7 +81,7 @@ public final class StreamMatchers {
      * @since 0.1
      */
     public static <T> Matcher<Stream<T>> asIterable(Matcher<Iterable<? super T>> matcher) {
-        return mappedBy(StreamMatchers::streamToIterable, matcher);
+        return mappedBy(StreamMatchers::baseStreamToIterable, matcher);
     }
 
     /**
@@ -101,10 +98,6 @@ public final class StreamMatchers {
      */
     public static <T, S extends BaseStream<T, S>> Matcher<BaseStream<T, S>> emptyStream() {
         return mappedBy(StreamMatchers::baseStreamToIterable, emptyIterable());
-    }
-
-    private static <T> Iterable<T> streamToIterable(Stream<T> stream) {
-        return baseStreamToIterable(stream);
     }
 
     private static <T, S extends BaseStream<T, S>> Iterable<T> baseStreamToIterable(BaseStream<T, S> stream) {

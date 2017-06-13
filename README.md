@@ -4,7 +4,7 @@
 [![Build Status][build-status-svg]][build-status-link]
 [![License][license-svg]][license-link]
 
-This library implements some hamcrest matchers usable with Java 8 and a set of utility functions built on top of them.
+This library implements some hamcrest matchers usable with Java 8+ and a set of utility functions built on top of them.
 
 **Les pièces de résistance** are the **[LambdaMatchers](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/LambdaMatchers.java)**
 **`mappedBy`** and **`lambdaAssert`** methods.

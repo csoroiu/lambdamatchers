@@ -43,7 +43,12 @@ public final class RegexMatchers {
      * @since 0.1
      */
     public static <T extends CharSequence> Matcher<T> matchesPattern(Pattern pattern) {
-        return PatternMatchesMatcher.matchesPattern(pattern);
+        return MatcherBuilder.<T>of(CharSequence.class)
+                .matches(actual -> pattern.matcher(actual).matches())
+                .describeMismatch((item, description) -> description.appendText("was ").appendValue(item))
+                .description(description -> description.appendText("a string matching pattern ")
+                        .appendValue(pattern.pattern()))
+                .build();
     }
 
     /**
@@ -95,7 +100,12 @@ public final class RegexMatchers {
      * @since 0.1
      */
     public static <T extends CharSequence> Matcher<T> containsPattern(Pattern pattern) {
-        return PatternFindMatcher.containsPattern(pattern);
+        return MatcherBuilder.<T>of(CharSequence.class)
+                .matches(actual -> pattern.matcher(actual).find())
+                .describeMismatch((item, description) -> description.appendText("was ").appendValue(item))
+                .description(description -> description.appendText("a string containing pattern ")
+                        .appendValue(pattern.pattern()))
+                .build();
     }
 
     /**

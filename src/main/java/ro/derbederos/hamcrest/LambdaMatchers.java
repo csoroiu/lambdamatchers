@@ -26,7 +26,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;
 
 /**
- * This class provides a set of mapping matchers based on java 8 functional interfaces (lambdas).
+ * This class provides a set of mapping matchers based on java 8+ functional interfaces (lambdas).
  * <p>
  * They are useful in plenty of places where you are required to make assertions on different properties of objects.
  * <p>
