@@ -18,11 +18,11 @@ package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.BaseStream;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
 
@@ -33,7 +33,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
  * <p>
  * Examples:
  * <pre>
- * assertThat(stream, tmapStream(Person::getName, hasItem(startsWith("Ana"))));
+ * assertThat(stream, mapStream(Person::getName, hasItem(startsWith("Ana"))));
  *
  * assertThat(stream, toIterable(hasItem("Ana Pop"));
  *
@@ -65,7 +65,7 @@ public final class StreamMatchers {
      */
     public static <T, U> Matcher<Stream<T>> mapStream(Function<? super T, ? extends U> mapper,
                                                       Matcher<Iterable<? super U>> matcher) {
-        return mappedBy(stream -> baseStreamToIterable(stream.map(mapper::apply)), matcher);
+        return mappedBy(stream -> stream.map(mapper).collect(Collectors.<U>toList()), matcher);
     }
 
     /**
@@ -80,8 +80,8 @@ public final class StreamMatchers {
      * @param <T>     The type of the elements in the input stream.
      * @since 0.1
      */
-    public static <T> Matcher<Stream<T>> asIterable(Matcher<Iterable<? super T>> matcher) {
-        return mappedBy(StreamMatchers::baseStreamToIterable, matcher);
+    public static <T> Matcher<Stream<T>> toIterable(Matcher<Iterable<? super T>> matcher) {
+        return mappedBy(stream -> stream.collect(Collectors.<T>toList()), matcher);
     }
 
     /**
@@ -101,9 +101,8 @@ public final class StreamMatchers {
     }
 
     private static <T, S extends BaseStream<T, S>> Iterable<T> baseStreamToIterable(BaseStream<T, S> stream) {
-        List<T> target = new ArrayList<>();
-        stream.iterator().forEachRemaining(target::add);
-        return target;
+        return StreamSupport.stream(stream.spliterator(), false)
+                .collect(Collectors.toList());
     }
 
     private static <E> org.hamcrest.Matcher<java.lang.Iterable<? extends E>> emptyIterable() {
