@@ -30,9 +30,9 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
-import static ro.derbederos.hamcrest.StreamMatchers.toIterable;
 import static ro.derbederos.hamcrest.StreamMatchers.emptyStream;
 import static ro.derbederos.hamcrest.StreamMatchers.mapStream;
+import static ro.derbederos.hamcrest.StreamMatchers.toIterable;
 import static ro.derbederos.hamcrest.TestUtil.assumeJavaVersion;
 
 public class StreamMatchersTest {
@@ -49,7 +49,7 @@ public class StreamMatchersTest {
 
     @Test
     public void streamIsEmptyDescription() {
-        assertDescription(endsWith("an empty iterable"), emptyStream());
+        assertDescription(endsWith("an empty stream"), emptyStream());
         assertMismatchDescription(endsWith("[\"alabala\",\"trilulilu\"]"),
                 Stream.of("alabala", "trilulilu"), emptyStream());
     }
@@ -60,8 +60,8 @@ public class StreamMatchersTest {
     }
 
     @Test
-    public void intStreamIsEmptyDescription() {
-        assertDescription(endsWith("an empty iterable"), emptyStream());
+    public void longStreamIsEmptyDescription() {
+        assertDescription(endsWith("an empty stream"), emptyStream());
         assertMismatchDescription(endsWith("[<3L>,<5L>]"),
                 LongStream.of(3, 5), emptyStream());
     }

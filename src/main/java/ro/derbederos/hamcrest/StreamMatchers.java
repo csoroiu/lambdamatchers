@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
+import static ro.derbederos.hamcrest.MappedValueMatcher.mappedBy;
 
 /**
  * This class provides a set of mapping matchers for Java 8+ streams.
@@ -101,15 +101,14 @@ public final class StreamMatchers {
     }
 
     private static <T, S extends BaseStream<T, S>> Iterable<T> baseStreamToIterable(BaseStream<T, S> stream) {
-        return StreamSupport.stream(stream.spliterator(), false)
-                .collect(Collectors.toList());
+        return StreamSupport.stream(stream.spliterator(), false).collect(Collectors.toList());
     }
 
-    private static <E> org.hamcrest.Matcher<java.lang.Iterable<? extends E>> emptyIterable() {
+    private static <E> Matcher<Iterable<? extends E>> emptyIterable() {
         return MatcherBuilder.<Iterable<? extends E>>of(Iterable.class)
                 .matches(it -> !it.iterator().hasNext())
-                .description("an empty iterable")
-                .describeMismatch((it, d) -> d.appendValueList("[", ",", "]", it))
+                .description("an empty stream")
+                .describeMismatch((it, d) -> d.appendText("was ").appendValueList("[", ",", "]", it))
                 .build();
     }
 }

@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
+import static ro.derbederos.hamcrest.MappedValueMatcher.mappedBy;
 import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;
 
 /**
