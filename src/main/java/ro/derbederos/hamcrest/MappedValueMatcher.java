@@ -45,24 +45,26 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
 
     @Override
     public void describeTo(Description description) {
-        if (featureDescription.length() > 0) {
-            description.appendText(featureDescription).appendText(" ");
-        }
+        appendTextIfNotEmpty(description, featureDescription);
         description.appendDescriptionOf(subMatcher);
     }
 
     @Override
     protected void describeMismatchSafely(T actual, Description mismatch) {
-        if (featureName.length() > 0) {
-            mismatch.appendText(featureName).appendText(" ");
-        }
+        appendTextIfNotEmpty(mismatch, featureName);
         U value = actual == lastInput ? lastValue : mapper.apply(actual);
         subMatcher.describeMismatch(value, mismatch);
     }
 
+    private static void appendTextIfNotEmpty(Description description, String text) {
+        if (text.length() > 0) {
+            description.appendText(text).appendText(" ");
+        }
+    }
+
     @Override
     protected final boolean matchesSafely(T actual) {
-        // hack - cache the description, or else it won't work with streams correctly.
+        // cache the value, sometimes useful to have a consistent description when it fails.
         lastValue = mapper.apply(actual);
         lastInput = actual;
         return subMatcher.matches(lastValue);

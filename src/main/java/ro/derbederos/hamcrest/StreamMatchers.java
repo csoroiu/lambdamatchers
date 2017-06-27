@@ -65,7 +65,7 @@ public final class StreamMatchers {
      */
     public static <T, U> Matcher<Stream<T>> mapStream(Function<? super T, ? extends U> mapper,
                                                       Matcher<Iterable<? super U>> matcher) {
-        return mappedBy(stream -> stream.map(mapper).collect(Collectors.<U>toList()), matcher);
+        return mappedBy(cacheResultFunction(stream -> streamToIterable(stream.map(mapper))), matcher);
     }
 
     /**
@@ -81,7 +81,7 @@ public final class StreamMatchers {
      * @since 0.1
      */
     public static <T> Matcher<Stream<T>> toIterable(Matcher<Iterable<? super T>> matcher) {
-        return mappedBy(stream -> stream.collect(Collectors.<T>toList()), matcher);
+        return mappedBy(cacheResultFunction(StreamMatchers::streamToIterable), matcher);
     }
 
     /**
@@ -97,10 +97,10 @@ public final class StreamMatchers {
      * @since 0.1
      */
     public static <T, S extends BaseStream<T, S>> Matcher<BaseStream<T, S>> emptyStream() {
-        return mappedBy(StreamMatchers::baseStreamToIterable, emptyIterable());
+        return mappedBy(cacheResultFunction(StreamMatchers::streamToIterable), emptyIterable());
     }
 
-    private static <T, S extends BaseStream<T, S>> Iterable<T> baseStreamToIterable(BaseStream<T, S> stream) {
+    private static <T, S extends BaseStream<T, S>> Iterable<T> streamToIterable(BaseStream<T, S> stream) {
         return StreamSupport.stream(stream.spliterator(), false).collect(Collectors.toList());
     }
 
@@ -110,5 +110,30 @@ public final class StreamMatchers {
                 .description("an empty stream")
                 .describeMismatch((it, d) -> d.appendText("was ").appendValueList("[", ",", "]", it))
                 .build();
+    }
+
+    private static <T, R> CacheLastResultFunction<T, R> cacheResultFunction(Function<? super T, ? extends R> mapper) {
+        return new CacheLastResultFunction<>(mapper);
+    }
+
+    private static class CacheLastResultFunction<T, R> implements Function<T, R> {
+        private final Function<? super T, ? extends R> mapper;
+        private boolean initialized = false;
+        private T lastInput;
+        private R lastValue;
+
+        private CacheLastResultFunction(Function<? super T, ? extends R> mapper) {
+            this.mapper = mapper;
+        }
+
+        @Override
+        public R apply(T t) {
+            if (lastInput != t || !initialized) {
+                initialized = true;
+                lastValue = mapper.apply(t);
+                lastInput = t;
+            }
+            return lastValue;
+        }
     }
 }

@@ -27,9 +27,11 @@ import java.util.stream.Stream;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
+import static ro.derbederos.hamcrest.RetryMatchers.retry;
 import static ro.derbederos.hamcrest.StreamMatchers.emptyStream;
 import static ro.derbederos.hamcrest.StreamMatchers.mapStream;
 import static ro.derbederos.hamcrest.StreamMatchers.toIterable;
@@ -98,5 +100,11 @@ public class StreamMatchersTest {
         assertDescription(endsWith("a collection containing \"Ana Pop1\""), streamMatcher);
         assertMismatchDescription(containsString("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
                 stream, streamMatcher);
+    }
+
+    @Test
+    public void retryStreamTest() {
+        Stream<String> stream = Stream.of("aa", "bb", "cc");
+        assertThat(stream, not(retry(500, toIterable(hasItem("aaa")))));
     }
 }

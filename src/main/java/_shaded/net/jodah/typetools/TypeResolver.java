@@ -211,15 +211,15 @@ public final class TypeResolver {
     if (genericType instanceof ParameterizedType) {
       ParameterizedType paramType = (ParameterizedType) genericType;
       Type[] arguments = paramType.getActualTypeArguments();
-      result = new Class[arguments.length];
+      result = new Class<?>[arguments.length];
       for (int i = 0; i < arguments.length; i++)
         result[i] = resolveRawClass(arguments[i], subType, functionalInterface);
     } else if (genericType instanceof TypeVariable) {
-      result = new Class[1];
+      result = new Class<?>[1];
       result[0] = resolveRawClass(genericType, subType, functionalInterface);
     } else if (genericType instanceof Class) {
       TypeVariable<?>[] typeParams = ((Class<?>) genericType).getTypeParameters();
-      result = new Class[typeParams.length];
+      result = new Class<?>[typeParams.length];
       for (int i = 0; i < typeParams.length; i++)
         result[i] = resolveRawClass(typeParams[i], subType, functionalInterface);
     }
