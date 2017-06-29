@@ -24,8 +24,8 @@ import java.util.function.Supplier;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static ro.derbederos.hamcrest.MappedValueMatcher.mappedBy;
-import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;
+import static ro.derbederos.hamcrest.TypeResolverFuncMatcher.mappedBy;
+import static ro.derbederos.hamcrest.TypeResolverFuncMatcher.supplierMatcher;
 
 /**
  * This class provides a set of matchers that retry a certain {@link Matcher} until a duration is reached.

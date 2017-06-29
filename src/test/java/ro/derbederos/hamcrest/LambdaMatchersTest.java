@@ -34,10 +34,10 @@ import static ro.derbederos.hamcrest.LambdaMatchers.lambdaAssert;
 import static ro.derbederos.hamcrest.LambdaMatchers.mapArray;
 import static ro.derbederos.hamcrest.LambdaMatchers.mapIterable;
 import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
-import static ro.derbederos.hamcrest.MappedValueMatcher.supplierMatcher;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 import static ro.derbederos.hamcrest.RegexMatchers.matchesPattern;
+import static ro.derbederos.hamcrest.TypeResolverFuncMatcher.supplierMatcher;
 
 public class LambdaMatchersTest {
     @Test

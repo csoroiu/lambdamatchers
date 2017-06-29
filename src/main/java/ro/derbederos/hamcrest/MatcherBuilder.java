@@ -169,4 +169,27 @@ public final class MatcherBuilder<T> {
         requireNonNull(describeTo, "Description was not set");
         return new FuncTypeSafeMatcher<>(inputType, matchesSafely, describeTo, describeMismatchSafely);
     }
+
+    private static void appendTextIfNotEmpty(Description description, String text) {
+        if (text.length() > 0) {
+            description.appendText(text).appendText(" ");
+        }
+    }
+
+    static <T, U> Matcher<T> mappedBy(Function<? super T, ? extends U> mapper,
+                                      Class<? super T> inputType,
+                                      String featureDescription, String featureName,
+                                      Matcher<? super U> subMatcher) {
+        return MatcherBuilder.<T>of(inputType)
+                .matches(item -> subMatcher.matches(mapper.apply(item)))
+                .description(description -> {
+                    appendTextIfNotEmpty(description, featureDescription);
+                    subMatcher.describeTo(description);
+                })
+                .describeMismatch((item, mismatch) -> {
+                    appendTextIfNotEmpty(mismatch, featureName);
+                    subMatcher.describeMismatch(mapper.apply(item), mismatch);
+                })
+                .build();
+    }
 }

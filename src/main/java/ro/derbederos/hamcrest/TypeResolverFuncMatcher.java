@@ -17,58 +17,14 @@
 package ro.derbederos.hamcrest;
 
 import _shaded.net.jodah.typetools.TypeResolver;
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
-final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
-    private final String featureDescription;
-    private final String featureName;
-    private final Function<? super T, ? extends U> mapper;
-    private final Matcher<? super U> subMatcher;
-    private T lastInput = null;
-    private U lastValue = null;
-
-    private MappedValueMatcher(Function<? super T, ? extends U> mapper, Class<?> inputType,
-                               String featureDescription, String featureName, Matcher<? super U> subMatcher) {
-        super(requireNonNull(inputType));
-        this.mapper = requireNonNull(mapper);
-        this.subMatcher = requireNonNull(subMatcher);
-        this.featureDescription = requireNonNull(featureDescription);
-        this.featureName = requireNonNull(featureName);
-    }
-
-    @Override
-    public void describeTo(Description description) {
-        appendTextIfNotEmpty(description, featureDescription);
-        description.appendDescriptionOf(subMatcher);
-    }
-
-    @Override
-    protected void describeMismatchSafely(T actual, Description mismatch) {
-        appendTextIfNotEmpty(mismatch, featureName);
-        U value = actual == lastInput ? lastValue : mapper.apply(actual);
-        subMatcher.describeMismatch(value, mismatch);
-    }
-
-    private static void appendTextIfNotEmpty(Description description, String text) {
-        if (text.length() > 0) {
-            description.appendText(text).appendText(" ");
-        }
-    }
-
-    @Override
-    protected final boolean matchesSafely(T actual) {
-        // cache the value, sometimes useful to have a consistent description when it fails.
-        lastValue = mapper.apply(actual);
-        lastInput = actual;
-        return subMatcher.matches(lastValue);
-    }
+final class TypeResolverFuncMatcher {
 
     private static <T> String getFeatureTypeName(T mapper, Class<T> mapperInterface, int resultIndex) {
         mapper = requireNonNull(mapper);
@@ -103,14 +59,16 @@ final class MappedValueMatcher<T, U> extends TypeSafeMatcher<T> {
             objectTypeName = "UnknownObjectType";
         }
         String featureDescription = getArticle(objectTypeName) + " " + objectTypeName + " having " + featureTypeName;
-        return new MappedValueMatcher<>(mapper, inputType, featureDescription, featureTypeName, matcher);
+        @SuppressWarnings("unchecked")
+        Class<T> castInputType = (Class<T>) inputType;
+        return MatcherBuilder.mappedBy(mapper, castInputType, featureDescription, featureTypeName, matcher);
     }
 
     static <T> Matcher<Supplier<T>> supplierMatcher(Supplier<T> supplier, Matcher<? super T> matcher) {
         supplier = requireNonNull(supplier);
         matcher = requireNonNull(matcher);
         String featureTypeName = getFeatureTypeName(supplier, Supplier.class, 0);
-        String featureDescription = "a " + featureTypeName;
-        return new MappedValueMatcher<>(Supplier::get, Supplier.class, featureDescription, featureTypeName, matcher);
+        String featureDescription = getArticle(featureTypeName) + " " + featureTypeName;
+        return MatcherBuilder.mappedBy(Supplier::get, Supplier.class, featureDescription, featureTypeName, matcher);
     }
 }

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static ro.derbederos.hamcrest.MappedValueMatcher.mappedBy;
+import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
 
 /**
  * This class provides a set of mapping matchers for Java 8+ streams.
