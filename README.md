@@ -23,7 +23,7 @@ that enables one to easily create a new custom matcher.
 ```
 #### Gradle dependency
 ```groovy
-testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.13'
+testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.16'
 ```
 
 ## Examples
