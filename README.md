@@ -17,7 +17,7 @@ that enables one to easily create a new custom matcher.
 <dependency>
     <groupId>ro.derbederos.hamcrest</groupId>
     <artifactId>lambdamatchers</artifactId>
-    <version>0.15</version>
+    <version>0.16</version>
     <scope>test</scope>
 </dependency>
 ```
