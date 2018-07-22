@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Claudiu Soroiu
+ * Copyright (c) 2016-2018 Claudiu Soroiu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
+import static ro.derbederos.hamcrest.LambdaMatchers.hasFeature;
 
 /**
  * This class provides a set of mapping matchers for Java 8+ streams.
@@ -33,7 +33,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
  * <p>
  * Examples:
  * <pre>
- * assertThat(stream, mapStream(Person::getName, hasItem(startsWith("Ana"))));
+ * assertThat(stream, featureStream(Person::getName, hasItem(startsWith("Ana"))));
  *
  * assertThat(stream, toIterable(hasItem("Ana Pop"));
  *
@@ -54,18 +54,18 @@ public final class StreamMatchers {
      * <p>
      * Example:
      * <pre>
-     * assertThat(stream, mapStream(Person::getName, hasItem(startsWith("Ana"))));
+     * assertThat(stream, featureStream(Person::getName, hasItem(startsWith("Ana"))));
      * </pre>
      *
-     * @param mapper  The function that transforms every element of the input stream.
-     * @param matcher The matcher to be applied on the resulting iterable.
-     * @param <T>     The type of the elements in the input stream.
-     * @param <U>     The type of the result of the {@code mapper} function.
-     * @since 0.1
+     * @param featureFunction The function that transforms every element of the input stream.
+     * @param iterableMatcher The matcher to be applied on the resulting iterable.
+     * @param <T>             The type of the elements in the input stream.
+     * @param <U>             The type of the result of the {@code featureFunction} function.
+     * @since 0.17
      */
-    public static <T, U> Matcher<Stream<T>> mapStream(Function<? super T, ? extends U> mapper,
-                                                      Matcher<Iterable<? super U>> matcher) {
-        return mappedBy(cacheResultFunction(stream -> streamToIterable(stream.map(mapper))), matcher);
+    public static <T, U> Matcher<Stream<T>> featureStream(Function<? super T, ? extends U> featureFunction,
+                                                          Matcher<Iterable<? super U>> iterableMatcher) {
+        return hasFeature(cacheResultFunction(stream -> streamToIterable(stream.map(featureFunction))), iterableMatcher);
     }
 
     /**
@@ -81,7 +81,7 @@ public final class StreamMatchers {
      * @since 0.1
      */
     public static <T> Matcher<Stream<T>> toIterable(Matcher<Iterable<? super T>> matcher) {
-        return mappedBy(cacheResultFunction(StreamMatchers::streamToIterable), matcher);
+        return hasFeature(cacheResultFunction(StreamMatchers::streamToIterable), matcher);
     }
 
     /**
@@ -97,7 +97,7 @@ public final class StreamMatchers {
      * @since 0.1
      */
     public static <T, S extends BaseStream<T, S>> Matcher<BaseStream<T, S>> emptyStream() {
-        return mappedBy(cacheResultFunction(StreamMatchers::streamToIterable), emptyIterable());
+        return hasFeature(cacheResultFunction(StreamMatchers::streamToIterable), emptyIterable());
     }
 
     private static <T, S extends BaseStream<T, S>> Iterable<T> streamToIterable(BaseStream<T, S> stream) {
@@ -112,25 +112,25 @@ public final class StreamMatchers {
                 .build();
     }
 
-    private static <T, R> CacheLastResultFunction<T, R> cacheResultFunction(Function<? super T, ? extends R> mapper) {
-        return new CacheLastResultFunction<>(mapper);
+    private static <T, R> CacheLastResultFunction<T, R> cacheResultFunction(Function<? super T, ? extends R> function) {
+        return new CacheLastResultFunction<>(function);
     }
 
     private static class CacheLastResultFunction<T, R> implements Function<T, R> {
-        private final Function<? super T, ? extends R> mapper;
+        private final Function<? super T, ? extends R> function;
         private boolean initialized = false;
         private T lastInput;
         private R lastValue;
 
-        private CacheLastResultFunction(Function<? super T, ? extends R> mapper) {
-            this.mapper = mapper;
+        private CacheLastResultFunction(Function<? super T, ? extends R> function) {
+            this.function = function;
         }
 
         @Override
         public R apply(T t) {
             if (lastInput != t || !initialized) {
                 initialized = true;
-                lastValue = mapper.apply(t);
+                lastValue = function.apply(t);
                 lastInput = t;
             }
             return lastValue;

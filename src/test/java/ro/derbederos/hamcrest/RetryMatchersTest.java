@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Claudiu Soroiu
+ * Copyright (c) 2016-2018 Claudiu Soroiu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
-import static ro.derbederos.hamcrest.RetryMatchers.lambdaAssert;
+import static ro.derbederos.hamcrest.RetryMatchers.assertFeature;
 import static ro.derbederos.hamcrest.RetryMatchers.retry;
 import static ro.derbederos.hamcrest.RetryMatchers.retrySupplier;
 import static ro.derbederos.hamcrest.TestUtil.assumeJavaVersion;
@@ -125,13 +125,13 @@ public class RetryMatchersTest {
     }
 
     @Test
-    public void lambdaAssertSimpleTestObjectMethodReference() {
+    public void assertFeatureSimpleTestObjectMethodReference() {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
-        lambdaAssert(bean::getValue, 500, equalTo(7));
+        assertFeature(bean::getValue, 500, equalTo(7));
     }
 
     @Test
-    public void lambdaAssertSimpleTestObjectMethodReferenceDescription() {
+    public void assertFeatureSimpleTestObjectMethodReferenceDescription() {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         Matcher<Supplier<Integer>> retryMatcher = retrySupplier(300, bean::getValue, equalTo(9));
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Claudiu Soroiu
+ * Copyright (c) 2016-2018 Claudiu Soroiu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.hasProperty;
-import static ro.derbederos.hamcrest.LambdaMatchers.lambdaAssert;
-import static ro.derbederos.hamcrest.LambdaMatchers.mapArray;
-import static ro.derbederos.hamcrest.LambdaMatchers.mapIterable;
-import static ro.derbederos.hamcrest.LambdaMatchers.mappedBy;
+import static ro.derbederos.hamcrest.LambdaMatchers.assertFeature;
+import static ro.derbederos.hamcrest.LambdaMatchers.featureArray;
+import static ro.derbederos.hamcrest.LambdaMatchers.featureIterable;
+import static ro.derbederos.hamcrest.LambdaMatchers.hasFeature;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 import static ro.derbederos.hamcrest.RegexMatchers.matchesPattern;
@@ -43,15 +43,15 @@ public class LambdaMatchersTest {
     @Test
     public void simpleTestObjectMethodReference() {
         Person p = new Person("Alice", 21);
-        assertThat(p, mappedBy(Person::getName, startsWith("A")));
+        assertThat(p, hasFeature(Person::getName, startsWith("A")));
     }
 
     @Test
     public void simpleTestObjectMethodReferenceDescription() {
-        Matcher<Person> mapMatcher = mappedBy(Person::getName, startsWith("B"));
-        assertDescription(equalTo("a Person having `Person::getName` a string starting with \"B\""), mapMatcher);
+        Matcher<Person> featureMatcher = hasFeature(Person::getName, startsWith("B"));
+        assertDescription(equalTo("a Person having `Person::getName` a string starting with \"B\""), featureMatcher);
         assertMismatchDescription(equalTo("`Person::getName` was \"Alice\""),
-                new Person("Alice", 21), mapMatcher);
+                new Person("Alice", 21), featureMatcher);
     }
 
     private String getPersonName(Person p) {
@@ -61,62 +61,62 @@ public class LambdaMatchersTest {
     @Test
     public void simpleTestInstanceObjectMethodReference() {
         Person p = new Person("Alice", 21);
-        assertThat(p, mappedBy(this::getPersonName, startsWith("A")));
+        assertThat(p, hasFeature(this::getPersonName, startsWith("A")));
     }
 
     @Test
     public void simpleTestInstanceObjectMethodReferenceDescription() {
-        Matcher<Person> mapMatcher = mappedBy(this::getPersonName, startsWith("B"));
+        Matcher<Person> featureMatcher = hasFeature(this::getPersonName, startsWith("B"));
         // retrolambda creates an access method for a private instance method reference
         assertDescription(anyOf(
                 equalTo("a Person having `LambdaMatchersTest::getPersonName` a string starting with \"B\""),
                 equalTo("a Person having `(String)LambdaMatchersTest::access$lambda$1` a string starting with \"B\""),
                 equalTo("a Person having `(String)LambdaMatchersTest::access$lambda$simpleTestInstanceObjectMethodReferenceDescription$1` a string starting with \"B\"")),
-                mapMatcher);
+                featureMatcher);
         assertMismatchDescription(anyOf(
                 equalTo("`LambdaMatchersTest::getPersonName` was \"Alice\""),
                 equalTo("`(String)LambdaMatchersTest::access$lambda$1` was \"Alice\""),
                 equalTo("`(String)LambdaMatchersTest::access$lambda$simpleTestInstanceObjectMethodReferenceDescription$1` was \"Alice\"")),
-                new Person("Alice", 21), mapMatcher);
+                new Person("Alice", 21), featureMatcher);
     }
 
     @Test
     public void simpleTestConstructorReference() {
-        assertThat("4", mappedBy(BigInteger::new, equalTo(BigInteger.valueOf(4L))));
+        assertThat("4", hasFeature(BigInteger::new, equalTo(BigInteger.valueOf(4L))));
     }
 
     @Test
     public void simpleTestConstructorReferenceDescription() {
-        Matcher<String> mapMatcher = mappedBy(BigInteger::new, equalTo(BigInteger.valueOf(5L)));
-        assertDescription(equalTo("a String having `BigInteger::new` <5>"), mapMatcher);
-        assertMismatchDescription(equalTo("`BigInteger::new` was <4>"), "4", mapMatcher);
+        Matcher<String> featureMatcher = hasFeature(BigInteger::new, equalTo(BigInteger.valueOf(5L)));
+        assertDescription(equalTo("a String having `BigInteger::new` <5>"), featureMatcher);
+        assertMismatchDescription(equalTo("`BigInteger::new` was <4>"), "4", featureMatcher);
     }
 
     @Test
     public void simpleTestObjectClassMethodReference() {
-        assertThat(4d, mappedBy(Object::toString, equalTo("4.0")));
+        assertThat(4d, hasFeature(Object::toString, equalTo("4.0")));
     }
 
     @Test
     public void simpleTestObjectClassMethodReferenceDescription() {
-        Matcher<Object> mapMatcher = mappedBy(Object::toString, equalTo("4"));
-        assertDescription(equalTo("an Object having `Object::toString` \"4\""), mapMatcher);
+        Matcher<Object> featureMatcher = hasFeature(Object::toString, equalTo("4"));
+        assertDescription(equalTo("an Object having `Object::toString` \"4\""), featureMatcher);
         assertMismatchDescription(equalTo("`Object::toString` was \"4.0\""),
-                4d, mapMatcher);
+                4d, featureMatcher);
     }
 
     @Test
     public void simpleTestUnboxingMethodReference() {
-        assertThat(4d, mappedBy(Double::doubleValue, equalTo(4.0)));
+        assertThat(4d, hasFeature(Double::doubleValue, equalTo(4.0)));
     }
 
     @Test
     @Ignore
     public void simpleTestUnboxingMethodReferenceDescription() {
-        Matcher<Double> mapMatcher = mappedBy(Double::doubleValue, equalTo(4.0));
-        assertDescription(equalTo("a Double having `Double::doubleValue` <4.0>"), mapMatcher);
+        Matcher<Double> featureMatcher = hasFeature(Double::doubleValue, equalTo(4.0));
+        assertDescription(equalTo("a Double having `Double::doubleValue` <4.0>"), featureMatcher);
         assertMismatchDescription(equalTo("`Double::doubleValue` was <5.0>"),
-                5d, mapMatcher);
+                5d, featureMatcher);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked", "Convert2Lambda"})
@@ -129,10 +129,10 @@ public class LambdaMatchersTest {
                 return (T) (Integer) person.getAge();
             }
         };
-        Matcher<Person> mapMatcher = mappedBy(getAge, equalTo(22));
-        assertDescription(equalTo("a Person having UnknownFieldType <22>"), mapMatcher);
+        Matcher<Person> featureMatcher = hasFeature(getAge, equalTo(22));
+        assertDescription(equalTo("a Person having UnknownFieldType <22>"), featureMatcher);
         assertMismatchDescription(equalTo("UnknownFieldType was <21>"),
-                new Person("Alice", 21), mapMatcher);
+                new Person("Alice", 21), featureMatcher);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked", "Convert2Lambda"})
@@ -144,35 +144,35 @@ public class LambdaMatchersTest {
                 return ((Person) person).getAge();
             }
         };
-        Matcher<Person> mapMatcher = mappedBy(getAge, equalTo(22));
-        assertDescription(equalTo("an UnknownObjectType having Integer <22>"), mapMatcher);
+        Matcher<Person> featureMatcher = hasFeature(getAge, equalTo(22));
+        assertDescription(equalTo("an UnknownObjectType having Integer <22>"), featureMatcher);
         assertMismatchDescription(equalTo("Integer was <21>"),
-                new Person("Alice", 21), mapMatcher);
+                new Person("Alice", 21), featureMatcher);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
     public void simpleTestInvalidInputTypeDescription() {
-        Matcher mapMatcher = mappedBy(Person::getAge, equalTo(22));
-        assertDescription(equalTo("a Person having `Person::getAge` <22>"), mapMatcher);
+        Matcher featureMatcher = hasFeature(Person::getAge, equalTo(22));
+        assertDescription(equalTo("a Person having `Person::getAge` <22>"), featureMatcher);
         assertMismatchDescription(equalTo("was a java.lang.String (\"22\")"),
-                "22", mapMatcher);
+                "22", featureMatcher);
     }
 
     @Test
-    public void simpleTestLambda() {
+    public void simpleTestHasFeature() {
         Person p = new Person("Alice Bob", 21);
-        Function<Person, String> mapper = a -> a.getName().split(" ")[1];
-        assertThat(p, mappedBy(mapper, equalTo("Bob")));
+        Function<Person, String> featureFunction = a -> a.getName().split(" ")[1];
+        assertThat(p, hasFeature(featureFunction, equalTo("Bob")));
     }
 
     @Test
-    public void simpleTestLambdaDescription() {
-        Function<Person, String> mapper = a -> a.getName().split(" ")[1];
-        Matcher<Person> mapMatcher = mappedBy(mapper, equalTo("Pop"));
-        assertDescription(matchesPattern("a Person having `\\(String\\)LambdaMatchersTest::lambda\\$simpleTestLambdaDescription\\$\\d+` \"Pop\""), mapMatcher);
-        assertMismatchDescription(matchesPattern("`\\(String\\)LambdaMatchersTest::lambda\\$simpleTestLambdaDescription\\$\\d+` was \"Bob\""),
-                new Person("Alice Bob", 21), mapMatcher);
+    public void simpleTestHasFeatureDescription() {
+        Function<Person, String> featureFunction = a -> a.getName().split(" ")[1];
+        Matcher<Person> featureMatcher = hasFeature(featureFunction, equalTo("Pop"));
+        assertDescription(matchesPattern("a Person having `\\(String\\)LambdaMatchersTest::lambda\\$simpleTestHasFeatureDescription\\$\\d+` \"Pop\""), featureMatcher);
+        assertMismatchDescription(matchesPattern("`\\(String\\)LambdaMatchersTest::lambda\\$simpleTestHasFeatureDescription\\$\\d+` was \"Bob\""),
+                new Person("Alice Bob", 21), featureMatcher);
     }
 
     @Test
@@ -182,15 +182,15 @@ public class LambdaMatchersTest {
     }
 
     @Test
-    public void simpleNotMatcherTestLambda() {
+    public void simpleNotMatcherHasFeatureLambda() {
         Person p = new Person("Alice", 21);
-        assertThat(p, not(mappedBy(Person::getName, startsWith("B"))));
+        assertThat(p, not(hasFeature(Person::getName, startsWith("B"))));
     }
 
     @Test
-    public void simpleBetterNotMatcherTestLambda() {
+    public void simpleBetterNotMatcherHasFeatureLambda() {
         Person p = new Person("Alice", 21);
-        assertThat(p, mappedBy(Person::getName, not(startsWith("B"))));
+        assertThat(p, hasFeature(Person::getName, not(startsWith("B"))));
     }
 
     @Test
@@ -204,16 +204,16 @@ public class LambdaMatchersTest {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
-        assertThat(list, everyItem(mappedBy(Person::getAge, equalTo(21))));
+        assertThat(list, everyItem(hasFeature(Person::getAge, equalTo(21))));
     }
 
     @Test
-    public void listTestLambda() {
+    public void listTestHasFeature() {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Bob", 21),
                 new Person("Ariana Bob", 21));
-        Function<Person, String> mapper = a -> a.getName().split(" ")[1];
-        assertThat(list, everyItem(mappedBy(mapper, equalTo("Bob"))));
+        Function<Person, String> featureFunction = a -> a.getName().split(" ")[1];
+        assertThat(list, everyItem(hasFeature(featureFunction, equalTo("Bob"))));
     }
 
     @Test
@@ -229,7 +229,7 @@ public class LambdaMatchersTest {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
-        assertThat(list, not(everyItem(mappedBy(Person::getName, startsWith("Alice")))));
+        assertThat(list, not(everyItem(hasFeature(Person::getName, startsWith("Alice")))));
     }
 
     @Test
@@ -237,7 +237,7 @@ public class LambdaMatchersTest {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
-        assertThat(list, everyItem(mappedBy(Person::getName, not(startsWith("Alices")))));
+        assertThat(list, everyItem(hasFeature(Person::getName, not(startsWith("Alices")))));
     }
 
     @Test
@@ -253,17 +253,17 @@ public class LambdaMatchersTest {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
-        assertThat(list, hasItem(mappedBy(Person::getName, startsWith("Alice"))));
+        assertThat(list, hasItem(hasFeature(Person::getName, startsWith("Alice"))));
     }
 
     @Test
-    public void listHasItemMatcherTestLambda() {
+    public void listHasItemMatcherTestHasFeature() {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
         // in case of inlining the following line, an explicit cast is needed
-        Function<Person, Integer> mapper = (person) -> person.getAge() + 1;
-        assertThat(list, hasItem(mappedBy(mapper, equalTo(22))));
+        Function<Person, Integer> featureFunction = (person) -> person.getAge() + 1;
+        assertThat(list, hasItem(hasFeature(featureFunction, equalTo(22))));
     }
 
     @Test
@@ -276,65 +276,68 @@ public class LambdaMatchersTest {
 
     @Test
     public void arrayHasItemMatcherTestMethodReference() {
-        Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21), new Person("Ariana G", 21)};
-        assertThat(array, hasItemInArray(mappedBy(Person::getName, startsWith("Alice"))));
+        Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21),
+                new Person("Ariana G", 21)};
+        assertThat(array, hasItemInArray(hasFeature(Person::getName, startsWith("Alice"))));
     }
 
     @Test
-    public void arrayHasItemMatcherTestLambda() {
-        Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21), new Person("Ariana G", 21)};
-        Function<Person, Integer> mapper = (person) -> person.getAge() + 1;
-        assertThat(array, hasItemInArray(mappedBy(mapper, equalTo(22))));
+    public void arrayHasItemMatcherTestHasFeature() {
+        Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21),
+                new Person("Ariana G", 21)};
+        Function<Person, Integer> featureFunction = (person) -> person.getAge() + 1;
+        assertThat(array, hasItemInArray(hasFeature(featureFunction, equalTo(22))));
     }
 
     @Test
     public void arrayHasItemMatcherTestHasProperty() {
-        Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21), new Person("Ariana G", 21)};
+        Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21),
+                new Person("Ariana G", 21)};
         assertThat(array, hasItemInArray(hasProperty("age", equalTo(21))));
     }
 
     @Test
-    public void listHasItemMatcherTestMapIterable() {
+    public void listHasItemMatcherTestFeatureIterable() {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
-        assertThat(list, mapIterable(Person::getName, hasItem("Ana Pop")));
+        assertThat(list, featureIterable(Person::getName, hasItem("Ana Pop")));
     }
 
     @Test
-    public void listHasItemMatcherTestMapIterableDescription() {
+    public void listHasItemMatcherTestFeatureIterableDescription() {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
-        Matcher<Iterable<Person>> mapMatcher = mapIterable(Person::getName, hasItem("Ana Pop1"));
-        assertDescription(matchesPattern("an Iterable having `\\(Iterable\\)LambdaMatchers::lambda\\$mapIterable\\$\\d+` a collection containing \"Ana Pop1\""), mapMatcher);
-        assertMismatchDescription(matchesPattern("`\\(Iterable\\)LambdaMatchers::lambda\\$mapIterable\\$\\d+` was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
-                list, mapMatcher);
+        Matcher<Iterable<Person>> featureMatcher = featureIterable(Person::getName, hasItem("Ana Pop1"));
+        assertDescription(matchesPattern("an Iterable having `\\(Iterable\\)LambdaMatchers::lambda\\$featureIterable\\$\\d+` a collection containing \"Ana Pop1\""), featureMatcher);
+        assertMismatchDescription(matchesPattern("`\\(Iterable\\)LambdaMatchers::lambda\\$featureIterable\\$\\d+` was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
+                list, featureMatcher);
     }
 
     @Test
-    public void arrayHasItemMatcherTestMapArray() {
+    public void arrayHasItemMatcherTestFeatureArray() {
         Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21), new Person("Ariana G", 21)};
-        assertThat(array, mapArray(Person::getName, hasItem(startsWith("Ana"))));
+        assertThat(array, featureArray(Person::getName, hasItem(startsWith("Ana"))));
     }
 
     @Test
-    public void arrayHasItemMatcherTestMapArrayDescription() {
+    public void arrayHasItemMatcherTestFeatureArrayDescription() {
         Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21), new Person("Ariana G", 21)};
-        Matcher<Person[]> mapMatcher = mapArray(Person::getName, hasItem(startsWith("Ana1")));
-        assertDescription(matchesPattern("an Object\\[\\] having `\\(Iterable\\)LambdaMatchers::lambda\\$mapArray\\$\\d+` a collection containing a string starting with \"Ana1\""), mapMatcher);
-        assertMismatchDescription(matchesPattern("`\\(Iterable\\)LambdaMatchers::lambda\\$mapArray\\$\\d+` was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
-                array, mapMatcher);
+        Matcher<Person[]> featureMatcher = featureArray(Person::getName, hasItem(startsWith("Ana1")));
+        assertDescription(matchesPattern("an Object\\[\\] having `\\(Iterable\\)LambdaMatchers::lambda\\$featureArray\\$\\d+` a collection containing a string starting with \"Ana1\""), featureMatcher);
+        assertMismatchDescription(matchesPattern("`\\(Iterable\\)LambdaMatchers::lambda\\$featureArray\\$\\d+` was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
+                array, featureMatcher);
     }
 
     @Test
-    public void lambdaAssertSimpleTestObjectMethodReference() {
+    public void assertFeatureSimpleTestObjectMethodReference() {
         Person p = new Person("Brutus", 21);
-        lambdaAssert(p::getName, equalTo("Brutus"));
+        assertFeature(p::getName, equalTo("Brutus"));
     }
 
     @Test
-    public void lambdaAssertSimpleTestObjectMethodReferenceDescription() {
+    public void assertFeatureSimpleTestObjectMethodReferenceDescription() {
         Person p = new Person("Brutus", 21);
         Supplier<String> supplier = p::getName;
         Matcher<Supplier<String>> matcher = supplierMatcher(supplier, equalTo("Caesar"));

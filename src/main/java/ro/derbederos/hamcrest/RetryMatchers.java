@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Claudiu Soroiu
+ * Copyright (c) 2016-2018 Claudiu Soroiu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static ro.derbederos.hamcrest.TypeResolverFuncMatcher.mappedBy;
+import static ro.derbederos.hamcrest.TypeResolverFuncMatcher.hasFeature;
 import static ro.derbederos.hamcrest.TypeResolverFuncMatcher.supplierMatcher;
 
 /**
@@ -122,13 +122,13 @@ public final class RetryMatchers {
     }
 
     /**
-     * Creates a {@link Matcher} that checks if the given {@code matcher} matches the input, every
+     * Creates a {@link Matcher} that checks if the given {@code featureMatcher} matches the input, every
      * {@code 50 ms}, until {@code durationMillis} is reached. This method receives a {@link Function} as
-     * input and builds a mapping matcher out of the {@code mapper} and the received {@code matcher}.
+     * input and builds a mapping featureMatcher out of the {@code featureFunction} and the received {@code featureMatcher}.
      * <p>
      * It is a shortcut for:
      * <pre>
-     * retry(durationMillis, mappedBy(mapper, matcher));
+     * retry(durationMillis, hasFeature(featureFunction, featureMatcher));
      * </pre>
      * <p>
      * Example:
@@ -136,35 +136,37 @@ public final class RetryMatchers {
      * assertThat(bean, retry(500, BeanClass::getValue, equalTo(7)));
      * </pre>
      *
-     * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
-     * @param mapper         The function that transforms the input.
-     * @param matcher        The {@link Matcher} to be applied on the result of the {@code mapper} function.
-     * @param <T>            The type of the input.
-     * @param <U>            The type of the result of the {@code mapper} function.
+     * @param durationMillis  The duration of the retry. Will fail afterwards if {@code featureMatcher} fails.
+     * @param featureFunction The function that transforms the input.
+     * @param featureMatcher  The {@link Matcher} to be applied on the result of the {@code featureFunction} function.
+     * @param <T>             The type of the input.
+     * @param <U>             The type of the result of the {@code featureFunction} function.
      * @since 0.3
      */
-    public static <T, U> Matcher<T> retry(long durationMillis, Function<? super T, ? extends U> mapper, Matcher<? super U> matcher) {
-        return retry(durationMillis, mappedBy(mapper, matcher));
+    public static <T, U> Matcher<T> retry(long durationMillis,
+                                          Function<? super T, ? extends U> featureFunction,
+                                          Matcher<? super U> featureMatcher) {
+        return retry(durationMillis, hasFeature(featureFunction, featureMatcher));
     }
 
     /**
      * This is an assert function that takes as input a supplier and a matcher for its value.
-     * It is a fancy version of {@link LambdaMatchers#lambdaAssert(Supplier, Matcher)} as it creates
+     * It is a fancy version of {@link LambdaMatchers#assertFeature(Supplier, Matcher)} as it creates
      * a retrying matcher in the back and retries to match the value against the received matcher
      * several times.
      * <p>
      * Example:
      * <pre>
-     * lambdaAssert(p::getName, 500, equalTo("Brutus"));
+     * assertFeature(p::getName, 500, equalTo("Brutus"));
      * </pre>
      *
      * @param supplier       The supplier for the value.
      * @param durationMillis The duration of the retry. Will fail afterwards if {@code matcher} fails.
      * @param matcher        The {@link Matcher} to be applied on the value supplied by the {@code supplier}.
      * @param <T>            The type of the supplied value.
-     * @since 0.9
+     * @since 0.17
      */
-    public static <T> void lambdaAssert(Supplier<T> supplier, long durationMillis, Matcher<? super T> matcher) {
+    public static <T> void assertFeature(Supplier<T> supplier, long durationMillis, Matcher<? super T> matcher) {
         assertThat(supplier, retrySupplier(durationMillis, supplier, matcher));
     }
 

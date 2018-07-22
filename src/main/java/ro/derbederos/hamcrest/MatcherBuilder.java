@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Claudiu Soroiu
+ * Copyright (c) 2016-2018 Claudiu Soroiu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -176,19 +176,20 @@ public final class MatcherBuilder<T> {
         }
     }
 
-    static <T, U> Matcher<T> mappedBy(Function<? super T, ? extends U> mapper,
-                                      Class<? super T> inputType,
-                                      String featureDescription, String featureName,
-                                      Matcher<? super U> subMatcher) {
+    static <T, U> Matcher<T> hasFeature(Class<? super T> inputType,
+                                        String featureDescription,
+                                        String featureName,
+                                        Function<? super T, ? extends U> featureFunction,
+                                        Matcher<? super U> featureMatcher) {
         return MatcherBuilder.<T>of(inputType)
-                .matches(item -> subMatcher.matches(mapper.apply(item)))
+                .matches(item -> featureMatcher.matches(featureFunction.apply(item)))
                 .description(description -> {
                     appendTextIfNotEmpty(description, featureDescription);
-                    subMatcher.describeTo(description);
+                    featureMatcher.describeTo(description);
                 })
                 .describeMismatch((item, mismatch) -> {
                     appendTextIfNotEmpty(mismatch, featureName);
-                    subMatcher.describeMismatch(mapper.apply(item), mismatch);
+                    featureMatcher.describeMismatch(featureFunction.apply(item), mismatch);
                 })
                 .build();
     }

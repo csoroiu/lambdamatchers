@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Claudiu Soroiu
+ * Copyright (c) 2016-2018 Claudiu Soroiu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 import static ro.derbederos.hamcrest.RetryMatchers.retry;
 import static ro.derbederos.hamcrest.StreamMatchers.emptyStream;
-import static ro.derbederos.hamcrest.StreamMatchers.mapStream;
+import static ro.derbederos.hamcrest.StreamMatchers.featureStream;
 import static ro.derbederos.hamcrest.StreamMatchers.toIterable;
 import static ro.derbederos.hamcrest.TestUtil.assumeJavaVersion;
 
@@ -69,19 +69,19 @@ public class StreamMatchersTest {
     }
 
     @Test
-    public void streamHasItemMatcherTestMapStream() {
+    public void streamHasItemMatcherTestFeatureStream() {
         Stream<Person> stream = Stream.of(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
-        assertThat(stream, mapStream(Person::getName, hasItem("Ana Pop")));
+        assertThat(stream, featureStream(Person::getName, hasItem("Ana Pop")));
     }
 
     @Test
-    public void streamHasItemMatcherTestMapStreamDescription() {
+    public void streamHasItemMatcherTestFeatureStreamDescription() {
         Stream<Person> stream = Stream.of(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
-        Matcher<Stream<Person>> streamMatcher = mapStream(Person::getName, hasItem("Ana Pop1"));
+        Matcher<Stream<Person>> streamMatcher = featureStream(Person::getName, hasItem("Ana Pop1"));
         assertDescription(endsWith("a collection containing \"Ana Pop1\""), streamMatcher);
         assertMismatchDescription(containsString("was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
                 stream, streamMatcher);

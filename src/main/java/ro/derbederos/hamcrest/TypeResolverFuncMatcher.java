@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Claudiu Soroiu
+ * Copyright (c) 2016-2018 Claudiu Soroiu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,11 @@ import static java.util.Objects.requireNonNull;
 
 final class TypeResolverFuncMatcher {
 
-    private static <T> String getFeatureTypeName(T mapper, Class<T> mapperInterface, int resultIndex) {
-        mapper = requireNonNull(mapper);
-        String featureTypeName = MethodRefResolver.resolveMethodRefName(mapper.getClass());
+    private static <T> String getFeatureTypeName(T featureFunction, Class<T> functionInterface, int resultIndex) {
+        featureFunction = requireNonNull(featureFunction);
+        String featureTypeName = MethodRefResolver.resolveMethodRefName(featureFunction.getClass());
         if (featureTypeName == null) {
-            Class<?> featureType = TypeResolver.resolveRawArguments(mapperInterface, mapper.getClass())[resultIndex];
+            Class<?> featureType = TypeResolver.resolveRawArguments(functionInterface, featureFunction.getClass())[resultIndex];
             featureTypeName = featureType.getSimpleName();
             if (TypeResolver.Unknown.class.isAssignableFrom(featureType)) {
                 featureTypeName = "UnknownFieldType";
@@ -44,15 +44,18 @@ final class TypeResolverFuncMatcher {
         return startsWithVowel ? "an" : "a";
     }
 
-    static <T, U> Matcher<T> mappedBy(Function<? super T, ? extends U> mapper, Matcher<? super U> matcher) {
-        return mappedBy(mapper, getFeatureTypeName(mapper, Function.class, 1), matcher);
+    static <T, U> Matcher<T> hasFeature(Function<? super T, ? extends U> featureFunction,
+                                        Matcher<? super U> featureMatcher) {
+        return hasFeature(getFeatureTypeName(featureFunction, Function.class, 1), featureFunction, featureMatcher);
     }
 
-    static <T, U> Matcher<T> mappedBy(Function<? super T, ? extends U> mapper, String featureTypeName, Matcher<? super U> matcher) {
-        mapper = requireNonNull(mapper);
-        matcher = requireNonNull(matcher);
+    static <T, U> Matcher<T> hasFeature(String featureTypeName,
+                                        Function<? super T, ? extends U> featureFunction,
+                                        Matcher<? super U> featureMatcher) {
+        featureFunction = requireNonNull(featureFunction);
+        featureMatcher = requireNonNull(featureMatcher);
         featureTypeName = requireNonNull(featureTypeName);
-        Class<?> inputType = TypeResolver.resolveRawArguments(Function.class, mapper.getClass())[0];
+        Class<?> inputType = TypeResolver.resolveRawArguments(Function.class, featureFunction.getClass())[0];
         String objectTypeName = inputType.getSimpleName();
         if (TypeResolver.Unknown.class.isAssignableFrom(inputType)) {
             inputType = Object.class;
@@ -61,7 +64,7 @@ final class TypeResolverFuncMatcher {
         String featureDescription = getArticle(objectTypeName) + " " + objectTypeName + " having " + featureTypeName;
         @SuppressWarnings("unchecked")
         Class<T> castInputType = (Class<T>) inputType;
-        return MatcherBuilder.mappedBy(mapper, castInputType, featureDescription, featureTypeName, matcher);
+        return MatcherBuilder.hasFeature(castInputType, featureDescription, featureTypeName, featureFunction, featureMatcher);
     }
 
     static <T> Matcher<Supplier<T>> supplierMatcher(Supplier<T> supplier, Matcher<? super T> matcher) {
@@ -69,6 +72,6 @@ final class TypeResolverFuncMatcher {
         matcher = requireNonNull(matcher);
         String featureTypeName = getFeatureTypeName(supplier, Supplier.class, 0);
         String featureDescription = getArticle(featureTypeName) + " " + featureTypeName;
-        return MatcherBuilder.mappedBy(Supplier::get, Supplier.class, featureDescription, featureTypeName, matcher);
+        return MatcherBuilder.hasFeature(Supplier.class, featureDescription, featureTypeName, Supplier::get, matcher);
     }
 }
