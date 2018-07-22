@@ -95,7 +95,7 @@
                         <configuration>
                             <!-- compile everything to ensure module-info contains right entries -->
                             <!-- required when JAVA_HOME is JDK 8 or below -->
-                            <release>10</release>
+                            <release>9</release>
                         </configuration>
                     </execution>
                     <execution>
@@ -114,7 +114,7 @@
                 <configuration>
                     <!-- Only required when JAVA_HOME isn't at least Java 9 and when haven't configured the maven-toolchains-plugin -->
                     <jdkToolchain>
-                        <version>10</version>
+                        <version>9</version>
                     </jdkToolchain>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -151,7 +151,7 @@
                 </executions>
                 <configuration>
                     <jdkToolchain>
-                        <version>10</version>
+                        <version>9</version>
                     </jdkToolchain>
                     <source>1.8</source>
                     <sourceFileExcludes>
