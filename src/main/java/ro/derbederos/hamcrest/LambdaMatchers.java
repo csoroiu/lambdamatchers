@@ -23,7 +23,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static ro.derbederos.hamcrest.TypeResolverFuncMatcher.supplierMatcher;
+import static ro.derbederos.hamcrest.TypeResolverFeatureMatcherFactory.supplierMatcher;
 
 /**
  * This class provides a set of mapping matchers based on java 8+ functional interfaces (lambdas).
@@ -88,7 +88,7 @@ public final class LambdaMatchers {
     public static <T, U> Matcher<T> hasFeature(String featureName,
                                                Function<? super T, ? extends U> featureFunction,
                                                Matcher<? super U> featureMatcher) {
-        return TypeResolverFuncMatcher.hasFeature(featureName, featureFunction, featureMatcher);
+        return TypeResolverFeatureMatcherFactory.hasFeature(featureName, featureFunction, featureMatcher);
     }
 
     /**
@@ -116,7 +116,7 @@ public final class LambdaMatchers {
      * @since 0.17
      */
     public static <T, U> Matcher<T> hasFeature(Function<? super T, ? extends U> featureFunction, Matcher<? super U> featureMatcher) {
-        return TypeResolverFuncMatcher.hasFeature(featureFunction, featureMatcher);
+        return TypeResolverFeatureMatcherFactory.hasFeature(featureFunction, featureMatcher);
     }
 
     /**

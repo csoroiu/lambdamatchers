@@ -37,7 +37,7 @@ import static ro.derbederos.hamcrest.LambdaMatchers.hasFeature;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 import static ro.derbederos.hamcrest.RegexMatchers.matchesPattern;
-import static ro.derbederos.hamcrest.TypeResolverFuncMatcher.supplierMatcher;
+import static ro.derbederos.hamcrest.TypeResolverFeatureMatcherFactory.supplierMatcher;
 
 public class LambdaMatchersTest {
     @Test

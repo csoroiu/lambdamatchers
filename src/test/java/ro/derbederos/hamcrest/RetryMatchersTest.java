@@ -65,33 +65,33 @@ public class RetryMatchersTest {
     }
 
     @Test
-    public void testRetryHasProperty() throws Exception {
+    public void testRetryHasProperty() {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         assertThat(bean, retry(500, 25, hasProperty("value", equalTo(7))));
     }
 
     @Test
-    public void testRetryTimeUnitHasProperty() throws Exception {
+    public void testRetryTimeUnitHasProperty() {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         assertThat(bean, retry(500, TimeUnit.MILLISECONDS, hasProperty("value", equalTo(7))));
     }
 
     @Test
-    public void testRetryLambda() throws Exception {
+    public void testRetryLambda() {
         DelayedValueBean bean = new DelayedValueBean(144, 2, 7);
         assertThat(bean, retry(500, DelayedValueBean::getValue, equalTo(7)));
         assertThat(bean.getValueCallCount.intValue(), greaterThanOrEqualTo(2));
     }
 
     @Test
-    public void testNoRetryLambda() throws Exception {
+    public void testNoRetryLambda() {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         assertThat(bean, retry(500, DelayedValueBean::getValue, equalTo(2)));
         assertThat(bean.getValueCallCount.intValue(), equalTo(1));
     }
 
     @Test
-    public void testRetryHasPropertyDescription() throws Exception {
+    public void testRetryHasPropertyDescription() {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         Matcher<Object> retryMatcher = retry(300, hasProperty("value", equalTo(9)));
         assertDescription(equalTo("hasProperty(\"value\", <9>)"), retryMatcher);
@@ -100,7 +100,7 @@ public class RetryMatchersTest {
     }
 
     @Test
-    public void testRetryLambdaDescription() throws Exception {
+    public void testRetryLambdaDescription() {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         Matcher<DelayedValueBean> retryMatcher = retry(300, DelayedValueBean::getValue, equalTo(9));
         assertDescription(equalTo("a DelayedValueBean having `DelayedValueBean::getValue` <9>"), retryMatcher);
@@ -109,14 +109,14 @@ public class RetryMatchersTest {
     }
 
     @Test
-    public void testRetryAtomicLong() throws Exception {
+    public void testRetryAtomicLong() {
         AtomicLong atomicLong = new AtomicLong(2);
         executeDelayed(100, () -> atomicLong.set(7));
         assertThat(atomicLong, retry(500, AtomicLong::longValue, equalTo(7L)));
     }
 
     @Test
-    public void testRetryAtomicLongDescription() throws Exception {
+    public void testRetryAtomicLongDescription() {
         AtomicLong atomicInteger = new AtomicLong(7);
         Matcher<AtomicLong> retryMatcher = retry(300, AtomicLong::longValue, equalTo(9L));
         assertDescription(equalTo("an AtomicLong having `AtomicLong::longValue` <9L>"), retryMatcher);
@@ -141,7 +141,7 @@ public class RetryMatchersTest {
     }
 
     @Test
-    public void testRetryLongAccumulator() throws Exception {
+    public void testRetryLongAccumulator() {
         assumeJavaVersion(1.8);
         LongAccumulator accumulator = new LongAccumulator((a, b) -> a * b, 3);
         @SuppressWarnings("Convert2Lambda")
@@ -156,7 +156,7 @@ public class RetryMatchersTest {
     }
 
     @Test
-    public void testRetryLongAccumulatorDescription() throws Exception {
+    public void testRetryLongAccumulatorDescription() {
         assumeJavaVersion(1.8);
         LongAccumulator accumulator = new LongAccumulator((a, b) -> a * b, 3);
         @SuppressWarnings("Convert2Lambda")

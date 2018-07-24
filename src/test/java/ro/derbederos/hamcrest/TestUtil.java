@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assume.assumeThat;
 
 class TestUtil {
-    static void assumeJavaVersion(double version) throws Exception {
+    static void assumeJavaVersion(double version) {
         Double JAVA_VERSION = Double.parseDouble(System.getProperty("java.specification.version", "0"));
         assumeThat("Java version", JAVA_VERSION, greaterThanOrEqualTo(version));
     }

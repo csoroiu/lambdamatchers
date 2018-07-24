@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
-final class TypeResolverFuncMatcher {
+final class TypeResolverFeatureMatcherFactory {
 
     private static <T> String getFeatureTypeName(T featureFunction, Class<T> functionInterface, int resultIndex) {
         featureFunction = requireNonNull(featureFunction);
@@ -64,7 +64,7 @@ final class TypeResolverFuncMatcher {
         String featureDescription = getArticle(objectTypeName) + " " + objectTypeName + " having " + featureTypeName;
         @SuppressWarnings("unchecked")
         Class<T> castInputType = (Class<T>) inputType;
-        return MatcherBuilder.hasFeature(castInputType, featureDescription, featureTypeName, featureFunction, featureMatcher);
+        return FeatureMatcherFactory.hasFeature(castInputType, featureDescription, featureTypeName, featureFunction, featureMatcher);
     }
 
     static <T> Matcher<Supplier<T>> supplierMatcher(Supplier<T> supplier, Matcher<? super T> matcher) {
@@ -72,6 +72,6 @@ final class TypeResolverFuncMatcher {
         matcher = requireNonNull(matcher);
         String featureTypeName = getFeatureTypeName(supplier, Supplier.class, 0);
         String featureDescription = getArticle(featureTypeName) + " " + featureTypeName;
-        return MatcherBuilder.hasFeature(Supplier.class, featureDescription, featureTypeName, Supplier::get, matcher);
+        return FeatureMatcherFactory.hasFeature(Supplier.class, featureDescription, featureTypeName, Supplier::get, matcher);
     }
 }

@@ -88,8 +88,7 @@ public final class MatcherBuilder<T> {
      */
     public MatcherBuilder<T> matches(T expected, BiPredicate<T, T> predicate) {
         requireNonNull(predicate);
-        this.matchesSafely = (T actual) -> predicate.test(expected, actual);
-        return this;
+        return matches((T actual) -> predicate.test(expected, actual));
     }
 
     /**
@@ -168,29 +167,5 @@ public final class MatcherBuilder<T> {
     public Matcher<T> build() {
         requireNonNull(describeTo, "Description was not set");
         return new FuncTypeSafeMatcher<>(inputType, matchesSafely, describeTo, describeMismatchSafely);
-    }
-
-    private static void appendTextIfNotEmpty(Description description, String text) {
-        if (text.length() > 0) {
-            description.appendText(text).appendText(" ");
-        }
-    }
-
-    static <T, U> Matcher<T> hasFeature(Class<? super T> inputType,
-                                        String featureDescription,
-                                        String featureName,
-                                        Function<? super T, ? extends U> featureFunction,
-                                        Matcher<? super U> featureMatcher) {
-        return MatcherBuilder.<T>of(inputType)
-                .matches(item -> featureMatcher.matches(featureFunction.apply(item)))
-                .description(description -> {
-                    appendTextIfNotEmpty(description, featureDescription);
-                    featureMatcher.describeTo(description);
-                })
-                .describeMismatch((item, mismatch) -> {
-                    appendTextIfNotEmpty(mismatch, featureName);
-                    featureMatcher.describeMismatch(featureFunction.apply(item), mismatch);
-                })
-                .build();
     }
 }

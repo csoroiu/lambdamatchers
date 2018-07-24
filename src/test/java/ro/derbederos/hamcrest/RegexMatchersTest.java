@@ -31,64 +31,64 @@ import static ro.derbederos.hamcrest.RegexMatchers.*;
 
 public class RegexMatchersTest {
     @Test
-    public void testMatchesPatternSubstring() throws Exception {
+    public void testMatchesPatternSubstring() {
         assertThat("alabala", matchesPattern("alabala"));
     }
 
     @Test
-    public void testContainsPatternSubstring() throws Exception {
+    public void testContainsPatternSubstring() {
         assertThat("alabala", containsPattern("aba"));
     }
 
     @Test
-    public void testMatchesPatternEnding() throws Exception {
+    public void testMatchesPatternEnding() {
         assertThat("alabala", matchesPattern("\\w*bala$"));
     }
 
     @Test
-    public void testContainsPatternEnding() throws Exception {
+    public void testContainsPatternEnding() {
         assertThat("alabala", containsPattern("bala$"));
     }
 
     @Test
-    public void testMatchesPatternStarting() throws Exception {
+    public void testMatchesPatternStarting() {
         assertThat("alabala", matchesPattern("^.labala"));
     }
 
     @Test
-    public void testContainsPatternStarting() throws Exception {
+    public void testContainsPatternStarting() {
         assertThat("alabala", containsPattern("^.la"));
     }
 
     @Test
-    public void testMatchesPatternIgnoreCase1() throws Exception {
+    public void testMatchesPatternIgnoreCase1() {
         assertThat("alabala", matchesPattern("ALA.ALA", Pattern.CASE_INSENSITIVE));
     }
 
     @Test
-    public void testMatchesPatternIgnoreCase2() throws Exception {
+    public void testMatchesPatternIgnoreCase2() {
         assertThat("alabala", matchesPattern(Pattern.compile("ALA.ALA", Pattern.CASE_INSENSITIVE)));
     }
 
     @Test
-    public void testContainsPatternIgnoreCase1() throws Exception {
+    public void testContainsPatternIgnoreCase1() {
         assertThat("alabala", containsPattern("LA.A", Pattern.CASE_INSENSITIVE));
     }
 
     @Test
-    public void testContainsPatternIgnoreCase2() throws Exception {
+    public void testContainsPatternIgnoreCase2() {
         assertThat("alabala", containsPattern(Pattern.compile("LA.A", Pattern.CASE_INSENSITIVE)));
     }
 
     @Test
-    public void testMatchesPatternDescription() throws Exception {
+    public void testMatchesPatternDescription() {
         Matcher<String> regexMatcher = matchesPattern("ababa");
         assertDescription(equalTo("a string matching pattern \"ababa\""), regexMatcher);
         assertMismatchDescription(equalTo("was \"alabala\""), "alabala", regexMatcher);
     }
 
     @Test
-    public void testContainsPatternDescription() throws Exception {
+    public void testContainsPatternDescription() {
         Matcher<String> regexMatcher = containsPattern("ata");
         assertDescription(equalTo("a string containing pattern \"ata\""), regexMatcher);
         assertMismatchDescription(equalTo("was \"alabala\""), "alabala", regexMatcher);

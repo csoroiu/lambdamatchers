@@ -40,7 +40,7 @@ import static ro.derbederos.hamcrest.TestUtil.assumeJavaVersion;
 public class StreamMatchersTest {
 
     @Before
-    public void before() throws Exception {
+    public void before() {
         assumeJavaVersion(1.8);
     }
 
