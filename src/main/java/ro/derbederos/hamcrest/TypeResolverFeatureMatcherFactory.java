@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
 final class TypeResolverFeatureMatcherFactory {
 
     private static <T> String getFeatureTypeName(T featureFunction, Class<T> functionInterface, int resultIndex) {
-        featureFunction = requireNonNull(featureFunction);
+        requireNonNull(featureFunction);
         String featureTypeName = MethodRefResolver.resolveMethodRefName(featureFunction.getClass());
         if (featureTypeName == null) {
             Class<?> featureType = TypeResolver.resolveRawArguments(functionInterface, featureFunction.getClass())[resultIndex];
@@ -52,9 +52,9 @@ final class TypeResolverFeatureMatcherFactory {
     static <T, U> Matcher<T> hasFeature(String featureTypeName,
                                         Function<? super T, ? extends U> featureFunction,
                                         Matcher<? super U> featureMatcher) {
-        featureFunction = requireNonNull(featureFunction);
-        featureMatcher = requireNonNull(featureMatcher);
-        featureTypeName = requireNonNull(featureTypeName);
+        requireNonNull(featureFunction);
+        requireNonNull(featureMatcher);
+        requireNonNull(featureTypeName);
         Class<?> inputType = TypeResolver.resolveRawArguments(Function.class, featureFunction.getClass())[0];
         String objectTypeName = inputType.getSimpleName();
         if (TypeResolver.Unknown.class.isAssignableFrom(inputType)) {
@@ -68,8 +68,8 @@ final class TypeResolverFeatureMatcherFactory {
     }
 
     static <T> Matcher<Supplier<T>> supplierMatcher(Supplier<T> supplier, Matcher<? super T> matcher) {
-        supplier = requireNonNull(supplier);
-        matcher = requireNonNull(matcher);
+        requireNonNull(supplier);
+        requireNonNull(matcher);
         String featureTypeName = getFeatureTypeName(supplier, Supplier.class, 0);
         String featureDescription = getArticle(featureTypeName) + " " + featureTypeName;
         return FeatureMatcherFactory.hasFeature(Supplier.class, featureDescription, featureTypeName, Supplier::get, matcher);
