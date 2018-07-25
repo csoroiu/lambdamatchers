@@ -7,7 +7,7 @@
 This library implements some hamcrest matchers usable with Java 8+ and a set of utility functions built on top of them.
 
 **Les pièces de résistance** are the **[LambdaMatchers](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/LambdaMatchers.java)**
-**`mappedBy`** and **`lambdaAssert`** methods.
+**`hasFeature`** and **`assertFeature`** methods.
 
 Starting with v0.11, the library is featuring a **[MatcherBuilder](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/MatcherBuilder.java)**
 that enables one to easily create a new custom matcher.
@@ -17,13 +17,13 @@ that enables one to easily create a new custom matcher.
 <dependency>
     <groupId>ro.derbederos.hamcrest</groupId>
     <artifactId>lambdamatchers</artifactId>
-    <version>0.16</version>
+    <version>0.17</version>
     <scope>test</scope>
 </dependency>
 ```
 #### Gradle dependency
 ```groovy
-testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.16'
+testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.17'
 ```
 
 ## Examples
@@ -32,19 +32,19 @@ The usages of the matchers can be seen in:
 * **[OptionalMatchers.java](https://gist.github.com/csoroiu/098e51c01f57ecf7b599e7d1fd1b1d96)**
 * **[LambdaMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/LambdaMatchersTest.java)**. Some examples are:
 ```java
-lambdaAssert(person::getName, equalTo("Brutus"));
+assertFeature(person::getName, equalTo("Brutus"));
 
-assertThat(list, everyItem(mappedBy(Person::getAge, greaterThanOrEqualTo(21))));
+assertThat(list, everyItem(hasFeature(Person::getAge, greaterThanOrEqualTo(21))));
 
-assertThat(list, hasItem(mappedBy(Person::getName, startsWith("Alice"))));
+assertThat(list, hasItem(hasFeature(Person::getName, startsWith("Alice"))));
 
-assertThat(list, mapIterable(Person::getName, hasItem("Ana")));
+assertThat(list, featureIterable(Person::getName, hasItem("Ana")));
 
-assertThat(array, mapArray(Person::getName, hasItem(startsWith("Ana"))));
+assertThat(array, featureArray(Person::getName, hasItem(startsWith("Ana"))));
 ```
 * **[StreamMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/StreamMatchersTest.java)**. Some examples are:
 ```java
-assertThat(stream, mapStream(Person::getName, hasItem(startsWith("Ana"))));
+assertThat(stream, featureStream(Person::getName, hasItem(startsWith("Ana"))));
 
 assertThat(stream, toIterable(hasItem("Ana Pop"));
 
@@ -68,7 +68,7 @@ This library is intended to be used in tests, and in case of failure, **meaningf
 
 Such an error message for the code:
 ```java
-lambdaAssert(person::getName, equalTo("Brutus"));
+assertFeature(person::getName, equalTo("Brutus"));
 ```
 could be:
 ```java
@@ -79,7 +79,7 @@ Expected: a `Person::getName` "Brutus"
 
 And for the code:
 ```java
-assertThat(list, everyItem(mappedBy(Person::getAge, greaterThanOrEqualTo(22))));
+assertThat(list, everyItem(hasFeature(Person::getAge, greaterThanOrEqualTo(22))));
 ```
 could be:
 ```java
@@ -102,7 +102,7 @@ public Matcher<Person> myCustomMatcher(Person expected) {
 
 ## Features
 * The matchers have **meaningful descriptions**. The library is intended to be used inside unit test and ***help the developers to get an idea of what is wrong before looking at the source code***.
-* The **`lambdaAssert`** method offers a way to maintain a simple test code while improving the error messages in case of failure.
+* The **`assertFeature`** method offers a way to maintain a simple test code while improving the error messages in case of failure.
 * Lambda type detection, thanks to **[Type Tools](http://github.com/jhalterman/typetools)** library.
 * Works with Java 8 and 9.
 * Compatible with **[Hamcrest](https://github.com/hamcrest/JavaHamcrest)** versions **1.3** and **2.0.0.0**.

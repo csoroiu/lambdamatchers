@@ -108,6 +108,25 @@ public final class MatcherBuilder<T> {
     /**
      * Sets a {@link Supplier} which will provide the description of the matcher.
      *
+     * @param format A <a href="../util/Formatter.html#syntax">format string</a>
+     * @param args   Arguments referenced by the format specifiers in the format
+     *               string.
+     * @return {@code this} {@link MatcherBuilder}.
+     * @throws java.util.IllegalFormatException If a format string contains an illegal syntax, a format
+     *                                          specifier that is incompatible with the given arguments,
+     *                                          insufficient arguments given the format string, or other
+     *                                          illegal conditions.
+     * @see String#format(String, Object...)
+     * @since 0.17
+     */
+    public MatcherBuilder<T> description(String format, Object... args) {
+        requireNonNull(format);
+        return description(d -> d.appendText(String.format(format, args)));
+    }
+
+    /**
+     * Sets a {@link Supplier} which will provide the description of the matcher.
+     *
      * @param descriptionSupplier The supplier for the description.
      * @return {@code this} {@link MatcherBuilder}.
      * @since 0.11
@@ -165,7 +184,9 @@ public final class MatcherBuilder<T> {
      * @since 0.11
      */
     public Matcher<T> build() {
+        requireNonNull(matchesSafely, "Matches predicate was not set");
         requireNonNull(describeTo, "Description was not set");
+        requireNonNull(describeMismatchSafely, "Mismatch description was not set");
         return new FuncTypeSafeMatcher<>(inputType, matchesSafely, describeTo, describeMismatchSafely);
     }
 }

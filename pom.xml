@@ -22,7 +22,7 @@
 
     <groupId>ro.derbederos.hamcrest</groupId>
     <artifactId>lambdamatchers</artifactId>
-    <version>0.17-SNAPSHOT</version>
+    <version>0.17</version>
     <packaging>jar</packaging>
 
     <name>LambdaMatchers</name>
@@ -147,7 +147,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>attach-javadoc</id>
