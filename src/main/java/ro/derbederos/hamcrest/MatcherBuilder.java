@@ -106,9 +106,9 @@ public final class MatcherBuilder<T> {
     }
 
     /**
-     * Sets a {@link Supplier} which will provide the description of the matcher.
+     * Sets the description of the matcher.
      *
-     * @param format A <a href="../util/Formatter.html#syntax">format string</a>
+     * @param format A <a href="../util/Formatter.html#syntax">format string</a>.
      * @param args   Arguments referenced by the format specifiers in the format
      *               string.
      * @return {@code this} {@link MatcherBuilder}.
