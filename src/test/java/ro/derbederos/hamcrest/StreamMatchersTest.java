@@ -17,7 +17,6 @@
 package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
-import org.junit.Before;
 import org.junit.Test;
 import ro.derbederos.hamcrest.LambdaMatchersTest.Person;
 
@@ -35,14 +34,8 @@ import static ro.derbederos.hamcrest.RetryMatchers.retry;
 import static ro.derbederos.hamcrest.StreamMatchers.emptyStream;
 import static ro.derbederos.hamcrest.StreamMatchers.featureStream;
 import static ro.derbederos.hamcrest.StreamMatchers.toIterable;
-import static ro.derbederos.hamcrest.TestUtil.assumeJavaVersion;
 
 public class StreamMatchersTest {
-
-    @Before
-    public void before() {
-        assumeJavaVersion(1.8);
-    }
 
     @Test
     public void streamIsEmpty() {

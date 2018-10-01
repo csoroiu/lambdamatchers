@@ -40,7 +40,6 @@ import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDesc
 import static ro.derbederos.hamcrest.RetryMatchers.assertFeature;
 import static ro.derbederos.hamcrest.RetryMatchers.retry;
 import static ro.derbederos.hamcrest.RetryMatchers.retrySupplier;
-import static ro.derbederos.hamcrest.TestUtil.assumeJavaVersion;
 
 public class RetryMatchersTest {
     @Rule
@@ -142,7 +141,6 @@ public class RetryMatchersTest {
 
     @Test
     public void testRetryLongAccumulator() {
-        assumeJavaVersion(1.8);
         LongAccumulator accumulator = new LongAccumulator((a, b) -> a * b, 3);
         @SuppressWarnings("Convert2Lambda")
         Runnable runnable = new Runnable() {
@@ -157,7 +155,6 @@ public class RetryMatchersTest {
 
     @Test
     public void testRetryLongAccumulatorDescription() {
-        assumeJavaVersion(1.8);
         LongAccumulator accumulator = new LongAccumulator((a, b) -> a * b, 3);
         @SuppressWarnings("Convert2Lambda")
         Runnable runnable = new Runnable() {
