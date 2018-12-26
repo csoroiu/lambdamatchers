@@ -17,8 +17,8 @@
 package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -111,7 +111,7 @@ public class LambdaMatchersTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void simpleTestUnboxingMethodReferenceDescription() {
         Matcher<Double> featureMatcher = hasFeature(Double::doubleValue, equalTo(4.0));
         assertDescription(equalTo("a Double having `Double::doubleValue` <4.0>"), featureMatcher);
