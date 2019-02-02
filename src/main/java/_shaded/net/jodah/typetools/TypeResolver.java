@@ -16,30 +16,14 @@
 
 package _shaded.net.jodah.typetools;
 
+import sun.misc.Unsafe;
+
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.lang.reflect.WildcardType;
+import java.lang.reflect.*;
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.WeakHashMap;
-
-import sun.misc.Unsafe;
+import java.util.*;
 
 /**
  * Enhanced type resolution utilities.
@@ -115,93 +99,6 @@ public final class TypeResolver {
   /** An unknown type. */
   public static final class Unknown {
     private Unknown() {
-    }
-  }
-
-  private static class ReifiedParameterizedType implements ParameterizedType {
-    private final ParameterizedType original;
-    private final Type[] resolvedTypeArguments;
-
-    private ReifiedParameterizedType(ParameterizedType original, Type[] resolvedTypeArguments) {
-      this.original = original;
-      this.resolvedTypeArguments = resolvedTypeArguments;
-    }
-
-    @Override
-    public Type[] getActualTypeArguments() {
-      return resolvedTypeArguments;
-    }
-
-    @Override
-    public Type getRawType() {
-      return original.getRawType();
-    }
-
-    @Override
-    public Type getOwnerType() {
-      return original.getOwnerType();
-    }
-
-    /** Keep this consistent with {@link sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl#toString} */
-    @Override
-    public String toString() {
-      final Type ownerType = getOwnerType();
-      final Type rawType = getRawType();
-      final Type[] actualTypeArguments = getActualTypeArguments();
-
-      StringBuilder sb = new StringBuilder();
-
-      if (ownerType != null) {
-        if (ownerType instanceof Class)
-          sb.append(((Class) ownerType).getName());
-        else
-          sb.append(ownerType.toString());
-
-        sb.append(".");
-
-        if (ownerType instanceof ParameterizedType) {
-          // Find simple name of nested type by removing the
-          // shared prefix with owner.
-          sb.append(rawType.getTypeName()
-              .replace( ((ParameterizedType)ownerType).getRawType().getTypeName() + "$", ""));
-        } else
-          sb.append(rawType.getTypeName());
-      } else
-        sb.append(rawType.getTypeName());
-
-      if (actualTypeArguments != null && actualTypeArguments.length > 0) {
-        sb.append("<");
-
-        boolean first = true;
-        for (Type t: actualTypeArguments) {
-          if (!first)
-            sb.append(", ");
-          sb.append(t.getTypeName());
-          first = false;
-        }
-        sb.append(">");
-      }
-
-      return sb.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o)
-        return true;
-      if (o == null || getClass() != o.getClass())
-        return false;
-
-      ReifiedParameterizedType that = (ReifiedParameterizedType) o;
-      return original.equals(that.original) &&
-          Arrays.equals(resolvedTypeArguments, that.resolvedTypeArguments);
-    }
-
-    @Override
-    public int hashCode() {
-      int result = original.hashCode();
-      result = 31 * result + Arrays.hashCode(resolvedTypeArguments);
-      return result;
     }
   }
 
@@ -481,33 +378,62 @@ public final class TypeResolver {
     return genericType instanceof Class ? (Class<?>) genericType : Unknown.class;
   }
 
+  private static Type reify(final Type genericType, final Map<TypeVariable<?>, Type> typeVariableTypeMap) {
+    // Check for terminal cases to avoid allocating HashMap and trivial call.
+    if (genericType == null)
+      return null;
+    else if (genericType instanceof Class<?>)
+      return genericType;
+    else
+      return reify(genericType, typeVariableTypeMap, new HashMap<>());
+  }
+
   /**
    * Works like {@link #resolveRawClass(Type, Class, Class)} but does not stop at raw classes. Instead, traverses
    * referenced types.
+   *
+   * @param cache contains a mapping of generic types to reified types. A value of {@code null} inside a
+   *        {@link ReifiedParameterizedType} instance means that this type is currently being reified.
    */
-  private static Type reify(final Type genericType, final Map<TypeVariable<?>, Type> typeVariableMap) {
-    if (genericType == null) {
-      return null;
-    } else if (genericType instanceof Class<?>) {
+  private static Type reify(Type genericType, final Map<TypeVariable<?>, Type> typeVariableMap, Map<Type, Type> cache) {
+    // Terminal case.
+    if (genericType instanceof Class<?>)
       return genericType;
-    } else if (genericType instanceof ParameterizedType) {
+
+    // For cycles of length larger than one, find its last element by chasing through cache.
+    while (cache.containsKey(genericType)) {
+      genericType = cache.get(genericType);
+    }
+
+    // Recursive cases.
+    if (genericType instanceof ParameterizedType) {
       final ParameterizedType parameterizedType = (ParameterizedType) genericType;
       final Type[] genericTypeArguments =  parameterizedType.getActualTypeArguments();
       final Type[] reifiedTypeArguments = new Type[genericTypeArguments.length];
 
+      ReifiedParameterizedType result = new ReifiedParameterizedType(parameterizedType);
+      cache.put(genericType, result);
+
       boolean changed = false;
       for (int i = 0; i < genericTypeArguments.length; i++) {
-        reifiedTypeArguments[i] = reify(genericTypeArguments[i], typeVariableMap);
+        // Cycle detection. In case a genericTypeArgument is null, it is currently being resolved,
+        // thus there's a cycle in the type's structure.
+        if (genericTypeArguments[i] == null) {
+          return parameterizedType;
+        }
+        reifiedTypeArguments[i] = reify(genericTypeArguments[i], typeVariableMap, cache);
         changed = changed || (reifiedTypeArguments[i] != genericTypeArguments[i]);
       }
 
-      return changed
-          ? new ReifiedParameterizedType(parameterizedType,  reifiedTypeArguments)
-          : parameterizedType;
+      if (!changed)
+        return parameterizedType;
+
+      result.setReifiedTypeArguments(reifiedTypeArguments);
+      return result;
     } else if (genericType instanceof GenericArrayType) {
       final GenericArrayType genericArrayType = (GenericArrayType) genericType;
       final Type genericComponentType = genericArrayType.getGenericComponentType();
-      final Type reifiedComponentType = reify(genericArrayType.getGenericComponentType(), typeVariableMap);
+      final Type reifiedComponentType = reify(genericArrayType.getGenericComponentType(), typeVariableMap, cache);
 
       if (genericComponentType == reifiedComponentType)
         return genericComponentType;
@@ -521,22 +447,30 @@ public final class TypeResolver {
     } else if (genericType instanceof TypeVariable<?>) {
       final TypeVariable<?> typeVariable = (TypeVariable<?>) genericType;
       final Type mapping = typeVariableMap.get(typeVariable);
-      if (mapping != null)
-        return reify(mapping, typeVariableMap);
+      if (mapping != null) {
+        cache.put(typeVariable, mapping);
+        return reify(mapping, typeVariableMap, cache);
+      }
 
       final Type[] upperBounds = typeVariable.getBounds();
+
+      // Copy cache in case the bound is mutually recursive on the variable. This is to avoid sharing of
+      // cache in different branches of the call-graph of reify.
+      cache = new HashMap<>(cache);
+
       // NOTE: According to https://docs.oracle.com/javase/tutorial/java/generics/bounded.html
       // if there are multiple upper bounds where one bound is a class, then this must be the
       // leftmost/first bound. Therefore we blindly take this one, hoping is the most relevant.
       // Hibernate does the same when erasing types, see also
       // https://github.com/hibernate/hibernate-validator/blob/6.0/engine/src/main/java/org/hibernate/validator/internal/util/TypeHelper.java#L181-L186
-      return reify(upperBounds[0], typeVariableMap);
+      cache.put(typeVariable, upperBounds[0]);
+      return reify(upperBounds[0], typeVariableMap, cache);
     } else if (genericType instanceof WildcardType) {
       final WildcardType wildcardType = (WildcardType) genericType;
       final Type[] upperBounds = wildcardType.getUpperBounds();
       final Type[] lowerBounds = wildcardType.getLowerBounds();
       if (upperBounds.length == 1 && lowerBounds.length == 0)
-        return reify(upperBounds[0], typeVariableMap);
+        return reify(upperBounds[0], typeVariableMap, cache);
 
       throw new UnsupportedOperationException(
           "Attempted to reify wildcard type with name '" + wildcardType + "' which has " +
@@ -753,8 +687,8 @@ public final class TypeResolver {
       Member member = constantPoolMethods[i];
       // Skip SerializedLambda constructors and members of the "type" class
       if ((member instanceof Constructor
-              && member.getDeclaringClass().getName().equals("java.lang.invoke.SerializedLambda"))
-              || member.getDeclaringClass().equals(type))
+          && member.getDeclaringClass().getName().equals("java.lang.invoke.SerializedLambda"))
+          || member.getDeclaringClass().equals(type))
         continue;
 
       result = member;
@@ -808,7 +742,7 @@ public final class TypeResolver {
   private static boolean isBoxingMethod(Method method) {
     Class<?>[] parameters = method.getParameterTypes();
     return method.getName().equals("valueOf") && parameters.length == 1 && parameters[0].isPrimitive()
-            && wrapPrimitives(parameters[0]).equals(method.getDeclaringClass());
+        && wrapPrimitives(parameters[0]).equals(method.getDeclaringClass());
   }
 
   private static boolean isUnboxingMethod(Method method) {
@@ -817,10 +751,10 @@ public final class TypeResolver {
     Class<?>[] parameters = method.getParameterTypes();
 
     return method.getReturnType().isPrimitive() && parameters.length == 0
-            // booleanValue, byteValue, charValue, doubleValue, floatValue, intValue, longValue, shortValue
-            && methodName.startsWith(returnType) && methodName.endsWith("Value")
-            && (wrapPrimitives(method.getReturnType()).equals(method.getDeclaringClass())
-            || method.getDeclaringClass().equals(Number.class));
+        //booleanValue, byteValue, charValue, doubleValue, floatValue, intValue, longValue, shortValue
+        && methodName.startsWith(returnType) && methodName.endsWith("Value")
+        && (wrapPrimitives(method.getReturnType()).equals(method.getDeclaringClass())
+        || method.getDeclaringClass().equals(Number.class));
   }
 
   private static Class<?> wrapPrimitives(Class<?> clazz) {
