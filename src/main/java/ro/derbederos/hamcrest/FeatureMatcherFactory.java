@@ -16,17 +16,11 @@
 
 package ro.derbederos.hamcrest;
 
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
 import java.util.function.Function;
 
 class FeatureMatcherFactory {
-    private static void appendTextIfNotEmpty(Description description, String text) {
-        if (text.length() > 0) {
-            description.appendText(text).appendText(" ");
-        }
-    }
 
     static <T, U> Matcher<T> hasFeature(Class<? super T> inputType,
                                         String featureDescription,
@@ -36,11 +30,15 @@ class FeatureMatcherFactory {
         return MatcherBuilder.<T>of(inputType)
                 .matches(item -> featureMatcher.matches(featureFunction.apply(item)))
                 .description(description -> {
-                    appendTextIfNotEmpty(description, featureDescription);
+                    if (featureDescription.length() > 0) {
+                        description.appendText(featureDescription).appendText(" ");
+                    }
                     featureMatcher.describeTo(description);
                 })
                 .describeMismatch((item, mismatch) -> {
-                    appendTextIfNotEmpty(mismatch, featureName);
+                    if (featureName.length() > 0) {
+                        mismatch.appendText(" ").appendText(featureName).appendText(" ");
+                    }
                     featureMatcher.describeMismatch(featureFunction.apply(item), mismatch);
                 })
                 .build();

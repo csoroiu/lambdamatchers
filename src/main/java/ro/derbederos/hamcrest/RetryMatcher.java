@@ -71,7 +71,7 @@ final class RetryMatcher<T> extends BaseMatcher<T> {
     public void describeMismatch(Object item, Description description) {
         final long duration = timeUnit.convert(durationNanos, TimeUnit.NANOSECONDS);
         final String timeUnitStr = timeUnit.toString().toLowerCase().replaceAll("s$", "(s)");
-        description.appendText("after " + duration + " " + timeUnitStr + " ");
+        description.appendText("after " + duration + " " + timeUnitStr);
         subMatcher.describeMismatch(item, description);
     }
 

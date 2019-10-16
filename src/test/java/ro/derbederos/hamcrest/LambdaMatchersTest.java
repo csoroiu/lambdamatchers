@@ -311,7 +311,7 @@ public class LambdaMatchersTest {
                 new Person("Ariana G", 21));
         Matcher<Iterable<Person>> featureMatcher = featureIterable(Person::getName, hasItem("Ana Pop1"));
         assertDescription(matchesPattern("an Iterable having `\\(Iterable\\)LambdaMatchers::lambda\\$featureIterable\\$\\d+` a collection containing \"Ana Pop1\""), featureMatcher);
-        assertMismatchDescription(matchesPattern("`\\(Iterable\\)LambdaMatchers::lambda\\$featureIterable\\$\\d+` was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
+        assertMismatchDescription(matchesPattern("`\\(Iterable\\)LambdaMatchers::lambda\\$featureIterable\\$\\d+` mismatches were: \\[was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"\\]"),
                 list, featureMatcher);
     }
 
@@ -326,7 +326,7 @@ public class LambdaMatchersTest {
         Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21), new Person("Ariana G", 21)};
         Matcher<Person[]> featureMatcher = featureArray(Person::getName, hasItem(startsWith("Ana1")));
         assertDescription(matchesPattern("an Object\\[\\] having `\\(Iterable\\)LambdaMatchers::lambda\\$featureArray\\$\\d+` a collection containing a string starting with \"Ana1\""), featureMatcher);
-        assertMismatchDescription(matchesPattern("`\\(Iterable\\)LambdaMatchers::lambda\\$featureArray\\$\\d+` was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\""),
+        assertMismatchDescription(matchesPattern("`\\(Iterable\\)LambdaMatchers::lambda\\$featureArray\\$\\d+` mismatches were: \\[was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"\\]"),
                 array, featureMatcher);
     }
 
