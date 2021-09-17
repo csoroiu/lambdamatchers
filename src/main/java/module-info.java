@@ -4,4 +4,5 @@ module ro.derbederos.hamcrest {
     requires java.base;
     requires jdk.unsupported;
     requires transitive org.hamcrest;
+    uses sun.misc.Unsafe;
 }
