@@ -17,7 +17,6 @@
 package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
-
 import org.junit.jupiter.api.Test;
 import ro.derbederos.hamcrest.LambdaMatchersTest.Person;
 

@@ -17,13 +17,13 @@ that enables one to easily create a new custom matcher.
 <dependency>
     <groupId>ro.derbederos.hamcrest</groupId>
     <artifactId>lambdamatchers</artifactId>
-    <version>0.17</version>
+    <version>0.18</version>
     <scope>test</scope>
 </dependency>
 ```
 #### Gradle dependency
 ```groovy
-testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.17'
+testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.18'
 ```
 
 ## Examples

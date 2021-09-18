@@ -69,14 +69,14 @@ public class LambdaMatchersTest {
         Matcher<Person> featureMatcher = hasFeature(this::getPersonName, startsWith("B"));
         // retrolambda creates an access method for a private instance method reference
         assertDescription(anyOf(
-                equalTo("a Person having `LambdaMatchersTest::getPersonName` a string starting with \"B\""),
-                equalTo("a Person having `(String)LambdaMatchersTest::access$lambda$1` a string starting with \"B\""),
-                equalTo("a Person having `(String)LambdaMatchersTest::access$lambda$simpleTestInstanceObjectMethodReferenceDescription$1` a string starting with \"B\"")),
+                        equalTo("a Person having `LambdaMatchersTest::getPersonName` a string starting with \"B\""),
+                        equalTo("a Person having `(String)LambdaMatchersTest::access$lambda$1` a string starting with \"B\""),
+                        equalTo("a Person having `(String)LambdaMatchersTest::access$lambda$simpleTestInstanceObjectMethodReferenceDescription$1` a string starting with \"B\"")),
                 featureMatcher);
         assertMismatchDescription(anyOf(
-                equalTo("`LambdaMatchersTest::getPersonName` was \"Alice\""),
-                equalTo("`(String)LambdaMatchersTest::access$lambda$1` was \"Alice\""),
-                equalTo("`(String)LambdaMatchersTest::access$lambda$simpleTestInstanceObjectMethodReferenceDescription$1` was \"Alice\"")),
+                        equalTo("`LambdaMatchersTest::getPersonName` was \"Alice\""),
+                        equalTo("`(String)LambdaMatchersTest::access$lambda$1` was \"Alice\""),
+                        equalTo("`(String)LambdaMatchersTest::access$lambda$simpleTestInstanceObjectMethodReferenceDescription$1` was \"Alice\"")),
                 new Person("Alice", 21), featureMatcher);
     }
 
