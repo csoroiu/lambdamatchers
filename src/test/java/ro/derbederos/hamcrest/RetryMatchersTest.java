@@ -94,7 +94,7 @@ public class RetryMatchersTest {
         DelayedValueBean bean = new DelayedValueBean(100, 2, 7);
         Matcher<Object> retryMatcher = retry(300, hasProperty("value", equalTo(9)));
         assertDescription(equalTo("hasProperty(\"value\", <9>)"), retryMatcher);
-        assertMismatchDescription(equalTo("after 300 millisecond(s)  property 'value' was <7>"),
+        assertMismatchDescription(equalTo("after 300 millisecond(s) property 'value' was <7>"),
                 bean, retryMatcher);
     }
 

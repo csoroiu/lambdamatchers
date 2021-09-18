@@ -115,8 +115,8 @@ public Matcher<Person> myCustomMatcher(Person expected) {
 * When using agents that instrument the java byte code the type detection might malfunction. 
 ***In this unfortunate case I encourage you to fill in an issue about the problem you encountered.***
 
-[build-status-svg]: https://travis-ci.com/csoroiu/lambdamatchers.svg?branch=master
-[build-status-link]: https://travis-ci.com/csoroiu/lambdamatchers
+[build-status-svg]: https://app.travis-ci.com/csoroiu/lambdamatchers.svg?branch=master
+[build-status-link]: https://app.travis-ci.com/csoroiu/lambdamatchers
 [javadoc-svg]: http://javadoc.io/badge/ro.derbederos.hamcrest/lambdamatchers.svg?color=red
 [javadoc-link]: http://javadoc.io/doc/ro.derbederos.hamcrest/lambdamatchers
 [license-svg]: https://img.shields.io/badge/license-Apache2-blue.svg
