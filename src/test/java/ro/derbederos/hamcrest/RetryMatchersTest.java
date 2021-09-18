@@ -17,11 +17,9 @@
 package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.Timeout;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -41,19 +39,18 @@ import static ro.derbederos.hamcrest.RetryMatchers.assertFeature;
 import static ro.derbederos.hamcrest.RetryMatchers.retry;
 import static ro.derbederos.hamcrest.RetryMatchers.retrySupplier;
 
+@org.junit.jupiter.api.Timeout(value = 700, unit = TimeUnit.MILLISECONDS)
 public class RetryMatchersTest {
-    @Rule
-    public Timeout TIMEOUT = Timeout.millis(700);
 
     private static ScheduledExecutorService executorService;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeRetryMatchersTest() {
         executorService = Executors.newSingleThreadScheduledExecutor();
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    @AfterClass
+    @AfterAll
     public static void afterRetryMatchersTest() throws Exception {
         executorService.shutdown();
         executorService.awaitTermination(100, TimeUnit.MILLISECONDS);

@@ -17,7 +17,6 @@
 package ro.derbederos.hamcrest;
 
 import org.hamcrest.Matcher;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
@@ -28,12 +27,10 @@ import java.util.function.Supplier;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.hasProperty;
-import static ro.derbederos.hamcrest.LambdaMatchers.assertFeature;
-import static ro.derbederos.hamcrest.LambdaMatchers.featureArray;
-import static ro.derbederos.hamcrest.LambdaMatchers.featureIterable;
-import static ro.derbederos.hamcrest.LambdaMatchers.hasFeature;
+import static ro.derbederos.hamcrest.LambdaMatchers.*;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertDescription;
 import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDescription;
 import static ro.derbederos.hamcrest.RegexMatchers.matchesPattern;
@@ -111,7 +108,6 @@ public class LambdaMatchersTest {
     }
 
     @Test
-    @Disabled
     public void simpleTestUnboxingMethodReferenceDescription() {
         Matcher<Double> featureMatcher = hasFeature(Double::doubleValue, equalTo(4.0));
         assertDescription(equalTo("a Double having `Double::doubleValue` <4.0>"), featureMatcher);
@@ -162,14 +158,14 @@ public class LambdaMatchersTest {
     @Test
     public void simpleTestHasFeature() {
         Person p = new Person("Alice Bob", 21);
-        Function<Person, String> featureFunction = a -> a.getName().split(" ")[1];
-        assertThat(p, hasFeature(featureFunction, equalTo("Bob")));
+        Function<Person, String> featureExtractor = a -> a.getName().split(" ")[1];
+        assertThat(p, hasFeature(featureExtractor, equalTo("Bob")));
     }
 
     @Test
     public void simpleTestHasFeatureDescription() {
-        Function<Person, String> featureFunction = a -> a.getName().split(" ")[1];
-        Matcher<Person> featureMatcher = hasFeature(featureFunction, equalTo("Pop"));
+        Function<Person, String> featureExtractor = a -> a.getName().split(" ")[1];
+        Matcher<Person> featureMatcher = hasFeature(featureExtractor, equalTo("Pop"));
         assertDescription(matchesPattern("a Person having `\\(String\\)LambdaMatchersTest::lambda\\$simpleTestHasFeatureDescription\\$\\d+` \"Pop\""), featureMatcher);
         assertMismatchDescription(matchesPattern("`\\(String\\)LambdaMatchersTest::lambda\\$simpleTestHasFeatureDescription\\$\\d+` was \"Bob\""),
                 new Person("Alice Bob", 21), featureMatcher);
@@ -212,8 +208,8 @@ public class LambdaMatchersTest {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Bob", 21),
                 new Person("Ariana Bob", 21));
-        Function<Person, String> featureFunction = a -> a.getName().split(" ")[1];
-        assertThat(list, everyItem(hasFeature(featureFunction, equalTo("Bob"))));
+        Function<Person, String> featureExtractor = a -> a.getName().split(" ")[1];
+        assertThat(list, everyItem(hasFeature(featureExtractor, equalTo("Bob"))));
     }
 
     @Test
@@ -262,8 +258,7 @@ public class LambdaMatchersTest {
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
         // in case of inlining the following line, an explicit cast is needed
-        Function<Person, Integer> featureFunction = (person) -> person.getAge() + 1;
-        assertThat(list, hasItem(hasFeature(featureFunction, equalTo(22))));
+        assertThat(list, hasItem(hasFeature(Person::getAge, equalTo(21))));
     }
 
     @Test
@@ -285,8 +280,8 @@ public class LambdaMatchersTest {
     public void arrayHasItemMatcherTestHasFeature() {
         Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21),
                 new Person("Ariana G", 21)};
-        Function<Person, Integer> featureFunction = (person) -> person.getAge() + 1;
-        assertThat(array, hasItemInArray(hasFeature(featureFunction, equalTo(22))));
+        Function<Person, Integer> featureExtractor = (person) -> person.getAge() + 1;
+        assertThat(array, hasItemInArray(hasFeature(featureExtractor, equalTo(22))));
     }
 
     @Test
@@ -310,8 +305,8 @@ public class LambdaMatchersTest {
                 new Person("Ana Pop", 21),
                 new Person("Ariana G", 21));
         Matcher<Iterable<Person>> featureMatcher = featureIterable(Person::getName, hasItem("Ana Pop1"));
-        assertDescription(matchesPattern("an Iterable having `\\(Iterable\\)LambdaMatchers::lambda\\$featureIterable\\$\\d+` a collection containing \"Ana Pop1\""), featureMatcher);
-        assertMismatchDescription(matchesPattern("`\\(Iterable\\)LambdaMatchers::lambda\\$featureIterable\\$\\d+` mismatches were: \\[was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"\\]"),
+        assertDescription(equalTo("an Iterable of Person having `Person::getName` a collection containing \"Ana Pop1\""), featureMatcher);
+        assertMismatchDescription(equalTo("`Person::getName` mismatches were: [was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"]"),
                 list, featureMatcher);
     }
 
@@ -325,8 +320,8 @@ public class LambdaMatchersTest {
     public void arrayHasItemMatcherTestFeatureArrayDescription() {
         Person[] array = {new Person("Alice Bob", 21), new Person("Ana Pop", 21), new Person("Ariana G", 21)};
         Matcher<Person[]> featureMatcher = featureArray(Person::getName, hasItem(startsWith("Ana1")));
-        assertDescription(matchesPattern("an Object\\[\\] having `\\(Iterable\\)LambdaMatchers::lambda\\$featureArray\\$\\d+` a collection containing a string starting with \"Ana1\""), featureMatcher);
-        assertMismatchDescription(matchesPattern("`\\(Iterable\\)LambdaMatchers::lambda\\$featureArray\\$\\d+` mismatches were: \\[was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"\\]"),
+        assertDescription(matchesPattern("an Object\\[\\] of Person having `Person::getName` a collection containing a string starting with \"Ana1\""), featureMatcher);
+        assertMismatchDescription(matchesPattern("`Person::getName` mismatches were: \\[was \"Alice Bob\", was \"Ana Pop\", was \"Ariana G\"\\]"),
                 array, featureMatcher);
     }
 
@@ -347,7 +342,14 @@ public class LambdaMatchersTest {
                 supplier, matcher);
     }
 
-    @SuppressWarnings("WeakerAccess")
+    @Test
+    public void testExtract() {
+        Person p = new Person("alice", 21);
+
+        assertThat(p, hasFeature(extract(Person::getName, Person::getAge), contains("alice", 21)));
+        assertThat(p, hasFeature(extract(Person::getName, Person::getAge), hasItems("alice", 21)));
+    }
+
     public static class Person {
         private final String name;
         private final int age;

@@ -44,7 +44,8 @@ public final class TypeResolver {
   private static Method GET_CONSTANT_POOL_SIZE;
   private static Method GET_CONSTANT_POOL_METHOD_AT;
   private static final Map<String, Method> OBJECT_METHODS = new HashMap<String, Method>();
-  private static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPERS;
+  private static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPERS_MAP;
+  private static final Set<Class<?>> PRIMITIVE_WRAPPERS;
   private static final Double JAVA_VERSION;
 
   static {
@@ -141,7 +142,8 @@ public final class TypeResolver {
     types.put(long.class, Long.class);
     types.put(short.class, Short.class);
     types.put(void.class, Void.class);
-    PRIMITIVE_WRAPPERS = Collections.unmodifiableMap(types);
+    PRIMITIVE_WRAPPERS_MAP = Collections.unmodifiableMap(types);
+    PRIMITIVE_WRAPPERS = Collections.unmodifiableSet(new HashSet<>(types.values()));
   }
 
   private interface AccessMaker {
@@ -716,6 +718,7 @@ public final class TypeResolver {
     }
 
     Member result = null;
+    Method prev = null;
     for (int i = start - 1; i >= 0; i--) {
       Member member = constantPoolMethods[i];
       // Skip SerializedLambda constructors and members of the "type" class
@@ -727,8 +730,28 @@ public final class TypeResolver {
       result = member;
 
       // Return if not valueOf method
-      if (!(member instanceof Method) || !isBoxingOrUnboxingMethod((Method) member))
-        break;
+      if (isBoxingOrUnboxingMethod(member) && prev == null) {
+        prev = (Method) member; //retain the last member if it is boxing or unboxing
+        continue;
+      }
+
+      break;
+    }
+
+    if (prev != null) {
+      // depending on the result, if the constantpool ends with a boxing method,
+      // if result is a constructor, then special care is needed
+      // | constructor type    | prev type       | end result      |
+      // | any                 | boxing method   | boxing method   |
+      // | primitive wrapper   | unboxing method | constructor     |
+      // | ! primitive wrapper | unboxing method | unboxing method |
+      if (result instanceof Constructor) {
+        if (isBoxingMethod(prev)) {
+          return prev;
+        } else if (isUnboxingMethod(prev) && !PRIMITIVE_WRAPPERS.contains(((Constructor<?>) result).getDeclaringClass())) {
+          return prev;
+        }
+      }
     }
 
     return result;
@@ -742,7 +765,8 @@ public final class TypeResolver {
       return new Member[0];
     }
     ArrayList<Member> methods = new ArrayList<>();
-    for (int i = 0; i < getConstantPoolSize(constantPool); i++) {
+    int constantPoolSize = getConstantPoolSize(constantPool);
+    for (int i = 0; i < constantPoolSize; i++) {
       Member method = getConstantPoolMethodAt(constantPool, i);
       if (method != null)
         methods.add(method);
@@ -768,8 +792,8 @@ public final class TypeResolver {
     return result;
   }
 
-  private static boolean isBoxingOrUnboxingMethod(Method method) {
-    return isBoxingMethod(method) || isUnboxingMethod(method);
+  private static boolean isBoxingOrUnboxingMethod(Member member) {
+    return member instanceof Method && (isBoxingMethod((Method) member) || isUnboxingMethod((Method) member));
   }
 
   private static boolean isBoxingMethod(Method method) {
@@ -791,7 +815,7 @@ public final class TypeResolver {
   }
 
   private static Class<?> wrapPrimitives(Class<?> clazz) {
-    return clazz.isPrimitive() ? PRIMITIVE_WRAPPERS.get(clazz) : clazz;
+    return clazz.isPrimitive() ? PRIMITIVE_WRAPPERS_MAP.get(clazz) : clazz;
   }
 
   private static int getConstantPoolSize(Object constantPool) {

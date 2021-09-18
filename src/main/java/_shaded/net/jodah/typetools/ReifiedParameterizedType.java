@@ -77,9 +77,9 @@ class ReifiedParameterizedType implements ParameterizedType {
 
       if (ownerType != null) {
         if (ownerType instanceof Class) {
-          sb.append(((Class) ownerType).getName());
+          sb.append(((Class<?>) ownerType).getName());
         } else {
-          sb.append(ownerType.toString());
+          sb.append(ownerType);
         }
 
         sb.append("$");
@@ -90,7 +90,7 @@ class ReifiedParameterizedType implements ParameterizedType {
           sb.append(rawType.getTypeName()
               .replace(((ParameterizedType) ownerType).getRawType().getTypeName() + "$", ""));
         } else if (rawType instanceof Class){
-          sb.append(((Class) rawType).getSimpleName());
+          sb.append(((Class<?>) rawType).getSimpleName());
         } else {
           sb.append(rawType.getTypeName());
         }

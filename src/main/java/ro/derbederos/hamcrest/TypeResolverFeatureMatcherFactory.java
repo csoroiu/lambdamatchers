@@ -16,62 +16,98 @@
 
 package ro.derbederos.hamcrest;
 
-import _shaded.net.jodah.typetools.TypeResolver;
 import org.hamcrest.Matcher;
 
+import java.util.Arrays;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.StreamSupport;
 
 import static java.util.Objects.requireNonNull;
 
-final class TypeResolverFeatureMatcherFactory {
+class TypeResolverFeatureMatcherFactory {
 
-    private static <T> String getFeatureTypeName(T featureFunction, Class<T> functionInterface, int resultIndex) {
-        requireNonNull(featureFunction);
-        String featureTypeName = MethodRefResolver.resolveMethodRefName(featureFunction.getClass());
-        if (featureTypeName == null) {
-            Class<?> featureType = TypeResolver.resolveRawArguments(functionInterface, featureFunction.getClass())[resultIndex];
-            featureTypeName = featureType.getSimpleName();
-            if (TypeResolver.Unknown.class.isAssignableFrom(featureType)) {
-                featureTypeName = "UnknownFieldType";
-            }
-        }
-        return featureTypeName;
+    private TypeResolverFeatureMatcherFactory() {
+        throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    private static String getArticle(String objectTypeName) {
-        boolean startsWithVowel = "AaEeIiOoUu".indexOf(objectTypeName.charAt(0)) >= 0;
+    private static String getArticle(String s) {
+        boolean startsWithVowel = "AaEeIiOoUu".indexOf(s.charAt(0)) >= 0;
         return startsWithVowel ? "an" : "a";
     }
 
-    static <T, U> Matcher<T> hasFeature(Function<? super T, ? extends U> featureFunction,
-                                        Matcher<? super U> featureMatcher) {
-        return hasFeature(getFeatureTypeName(featureFunction, Function.class, 1), featureFunction, featureMatcher);
+    static String getFeatureDescription(String featureName, String entityType) {
+        return getArticle(entityType) + " " + entityType + " having " + featureName;
     }
 
-    static <T, U> Matcher<T> hasFeature(String featureTypeName,
-                                        Function<? super T, ? extends U> featureFunction,
-                                        Matcher<? super U> featureMatcher) {
-        requireNonNull(featureFunction);
-        requireNonNull(featureMatcher);
-        requireNonNull(featureTypeName);
-        Class<?> inputType = TypeResolver.resolveRawArguments(Function.class, featureFunction.getClass())[0];
-        String objectTypeName = inputType.getSimpleName();
-        if (TypeResolver.Unknown.class.isAssignableFrom(inputType)) {
-            inputType = Object.class;
-            objectTypeName = "UnknownObjectType";
-        }
-        String featureDescription = getArticle(objectTypeName) + " " + objectTypeName + " having " + featureTypeName;
-        @SuppressWarnings("unchecked")
-        Class<T> castInputType = (Class<T>) inputType;
-        return FeatureMatcherFactory.hasFeature(castInputType, featureDescription, featureTypeName, featureFunction, featureMatcher);
+    static <T, U> Matcher<T> feature(Function<? super T, ? extends U> featureExtractor,
+                                     Matcher<? super U> featureMatcher) {
+        FeatureMetadata<T> featureMetadata = FeatureMetadataResolver
+                .resolve(featureExtractor, Function.class);
+        return FeatureMatcherFactory.feature(featureMetadata.getDeclaringEntityType(),
+                getFeatureDescription(featureMetadata.getFeatureName(), featureMetadata.getDeclaringEntityName()),
+                featureMetadata.getFeatureName(),
+                featureExtractor,
+                featureMatcher);
+    }
+
+    static <T, U> Matcher<T> feature(String featureName,
+                                     Function<? super T, ? extends U> featureExtractor,
+                                     Matcher<? super U> featureMatcher) {
+        FeatureMetadata<T> featureMetadata = FeatureMetadataResolver
+                .resolve(featureExtractor, Function.class);
+        return FeatureMatcherFactory.feature(featureMetadata.getDeclaringEntityType(),
+                getFeatureDescription(featureName, featureMetadata.getDeclaringEntityName()),
+                featureName,
+                featureExtractor,
+                featureMatcher);
+    }
+
+    static <T, U> Matcher<Iterable<T>> featureIterable(Function<? super T, ? extends U> featureExtractor,
+                                                       Matcher<? extends Iterable<? super U>> iterableMatcher) {
+
+        FeatureMetadata<T> featureMetadata = FeatureMetadataResolver
+                .resolve(featureExtractor, Function.class);
+        String entityType = Iterable.class.getSimpleName() + " of " + featureMetadata.getDeclaringEntityName();
+        return FeatureMatcherFactory.feature(Iterable.class,
+                getFeatureDescription(featureMetadata.getFeatureName(),
+                        entityType),
+                featureMetadata.getFeatureName(),
+                iterable -> iterableWrapper(featureExtractor, iterable),
+                iterableMatcher);
+    }
+
+    private static <T, U> Iterable<U> iterableWrapper(Function<? super T, U> featureExtractor,
+                                                      Iterable<? extends T> iterable) {
+        return () -> StreamSupport.stream(iterable.spliterator(), false)
+                .map(featureExtractor).iterator();
+    }
+
+    static <T, U> Matcher<T[]> featureArray(Function<? super T, ? extends U> featureExtractor,
+                                            Matcher<? extends Iterable<? super U>> iterableMatcher) {
+
+        FeatureMetadata<T> featureMetadata = FeatureMetadataResolver
+                .resolve(featureExtractor, Function.class);
+        String entityType = Object[].class.getSimpleName() + " of " + featureMetadata.getDeclaringEntityName();
+        return FeatureMatcherFactory.feature(Object[].class,
+                getFeatureDescription(featureMetadata.getFeatureName(),
+                        entityType),
+                featureMetadata.getFeatureName(),
+                array -> arrayWrapper(featureExtractor, array),
+                iterableMatcher);
+    }
+
+    private static <T, U> Iterable<U> arrayWrapper(Function<? super T, U> featureExtractor,
+                                                   T[] array) {
+        return () -> Arrays.stream(array).map(featureExtractor).iterator();
     }
 
     static <T> Matcher<Supplier<T>> supplierMatcher(Supplier<T> supplier, Matcher<? super T> matcher) {
         requireNonNull(supplier);
         requireNonNull(matcher);
-        String featureTypeName = getFeatureTypeName(supplier, Supplier.class, 0);
-        String featureDescription = getArticle(featureTypeName) + " " + featureTypeName;
-        return FeatureMatcherFactory.hasFeature(Supplier.class, featureDescription, featureTypeName, Supplier::get, matcher);
+
+        String featureName = FeatureMetadataResolver.resolve(supplier, Supplier.class).getFeatureName();
+        String featureDescription = getArticle(featureName) + " " + featureName;
+        return FeatureMatcherFactory.feature(Supplier.class, featureDescription, featureName, Supplier::get, matcher);
     }
 }

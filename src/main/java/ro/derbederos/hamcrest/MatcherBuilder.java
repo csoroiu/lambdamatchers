@@ -24,9 +24,12 @@ import java.util.function.*;
 import static java.util.Objects.requireNonNull;
 
 /**
+ * <p>
  * Class used to easily create a custom matcher. Inspired from https://gist.github.com/tadams/10680655.
+ * </p>
  * <p>
  * Example:
+ * </p>
  * <pre>
  * return MatcherBuilder
  *         .of(Person.class)
@@ -50,8 +53,9 @@ public final class MatcherBuilder<T> {
     }
 
     /**
-     * Creates a {@link MatcherBuilder} for a specified {@code type}.
      * <p>
+     * Creates a {@link MatcherBuilder} for a specified {@code type}.
+     * </p>
      *
      * @param type The type of the checked object.
      * @param <T>  The generic type of the checked object.
@@ -63,9 +67,12 @@ public final class MatcherBuilder<T> {
     }
 
     /**
+     * <p>
      * Sets a {@link Predicate} that will be used to match the input value.
+     * </p>
      * <p>
      * The {@link Predicate} receives as input the value to be checked.
+     * </p>
      *
      * @param predicate The predicate.
      * @return {@code this} {@link MatcherBuilder}.
@@ -92,9 +99,12 @@ public final class MatcherBuilder<T> {
     }
 
     /**
+     * <p>
      * Sets the describer of the matcher which is a {@link Consumer}.
+     * </p>
      * <p>
      * The {@link Consumer} receives as input the {@link Description} and can set it.
+     * </p>
      *
      * @param describer The describer of the matcher.
      * @return {@code this} {@link MatcherBuilder}.
@@ -106,7 +116,9 @@ public final class MatcherBuilder<T> {
     }
 
     /**
+     * <p>
      * Sets the description of the matcher.
+     * </p>
      *
      * @param format A <a href="../util/Formatter.html#syntax">format string</a>.
      * @param args   Arguments referenced by the format specifiers in the format
@@ -125,7 +137,9 @@ public final class MatcherBuilder<T> {
     }
 
     /**
+     * <p>
      * Sets a {@link Supplier} which will provide the description of the matcher.
+     * </p>
      *
      * @param descriptionSupplier The supplier for the description.
      * @return {@code this} {@link MatcherBuilder}.
@@ -137,7 +151,9 @@ public final class MatcherBuilder<T> {
     }
 
     /**
+     * <p>
      * Sets the description of the matcher.
+     * </p>
      *
      * @param description The description of the matcher.
      * @return {@code this} {@link MatcherBuilder}.
@@ -149,9 +165,12 @@ public final class MatcherBuilder<T> {
     }
 
     /**
+     * <p>
      * Sets the mismatchDescriber of the matcher which is a {@link BiConsumer}.
+     * </p>
      * <p>
      * The {@link BiConsumer} receives as input the input value and the {@link Description} and can set the description.
+     * </p>
      *
      * @param mismatchDescriber The mismatchDescriber of the matcher.
      * @return {@code this} {@link MatcherBuilder}.
@@ -164,9 +183,12 @@ public final class MatcherBuilder<T> {
     }
 
     /**
+     * <p>
      * Sets a {@link Function} which will provide the mismatch description of the matcher.
+     * </p>
      * <p>
      * The {@link Function} will receive as input the input value and will have to provide a text.
+     * </p>
      *
      * @param mismatchFunction The mismatchFunction for the mismatch description.
      * @return {@code this} {@link MatcherBuilder}.
@@ -178,7 +200,9 @@ public final class MatcherBuilder<T> {
     }
 
     /**
+     * <p>
      * This method will create and return the custom {@link Matcher}.
+     * </p>
      *
      * @return The custom {@link Matcher}.
      * @since 0.11

@@ -24,8 +24,13 @@ import java.lang.reflect.Method;
 
 class MethodRefResolver {
 
+    private MethodRefResolver() {
+        throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
     private static final String DISABLE_LAMBDA_METHOD_REF = "lambdamatchers.disableMethodRefNameSupport";
     private static final String LAMBDA_METHOD_PREFIX = "lambda$";
+    private static final String SCALA_ANONFUN_METHOD_PREFIX = "$anonfun$";
     private static final String RETROLAMBDA_ACCESSMETHOD_PREFIX = "access$lambda$";
 
     private static Method GET_MEMBER_REF;
@@ -57,6 +62,8 @@ class MethodRefResolver {
             if (member.isSynthetic()) {
                 if (member.getName().startsWith(LAMBDA_METHOD_PREFIX)) {
                     return "`" + methodToString(member) + "`";
+                } else if (member.getName().startsWith(SCALA_ANONFUN_METHOD_PREFIX)) {
+                    return "`" + methodToString(member) + "`";
                 } else if (member.getName().startsWith(RETROLAMBDA_ACCESSMETHOD_PREFIX)) {
                     return "`" + methodToString(member) + "`";
                 }
@@ -73,6 +80,7 @@ class MethodRefResolver {
     private static String methodToString(Member methodRef) {
         StringBuilder sb = new StringBuilder();
         if (methodRef.getName().startsWith(LAMBDA_METHOD_PREFIX)
+                || methodRef.getName().startsWith(SCALA_ANONFUN_METHOD_PREFIX)
                 || methodRef.getName().startsWith(RETROLAMBDA_ACCESSMETHOD_PREFIX)) {
             sb.append("(");
             sb.append(((Method) methodRef).getReturnType().getSimpleName());

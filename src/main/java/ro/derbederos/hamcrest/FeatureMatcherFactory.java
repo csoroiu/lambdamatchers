@@ -20,15 +20,19 @@ import org.hamcrest.Matcher;
 
 import java.util.function.Function;
 
-class FeatureMatcherFactory {
+final class FeatureMatcherFactory {
 
-    static <T, U> Matcher<T> hasFeature(Class<? super T> inputType,
-                                        String featureDescription,
-                                        String featureName,
-                                        Function<? super T, ? extends U> featureFunction,
-                                        Matcher<? super U> featureMatcher) {
-        return MatcherBuilder.<T>of(inputType)
-                .matches(item -> featureMatcher.matches(featureFunction.apply(item)))
+    private FeatureMatcherFactory() {
+        throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
+    static <T, U> Matcher<T> feature(Class<? super T> entityType,
+                                     String featureDescription,
+                                     String featureName,
+                                     Function<? super T, ? extends U> featureExtractor,
+                                     Matcher<? extends U> featureMatcher) {
+        return MatcherBuilder.<T>of(entityType)
+                .matches(item -> featureMatcher.matches(featureExtractor.apply(item)))
                 .description(description -> {
                     if (featureDescription.length() > 0) {
                         description.appendText(featureDescription).appendText(" ");
@@ -39,7 +43,7 @@ class FeatureMatcherFactory {
                     if (featureName.length() > 0) {
                         mismatch.appendText(" ").appendText(featureName).appendText(" ");
                     }
-                    featureMatcher.describeMismatch(featureFunction.apply(item), mismatch);
+                    featureMatcher.describeMismatch(featureExtractor.apply(item), mismatch);
                 })
                 .build();
     }

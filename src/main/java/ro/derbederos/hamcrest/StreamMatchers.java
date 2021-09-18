@@ -27,11 +27,14 @@ import java.util.stream.StreamSupport;
 import static ro.derbederos.hamcrest.LambdaMatchers.hasFeature;
 
 /**
+ * <p>
  * This class provides a set of mapping matchers for Java 8+ streams.
  * Basically it contains matchers that convert streams to {@link Iterable} and allow {@link Iterable}
  * matchers to be used.
+ * </p>
  * <p>
  * Examples:
+ * </p>
  * <pre>
  * assertThat(stream, featureStream(Person::getName, hasItem(startsWith("Ana"))));
  *
@@ -45,33 +48,39 @@ import static ro.derbederos.hamcrest.LambdaMatchers.hasFeature;
 public final class StreamMatchers {
 
     private StreamMatchers() {
-        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+        throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     /**
+     * <p>
      * Utility method that creates a matcher that converts a stream of {@code <T>} to an iterable of
      * {@code <U>} allowing us to use an iterable matcher on the result of the mapping function.
+     * </p>
      * <p>
      * Example:
+     * </p>
      * <pre>
      * assertThat(stream, featureStream(Person::getName, hasItem(startsWith("Ana"))));
      * </pre>
      *
-     * @param featureFunction The function that transforms every element of the input stream.
-     * @param iterableMatcher The matcher to be applied on the resulting iterable.
-     * @param <T>             The type of the elements in the input stream.
-     * @param <U>             The type of the result of the {@code featureFunction} function.
+     * @param featureExtractor The function that transforms every element of the input stream.
+     * @param iterableMatcher  The matcher to be applied on the resulting iterable.
+     * @param <T>              The type of the elements in the input stream.
+     * @param <U>              The type of the result of the {@code featureExtractor} function.
      * @since 0.17
      */
-    public static <T, U> Matcher<Stream<T>> featureStream(Function<? super T, ? extends U> featureFunction,
+    public static <T, U> Matcher<Stream<T>> featureStream(Function<? super T, ? extends U> featureExtractor,
                                                           Matcher<Iterable<? super U>> iterableMatcher) {
-        return hasFeature(cacheResultFunction(stream -> streamToIterable(stream.map(featureFunction))), iterableMatcher);
+        return hasFeature(cacheResultFunction(stream -> streamToIterable(stream.map(featureExtractor))), iterableMatcher);
     }
 
     /**
+     * <p>
      * Creates a {@link Matcher} that applies an iterable {@code matcher} on the input stream. It is an adapter method.
+     * </p>
      * <p>
      * Example:
+     * </p>
      * <pre>
      * assertThat(stream, toIterable(hasItem("Ana Pop"));
      * </pre>
@@ -85,9 +94,12 @@ public final class StreamMatchers {
     }
 
     /**
+     * <p>
      * Creates a {@link Matcher} that checks if the given {@link BaseStream} is empty.
+     * </p>
      * <p>
      * Examples:
+     * </p>
      * <pre>
      * assertThat(Stream.empty(), emptyStream());
      * </pre>

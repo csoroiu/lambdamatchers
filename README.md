@@ -4,15 +4,29 @@
 [![Build Status][build-status-svg]][build-status-link]
 [![License][license-svg]][license-link]
 
-This library implements some hamcrest matchers usable with Java 8+ and a set of utility functions built on top of them.
+This library implements some hamcrest matchers usable with **Java 8+ (8, 11, 17)** and a set of utility functions built on top of them.
 
-**Les pièces de résistance** are the **[LambdaMatchers](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/LambdaMatchers.java)**
+**Les pièces de résistance** are the [LambdaMatchers](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/LambdaMatchers.java)
 **`hasFeature`** and **`assertFeature`** methods.
 
-Starting with v0.11, the library is featuring a **[MatcherBuilder](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/MatcherBuilder.java)**
+The library is featuring a [MatcherBuilder](https://github.com/csoroiu/lambdamatchers/blob/master/src/main/java/ro/derbederos/hamcrest/MatcherBuilder.java)
 that enables one to easily create a new custom matcher.
+
+## Features
+* The matchers have meaningful descriptions. The library is intended to be used inside unit test and **help developers to get a better idea of what is wrong before looking at the source code**.
+* The **`assertFeature`** method offers a way to maintain a simple test code while improving the error messages in case of failure.
+* Lambda type detection, thanks to [Type Tools](http://github.com/jhalterman/typetools) library.
+* Works with **Java 8 up to 17**.
+* Compatible with [Hamcrest](https://github.com/hamcrest/JavaHamcrest) 2.2.
+
+## Limitations
+* Does **not** work on **Android** because of the dependencies.
+* Matcher descriptions might not work fine for method references to *unboxing methods*,`Double::doubleValue`.
+* When using agents that instrument the java byte code the type detection might malfunction. 
+***In this unfortunate case I encourage you to fill in an issue about the problem you encountered.***
+
 ## Usage
-#### Maven dependency
+#### Maven test dependency
 ```xml
 <dependency>
     <groupId>ro.derbederos.hamcrest</groupId>
@@ -21,16 +35,22 @@ that enables one to easily create a new custom matcher.
     <scope>test</scope>
 </dependency>
 ```
-#### Gradle dependency
+#### Gradle test dependency
 ```groovy
-testCompile 'ro.derbederos.hamcrest:lambdamatchers:0.18'
+testImplementation 'ro.derbederos.hamcrest:lambdamatchers:0.18'
 ```
+
+#### Scala SBT test dependency
+```sbt
+libraryDependencies += "ro.derbederos.hamcrest" % "lambdamatchers" % "0.18" % "test"
+```
+
 
 ## Examples
 The usages of the matchers can be seen in:
-* **[RetryAtomic.java](https://gist.github.com/csoroiu/d982344e94b999d08f919737072fde5e)**
-* **[OptionalMatchers.java](https://gist.github.com/csoroiu/098e51c01f57ecf7b599e7d1fd1b1d96)**
-* **[LambdaMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/LambdaMatchersTest.java)**. Some examples are:
+* [RetryAtomic.java](https://gist.github.com/csoroiu/d982344e94b999d08f919737072fde5e)
+* [OptionalMatchers.java](https://gist.github.com/csoroiu/098e51c01f57ecf7b599e7d1fd1b1d96)
+* [LambdaMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/LambdaMatchersTest.java). Some examples are:
 ```java
 assertFeature(person::getName, equalTo("Brutus"));
 
@@ -42,7 +62,7 @@ assertThat(list, featureIterable(Person::getName, hasItem("Ana")));
 
 assertThat(array, featureArray(Person::getName, hasItem(startsWith("Ana"))));
 ```
-* **[StreamMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/StreamMatchersTest.java)**. Some examples are:
+* [StreamMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/StreamMatchersTest.java). Some examples are:
 ```java
 assertThat(stream, featureStream(Person::getName, hasItem(startsWith("Ana"))));
 
@@ -50,8 +70,8 @@ assertThat(stream, toIterable(hasItem("Ana Pop"));
 
 assertThat(Stream.empty(), emptyStream());
 ```
-* **[RegexMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/RegexMatchersTest.java)**
-* **[RetryMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/RetryMatchersTest.java)**. Some examples are:
+* [RegexMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/RegexMatchersTest.java)
+* [RetryMatchersTest](https://github.com/csoroiu/lambdamatchers/blob/master/src/test/java/ro/derbederos/hamcrest/RetryMatchersTest.java). Some examples are:
 ```java
 assertThat(mutableObject, retry(500, MutableObjectClass::getValue, equalTo(7)));
 
@@ -64,7 +84,7 @@ assertThat(atomicInteger, retry(300, AtomicInteger::intValue, equalTo(9)));
 assertThat(atomicLong, retry(300, AtomicLong::longValue, greaterThan(10L)));
 ```
 
-This library is intended to be used in tests, and in case of failure, **meaningful descriptions** are shown in order to ***help the developers to get an idea of what is wrong before looking at the source code***.
+As already mentioned, this library is intended to be used in tests, and in case of failure, more meaningful descriptions are shown.
 
 Such an error message for the code:
 ```java
@@ -100,20 +120,7 @@ public Matcher<Person> myCustomMatcher(Person expected) {
 }
 ```
 
-## Features
-* The matchers have **meaningful descriptions**. The library is intended to be used inside unit test and ***help the developers to get an idea of what is wrong before looking at the source code***.
-* The **`assertFeature`** method offers a way to maintain a simple test code while improving the error messages in case of failure.
-* Lambda type detection, thanks to **[Type Tools](http://github.com/jhalterman/typetools)** library.
-* Works with Java 8 up to 17.
-* Compatible with **[Hamcrest](https://github.com/hamcrest/JavaHamcrest) 2.2**.
-
 **Happy coding, and most important, happy testing!**
-
-## Limitations
-* Does **not** work on **Android** because of the dependencies.
-* Matcher descriptions might not work ok for method references to *unboxing methods*,`Double::doubleValue`.
-* When using agents that instrument the java byte code the type detection might malfunction. 
-***In this unfortunate case I encourage you to fill in an issue about the problem you encountered.***
 
 [build-status-svg]: https://app.travis-ci.com/csoroiu/lambdamatchers.svg?branch=master
 [build-status-link]: https://app.travis-ci.com/csoroiu/lambdamatchers
@@ -122,4 +129,4 @@ public Matcher<Person> myCustomMatcher(Person expected) {
 [license-svg]: https://img.shields.io/badge/license-Apache2-blue.svg
 [license-link]: https://raw.githubusercontent.com/csoroiu/lambdamatchers/master/LICENSE
 [maven-tasks-svg]: https://img.shields.io/maven-central/v/ro.derbederos.hamcrest/lambdamatchers.svg
-[maven-tasks-link]: https://maven-badges.herokuapp.com/maven-central/ro.derbederos.hamcrest/lambdamatchers
+[maven-tasks-link]: https://search.maven.org/search?q=g:%22ro.derbederos.hamcrest%22%20AND%20a:%22lambdamatchers%22

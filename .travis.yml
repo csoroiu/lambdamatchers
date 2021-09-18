@@ -14,8 +14,8 @@ os:
   - linux
 
 branches:
-  except:
-  - scala
+  only:
+  - main
 
 env:
   matrix:
