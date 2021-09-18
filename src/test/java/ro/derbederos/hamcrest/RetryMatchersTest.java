@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 Claudiu Soroiu
+ * Copyright (c) 2016-2021 Claudiu Soroiu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,7 @@ public class RetryMatchersTest {
         executorService = Executors.newSingleThreadScheduledExecutor();
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @AfterClass
     public static void afterRetryMatchersTest() throws Exception {
         executorService.shutdown();

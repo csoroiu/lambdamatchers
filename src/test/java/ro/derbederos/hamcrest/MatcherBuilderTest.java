@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 Claudiu Soroiu
+ * Copyright (c) 2016-2021 Claudiu Soroiu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ import static ro.derbederos.hamcrest.MatcherDescriptionAssert.assertMismatchDesc
 public class MatcherBuilderTest {
 
     @Test
-    @SuppressWarnings("unchecked")
     public void customEqualsMatcher() {
         List<Person> list = Arrays.asList(new Person("Alice Bob", 21),
                 new Person("Ana Pop", 21),
