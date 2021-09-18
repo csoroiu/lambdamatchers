@@ -104,20 +104,19 @@ public Matcher<Person> myCustomMatcher(Person expected) {
 * The matchers have **meaningful descriptions**. The library is intended to be used inside unit test and ***help the developers to get an idea of what is wrong before looking at the source code***.
 * The **`assertFeature`** method offers a way to maintain a simple test code while improving the error messages in case of failure.
 * Lambda type detection, thanks to **[Type Tools](http://github.com/jhalterman/typetools)** library.
-* Works with Java 8 and 9.
-* Compatible with **[Hamcrest](https://github.com/hamcrest/JavaHamcrest)** versions **1.3** and **2.0.0.0**.
+* Works with Java 8 up to 17.
+* Compatible with **[Hamcrest](https://github.com/hamcrest/JavaHamcrest) 2.2**.
 
 **Happy coding, and most important, happy testing!**
 
 ## Limitations
 * Does **not** work on **Android** because of the dependencies.
-* Limited support on **Java 9**. ***Work in progress.***
 * Matcher descriptions might not work ok for method references to *unboxing methods*,`Double::doubleValue`.
 * When using agents that instrument the java byte code the type detection might malfunction. 
 ***In this unfortunate case I encourage you to fill in an issue about the problem you encountered.***
 
-[build-status-svg]: https://travis-ci.org/csoroiu/lambdamatchers.svg?branch=master
-[build-status-link]: https://travis-ci.org/csoroiu/lambdamatchers
+[build-status-svg]: https://travis-ci.com/csoroiu/lambdamatchers.svg?branch=master
+[build-status-link]: https://travis-ci.com/csoroiu/lambdamatchers
 [javadoc-svg]: http://javadoc.io/badge/ro.derbederos.hamcrest/lambdamatchers.svg?color=red
 [javadoc-link]: http://javadoc.io/doc/ro.derbederos.hamcrest/lambdamatchers
 [license-svg]: https://img.shields.io/badge/license-Apache2-blue.svg
