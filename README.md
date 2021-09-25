@@ -31,18 +31,18 @@ that enables one to easily create a new custom matcher.
 <dependency>
     <groupId>ro.derbederos.hamcrest</groupId>
     <artifactId>lambdamatchers</artifactId>
-    <version>0.18</version>
+    <version>0.19</version>
     <scope>test</scope>
 </dependency>
 ```
 #### Gradle test dependency
 ```groovy
-testImplementation 'ro.derbederos.hamcrest:lambdamatchers:0.18'
+testImplementation 'ro.derbederos.hamcrest:lambdamatchers:0.19'
 ```
 
 #### Scala SBT test dependency
 ```sbt
-libraryDependencies += "ro.derbederos.hamcrest" % "lambdamatchers" % "0.18" % "test"
+libraryDependencies += "ro.derbederos.hamcrest" % "lambdamatchers" % "0.19" % "test"
 ```
 
 

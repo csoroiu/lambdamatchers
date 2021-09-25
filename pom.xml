@@ -22,7 +22,7 @@
 
     <groupId>ro.derbederos.hamcrest</groupId>
     <artifactId>lambdamatchers</artifactId>
-    <version>0.19-SNAPSHOT</version>
+    <version>0.19</version>
     <packaging>jar</packaging>
 
     <name>LambdaMatchers</name>
