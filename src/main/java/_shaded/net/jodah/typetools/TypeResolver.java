@@ -708,6 +708,7 @@ public final class TypeResolver {
 
   private static Member getMemberRef(Class<?> type) {
     Member[] constantPoolMethods = extractConstantPoolMethods(type);
+    //skip jacoco synthetic methods
     int start = constantPoolMethods.length;
     if (isInstrumentedByJacoco(type)) {
       for (int i = constantPoolMethods.length - 1; i >= 0; i--) {

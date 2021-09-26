@@ -20,6 +20,7 @@ import org.hamcrest.Matcher;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -39,7 +40,7 @@ import static ro.derbederos.hamcrest.RetryMatchers.assertFeature;
 import static ro.derbederos.hamcrest.RetryMatchers.retry;
 import static ro.derbederos.hamcrest.RetryMatchers.retrySupplier;
 
-@org.junit.jupiter.api.Timeout(value = 700, unit = TimeUnit.MILLISECONDS)
+@Timeout(value = 700, unit = TimeUnit.MILLISECONDS)
 public class RetryMatchersTest {
 
     private static ScheduledExecutorService executorService;

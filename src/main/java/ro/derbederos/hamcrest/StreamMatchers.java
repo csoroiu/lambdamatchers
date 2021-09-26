@@ -124,7 +124,7 @@ public final class StreamMatchers {
                 .build();
     }
 
-    private static <T, R> CacheLastResultFunction<T, R> cacheResultFunction(Function<? super T, ? extends R> function) {
+    private static <T, R> Function<T, R> cacheResultFunction(Function<? super T, ? extends R> function) {
         return new CacheLastResultFunction<>(function);
     }
 

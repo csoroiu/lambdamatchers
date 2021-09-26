@@ -26,7 +26,7 @@ import static org.hamcrest.CoreMatchers.anyOf;
 
 /**
  * <p>
- * Set regular expression matchers for strings.
+ * This class provides a set of regular expression matchers for {@link String} or anything derived from {@link CharSequence}.
  * </p>
  *
  * @since 0.1

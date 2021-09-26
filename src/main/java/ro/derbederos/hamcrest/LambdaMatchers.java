@@ -28,7 +28,7 @@ import static ro.derbederos.hamcrest.TypeResolverFeatureMatcherFactory.supplierM
 
 /**
  * <p>
- * This class provides a set of mapping matchers based on java 8+ functional interfaces (lambdas).
+ * This class provides a set of matchers based on java 8+ functional interfaces (lambdas).
  * </p>
  * <p>
  * They are useful in plenty of places where you are required to make assertions on different properties of objects.

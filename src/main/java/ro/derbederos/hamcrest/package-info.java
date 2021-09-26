@@ -15,8 +15,12 @@
  */
 
 /**
- * LambdaMatchers - https://github.com/csoroiu/lambdamatchers
+ * <p>
+ * LambdaMatchers - <a href="https://github.com/csoroiu/lambdamatchers">
+ * https://github.com/csoroiu/lambdamatchers</a>
+ * </p>
  * <p>
  * A set of tools that enables creating custom hamcrest matchers more easily.
+ * </p>
  */
 package ro.derbederos.hamcrest;

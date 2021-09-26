@@ -161,7 +161,7 @@
                     <additionalOptions>-html5</additionalOptions>
                     <failOnError>false</failOnError>
                     <links>
-                        <link>http://static.javadoc.io/org.hamcrest/hamcrest-all/${hamcrest.version}</link>
+                        <link>http://static.javadoc.io/org.hamcrest/hamcrest/${hamcrest.version}</link>
                     </links>
                     <excludePackageNames>_shaded.*</excludePackageNames>
                 </configuration>
