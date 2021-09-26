@@ -13,6 +13,8 @@
 -keepattributes Exceptions,InnerClasses,Signature,Deprecated,
                 SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
 
+-keep class module-info
+
 -keep public class ro.derbederos.** {
     public protected *;
 }

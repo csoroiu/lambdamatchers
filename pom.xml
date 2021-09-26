@@ -68,6 +68,8 @@
         <hamcrest.version>2.2</hamcrest.version>
         <junit.version>5.9.0</junit.version>
         <jacoco.version>0.8.8</jacoco.version>
+        <proguard-core.version>9.0.2</proguard-core.version>
+        <proguard.version>7.2.2</proguard.version>
     </properties>
 
     <build>
@@ -235,6 +237,55 @@
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>proguard</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.wvengen</groupId>
+                        <artifactId>proguard-maven-plugin</artifactId>
+                        <version>2.6.0</version>
+                        <configuration>
+                            <proguardVersion>${proguard.version}</proguardVersion>
+                            <proguardInclude>${basedir}/proguard-project.txt</proguardInclude>
+                            <obfuscate>true</obfuscate>
+                            <attach>true</attach>
+                            <appendClassifier>true</appendClassifier>
+                            <attachArtifactClassifier>obfuscated</attachArtifactClassifier>
+                            <addMavenDescriptor>true</addMavenDescriptor>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>proguard-obfuscate</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>proguard</goal>
+                                </goals>
+                                <configuration>
+                                    <injar>${project.build.finalName}.jar</injar>
+                                    <injarNotExistsSkip>true</injarNotExistsSkip>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.guardsquare</groupId>
+                                <artifactId>proguard-core</artifactId>
+                                <version>${proguard-core.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>com.guardsquare</groupId>
+                                <artifactId>proguard-base</artifactId>
+                                <version>${proguard.version}</version>
+                            </dependency>
+                        </dependencies>
                     </plugin>
                 </plugins>
             </build>
