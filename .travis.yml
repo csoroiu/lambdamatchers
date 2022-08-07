@@ -1,10 +1,10 @@
 #arch: amd64
 #os: linux
-dist: focal
+dist: jammy
 language: java
 
 jdk:
-  - openjdk11
+  - openjdk17
 
 cache:
   directories:
